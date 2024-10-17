@@ -2,40 +2,96 @@ import React, { useState } from "react";
 import Slider from "react-slick"; // Thêm Slider từ react-slick
 import "slick-carousel/slick/slick.css"; 
 import "slick-carousel/slick/slick-theme.css";
+import DatePicker from "react-datepicker";
+import TimePicker from 'react-time-picker'
+import 'react-datepicker/dist/react-datepicker.css';
 let event1 = require("../../Asset/event-1.jpg");
 let event2 = require("../../Asset/event-2.jpg");
 let event3 = require("../../Asset/event-3.jpg");
 
 const ImageVideoBlock = () => {
+    const [imageSrc, setImageSrc] = useState<string | null>(null); // Move useState outside the function
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]; // Check if file is available
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImageSrc(reader.result as string); // Cast reader result to string
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
     return (
-            <div className="w-full bg-gray-100 p-4 rounded-lg">
-                <h2 className="text-xl font-bold mb-4">Add images and video</h2>
-                <h3 className="text-lg font-semibold mb-2">Image</h3>
-                <div className="w-full bg-gray-200 border-dashed border-2 border-gray-300 h-48 flex flex-col justify-center items-center rounded-md mb-4">
-                    <div className="text-center">
-                        <i className="fas fa-image mb-2"></i>
-                        <p>Drag and drop an image or</p>
-                        <button className="bg-gray-300 px-4 py-2 mt-2 rounded">Upload Image</button>
-                    </div>
-                </div>
-                <p className="text-sm text-gray-500">
-                    Recommended image size: 2160 x 1080px • Maximum file size: 10MB • Supported image files: JPEG, PNG
-                </p>
-                <div className="mt-4">
-                    <h3 className="text-lg font-semibold mb-2">Video</h3>
-                    <p className="text-sm text-gray-500 mb-2">
-                        Add a video link from Youtube or Vimeo to show your event’s vibe.
-                    </p>
-                    <input
-                        type="text"
-                        placeholder="URL"
-                        className="w-full px-4 py-2 border rounded-md"
+        <div className="w-full bg-gray-100 p-4 rounded-lg">
+            <h2 className="text-xl font-bold mb-4">Add images and video</h2>
+            <h3 className="text-lg font-semibold mb-2">Image</h3>
+            <div className="w-full bg-gray-200 border-dashed border-2 border-gray-300 h-48 flex flex-col justify-center items-center rounded-md mb-4 overflow-hidden">
+                <div className="text-center">
+                    {imageSrc ? (
+                        <>
+                            <button
+                onClick={() => setImageSrc(null)} // Hàm để xóa hình ảnh
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 z-10"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
                     />
+                </svg>
+            </button>
+                            <img src={imageSrc} alt="Uploaded" className="w-full h-full object-cover " />
+                        
+                        </>
+                    ) : (
+                        <>
+                            <i className="fas fa-image mb-2"></i>
+                            <p>Drag and drop an image or</p>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                id="upload-button"
+                                onChange={handleFileChange}
+                            />
+                            <label
+                                htmlFor="upload-button"
+                                className="bg-gray-300 px-4 py-2 mt-2 rounded cursor-pointer"
+                            >
+                                Upload Image
+                            </label>
+                        </>
+                    )}
                 </div>
             </div>
-        
+            <p className="text-sm text-gray-500">
+                Recommended image size: 2160 x 1080px • Maximum file size: 10MB • Supported image files: JPEG, PNG
+            </p>
+            <div className="mt-4">
+                <h3 className="text-lg font-semibold mb-2">Video</h3>
+                <p className="text-sm text-gray-500 mb-2">
+                    Add a video link from Youtube or Vimeo to show your event’s vibe.
+                </p>
+                <input
+                    type="text"
+                    placeholder="URL"
+                    className="w-full px-4 py-2 border rounded-md"
+                />
+            </div>
+        </div>
     );
 };
+
 
 const TitleBlock = () => {
     return (
@@ -63,19 +119,49 @@ const TitleBlock = () => {
 };
 const EventDateTimeLocation = () => {
     const [showMap, setShowMap] = useState(true); // State để ẩn/hiện bản đồ
-
+    const [startDate, setStartDate] = useState<Date | null>(new Date('2022-04-17'));
+    const [startTimeValue, setStartTimeValue] = useState<string>('10:00');
+    const [finishTimeValue, setFinishTimeValue] = useState<string>('23:00');
+    const [selectedTypeEvent, setSelectedTypeEvent] = useState<string>('single');
     return (
         <div className="w-full bg-white p-6 rounded-lg border border-gray-300 space-y-6">
             {/* Type of event */}
             <div className="w-full">
                 <h2 className="text-xl font-bold mb-2">Type of event</h2>
                 <div className="flex space-x-4">
-                    <button className="flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500">
+                    <label
+                        className={`flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500 text-center cursor-pointer ${
+                            selectedTypeEvent === 'single' ? 'bg-blue-200' : ''
+                        }`}
+                        onClick={() => setSelectedTypeEvent('single')} // Thêm sự kiện `onClick`
+                    >
+                        <input
+                            type="radio"
+                            name="eventType"
+                            value="single"
+                            checked={selectedTypeEvent === 'single'}
+                            onChange={() => setSelectedTypeEvent('single')}
+                            className="sr-only" // Dùng `sr-only` để vẫn nhận click
+                        />
                         Single event
-                    </button>
-                    <button className="flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500">
+                    </label>
+
+                    <label
+                        className={`flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500 text-center cursor-pointer ${
+                            selectedTypeEvent === 'recurring' ? 'bg-blue-200' : ''
+                        }`}
+                        onClick={() => setSelectedTypeEvent('recurring')} // Thêm sự kiện `onClick`
+                    >
+                        <input
+                            type="radio"
+                            name="eventType"
+                            value="recurring"
+                            checked={selectedTypeEvent === 'recurring'}
+                            onChange={() => setSelectedTypeEvent('recurring')}
+                            className="sr-only"
+                        />
                         Recurring event
-                    </button>
+                    </label>
                 </div>
             </div>
 
@@ -87,21 +173,33 @@ const EventDateTimeLocation = () => {
                         <label className="block mb-1">Date</label>
                         <div className="flex items-center border rounded-lg p-2">
                             <i className="fas fa-calendar-alt mr-2"></i>
-                            <input type="text" value="11/25/2024" readOnly className="focus:outline-none"/>
+                            <DatePicker 
+                                label="Uncontrolled picker" 
+                                defaultValue={new Date('2022-04-17')} 
+                                selected={startDate} 
+                                onChange={(date: Date | null) => setStartDate(date)} />
                         </div>
                     </div>
                     <div>
                         <label className="block mb-1">Start time</label>
                         <div className="flex items-center border rounded-lg p-2">
                             <i className="fas fa-clock mr-2"></i>
-                            <input type="text" value="10:00 AM" readOnly className="focus:outline-none"/>
+                            <input 
+                                type="time" 
+                                value={startTimeValue} 
+                                onChange={(e) => setStartTimeValue(e.target.value)} 
+                            />
                         </div>
                     </div>
                     <div>
                         <label className="block mb-1">End time</label>
                         <div className="flex items-center border rounded-lg p-2">
                             <i className="fas fa-clock mr-2"></i>
-                            <input type="text" value="12:00 PM" readOnly className="focus:outline-none"/>
+                            <input 
+                                type="time" 
+                                value={finishTimeValue} 
+                                onChange={(e) => setFinishTimeValue(e.target.value)} 
+                            />
                         </div>
                     </div>
                 </div>
@@ -169,6 +267,7 @@ const CreateEvent = () => {
     const [showTitleBlock, setShowTitleBlock] = useState(false);
     const [showMap, setShowMap] = useState(true);
     const [showTimeAndMapBlock, setShowTimeAndMapBlock] = useState(false);
+    
     const settings = {
         dots: true,
         infinite: true,
