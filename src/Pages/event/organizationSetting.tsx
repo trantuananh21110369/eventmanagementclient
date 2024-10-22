@@ -103,57 +103,6 @@ const TeamManagement = () => {
   );
 };
 
-// Ticket Fees Component
-const TicketFees = () => {
-  const [serviceFee, setServiceFee] = useState(2.5); // Default service fee value
-  const [paymentFee, setPaymentFee] = useState(3.0); // Default payment fee value
-
-  const handleServiceFeeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setServiceFee(parseFloat(event.target.value));
-  };
-
-  const handlePaymentFeeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPaymentFee(parseFloat(event.target.value));
-  };
-
-  return (
-    <div>
-      <section className="bg-white p-6 rounded-md shadow-md">
-        <h2 className="text-2xl font-semibold mb-4">Ticket Fees</h2>
-        <p className="text-gray-600 mb-4">Manage fees applied to tickets sold for your events.</p>
-
-        <div className="mb-6">
-          <label className="block text-gray-700 mb-2">Service Fee</label>
-          <input
-            type="number"
-            className="border border-gray-300 p-2 rounded-md w-full"
-            value={serviceFee}
-            onChange={handleServiceFeeChange}
-            min="0"
-            step="0.01"
-          />
-        </div>
-
-        <div className="mb-6">
-          <label className="block text-gray-700 mb-2">Payment Processing Fee</label>
-          <input
-            type="number"
-            className="border border-gray-300 p-2 rounded-md w-full"
-            value={paymentFee}
-            onChange={handlePaymentFeeChange}
-            min="0"
-            step="0.01"
-          />
-        </div>
-
-        <button className="bg-indigo-600 text-white px-6 py-2 rounded-md">
-          Save Fees
-        </button>
-      </section>
-    </div>
-  );
-};
-
 // Main Component with Tab Navigation
 const OrganizationSettings = () => {
   const [activeTab, setActiveTab] = useState('OrganizerProfile');
@@ -203,14 +152,6 @@ const OrganizationSettings = () => {
           >
             Team Management
           </li>
-          <li
-            className={`cursor-pointer ${activeTab === 'TicketFees' ? 'border-b-2 border-indigo-600' : ''}`}
-            onClick={() => setActiveTab('TicketFees')}
-          >
-            Ticket Fees
-          </li>
-          <li>Plan Management</li>
-          <li>App Extensions</li>
         </ul>
       </nav>
 
@@ -230,8 +171,6 @@ const OrganizationSettings = () => {
       )}
 
       {activeTab === 'TeamManagement' && <TeamManagement />}
-      
-      {activeTab === 'TicketFees' && <TicketFees />}
     </div>
   );
 };

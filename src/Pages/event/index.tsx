@@ -1,3 +1,5 @@
 import CreateEvent from './createEvent';
+import ManageEventPage from './manageEventPage';
+import OrganizationSettings from './organizationSetting';
 
-export default CreateEvent;
+export default OrganizationSettings;
