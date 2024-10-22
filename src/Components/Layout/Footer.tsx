@@ -1,8 +1,8 @@
 import React from "react";
 
-function Footer() {
+function Footer({ className }: { className?: string }) {
   return (
-    <footer className="bg-primary p-4 text-second">
+    <footer className={`bg-primary p-4 text-second ${className}`}>
       <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
         <div className="mb-4 md:mb-0">
           <h2 className="text-xl font-bold">Event Management</h2>

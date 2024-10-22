@@ -1,22 +1,91 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import { userModel } from '../../Interfaces';
+import { RootState } from "../../Storage/Redux/store";
+import { emptyUserState, setLoggedInUser } from '../../Storage/Redux/userAuthSlice';
 import ModeTheme from "./ModeTheme";
 let logo = require("../../Asset/logo.jpg");
 
-function Header() {
+function Header({ className }: { className?: string }) {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(setLoggedInUser({ ...emptyUserState }));
+    navigate("/");
+  };
+
+  const userData: userModel = useSelector(
+    (state: RootState) => state.userAuthStore
+  );
+
   return (
-    <header className="bg-primary p-4 sticky top-0 z-50">
+    <header className={`bg-primary p-4 sticky top-0 z-50 ${className}`}>
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <img src={logo} alt="Logo" className="h-8 w-8 rounded-lg" />
           <div className="text-second text-xl font-bold text-heading">Event</div>
         </div>
-        <nav className="flex space-x-4 items-center">
-          <ModeTheme />
-          <a href="#" className="text-second hover:text-heading">Login</a>
-          <a href="#" className="text-second hover:text-heading">Register</a>
-        </nav>
-      </div>
-    </header>
+        <nav className="flex items-center">
+          <div className='px-2'>
+            <ModeTheme />
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            {userData.id ? (
+              <Menu>
+                <MenuButton className="bg-primary flex items-center space-x-2 focus:outline-none">
+                  <div className='rounded-3xl border-2 border-second p-1'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                    </svg>
+                  </div>
+                  <span className="text-second font-medium">{userData.fullName}</span>
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                  </svg>
+                </MenuButton>
+                <MenuItems className="absolute px-2 mt-2 right-0 bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none">
+                  <div className='py-1'>
+                    <MenuItem>
+                      <NavLink to="/manage-event" className="block w-full text-left py-2 text-sm text-gray-700">
+                        Management Event
+                      </NavLink>
+                    </MenuItem>
+                    <MenuItem>
+                      <button
+                        className="block w-full text-left py-2 text-sm text-gray-700"
+                        onClick={handleLogout}
+                      >
+                        Logout
+                      </button>
+                    </MenuItem>
+                  </div>
+                </MenuItems>
+              </Menu>
+
+            ) : (
+              <>
+                <div className='flex space-x-2'>
+                  <NavLink className="nav-link text-second" to="/register">
+                    Register
+                  </NavLink>
+                  <NavLink
+                    className="btn-success nav-link text-second"
+                    to="/login"
+                  >
+                    Login
+                  </NavLink>
+                </div>
+              </>
+            )
+            }
+          </div >
+        </nav >
+      </div >
+    </header >
   );
 }
 

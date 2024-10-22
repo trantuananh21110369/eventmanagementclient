@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Slider from "react-slick"; // Thêm Slider từ react-slick
-import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker'
@@ -32,26 +32,26 @@ const ImageVideoBlock = () => {
                     {imageSrc ? (
                         <>
                             <button
-                onClick={() => setImageSrc(null)} // Hàm để xóa hình ảnh
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 z-10"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                >
-                    <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M6 18L18 6M6 6l12 12"
-                    />
-                </svg>
-            </button>
+                                onClick={() => setImageSrc(null)} // Hàm để xóa hình ảnh
+                                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 z-10"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
                             <img src={imageSrc} alt="Uploaded" className="w-full h-full object-cover " />
-                        
+
                         </>
                     ) : (
                         <>
@@ -92,31 +92,31 @@ const ImageVideoBlock = () => {
     );
 };
 
-
 const TitleBlock = () => {
     return (
         <div className="w-full bg-gray-100 p-4 rounded-lg">
-                <h2 className="text-xl font-bold mb-4">Event Overview</h2>
-                <h3 className="text-lg font-semibold mb-2">Event title</h3>
-                <p className="text-sm text-gray-500">
-                    Be clear and descriptive with a title that tells people what your event is about.
-                </p>
-                <input
-                        type="text"
-                        placeholder="Event title"
-                        className="w-full px-4 py-2 border rounded-md"
-                    />
-                    <h3 className="text-lg font-semibold mb-2">Summary</h3>
-                <p className="text-sm text-gray-500">
+            <h2 className="text-xl font-bold mb-4">Event Overview</h2>
+            <h3 className="text-lg font-semibold mb-2">Event title</h3>
+            <p className="text-sm text-gray-500">
+                Be clear and descriptive with a title that tells people what your event is about.
+            </p>
+            <input
+                type="text"
+                placeholder="Event title"
+                className="w-full px-4 py-2 border rounded-md"
+            />
+            <h3 className="text-lg font-semibold mb-2">Summary</h3>
+            <p className="text-sm text-gray-500">
                 Grab people's attention with a short description about your event. Attendees will see this at the top of your event page. (140 characters max)
-                </p>
-                <textarea
-                        placeholder="Summary"
-                        className="w-full px-4 py-2 border rounded-md"
-                    />
-            </div>
+            </p>
+            <textarea
+                placeholder="Summary"
+                className="w-full px-4 py-2 border rounded-md"
+            />
+        </div>
     );
 };
+
 const EventDateTimeLocation = () => {
     const [showMap, setShowMap] = useState(true); // State để ẩn/hiện bản đồ
     const [startDate, setStartDate] = useState<Date | null>(new Date('2022-04-17'));
@@ -130,9 +130,8 @@ const EventDateTimeLocation = () => {
                 <h2 className="text-xl font-bold mb-2">Type of event</h2>
                 <div className="flex space-x-4">
                     <label
-                        className={`flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500 text-center cursor-pointer ${
-                            selectedTypeEvent === 'single' ? 'bg-blue-200' : ''
-                        }`}
+                        className={`flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500 text-center cursor-pointer ${selectedTypeEvent === 'single' ? 'bg-blue-200' : ''
+                            }`}
                         onClick={() => setSelectedTypeEvent('single')} // Thêm sự kiện `onClick`
                     >
                         <input
@@ -147,9 +146,8 @@ const EventDateTimeLocation = () => {
                     </label>
 
                     <label
-                        className={`flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500 text-center cursor-pointer ${
-                            selectedTypeEvent === 'recurring' ? 'bg-blue-200' : ''
-                        }`}
+                        className={`flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500 text-center cursor-pointer ${selectedTypeEvent === 'recurring' ? 'bg-blue-200' : ''
+                            }`}
                         onClick={() => setSelectedTypeEvent('recurring')} // Thêm sự kiện `onClick`
                     >
                         <input
@@ -173,10 +171,10 @@ const EventDateTimeLocation = () => {
                         <label className="block mb-1">Date</label>
                         <div className="flex items-center border rounded-lg p-2">
                             <i className="fas fa-calendar-alt mr-2"></i>
-                            <DatePicker 
-                                label="Uncontrolled picker" 
-                                defaultValue={new Date('2022-04-17')} 
-                                selected={startDate} 
+                            <DatePicker
+                                label="Uncontrolled picker"
+                                defaultValue={new Date('2022-04-17')}
+                                selected={startDate}
                                 onChange={(date: Date | null) => setStartDate(date)} />
                         </div>
                     </div>
@@ -184,10 +182,10 @@ const EventDateTimeLocation = () => {
                         <label className="block mb-1">Start time</label>
                         <div className="flex items-center border rounded-lg p-2">
                             <i className="fas fa-clock mr-2"></i>
-                            <input 
-                                type="time" 
-                                value={startTimeValue} 
-                                onChange={(e) => setStartTimeValue(e.target.value)} 
+                            <input
+                                type="time"
+                                value={startTimeValue}
+                                onChange={(e) => setStartTimeValue(e.target.value)}
                             />
                         </div>
                     </div>
@@ -195,10 +193,10 @@ const EventDateTimeLocation = () => {
                         <label className="block mb-1">End time</label>
                         <div className="flex items-center border rounded-lg p-2">
                             <i className="fas fa-clock mr-2"></i>
-                            <input 
-                                type="time" 
-                                value={finishTimeValue} 
-                                onChange={(e) => setFinishTimeValue(e.target.value)} 
+                            <input
+                                type="time"
+                                value={finishTimeValue}
+                                onChange={(e) => setFinishTimeValue(e.target.value)}
                             />
                         </div>
                     </div>
@@ -224,7 +222,7 @@ const EventDateTimeLocation = () => {
                 <div className="mt-4">
                     <div className="flex items-center border rounded-lg p-2">
                         <i className="fas fa-map-marker-alt mr-2"></i>
-                        <input type="text" placeholder="Location" className="flex-1 focus:outline-none"/>
+                        <input type="text" placeholder="Location" className="flex-1 focus:outline-none" />
                     </div>
                 </div>
 
@@ -267,7 +265,7 @@ const CreateEvent = () => {
     const [showTitleBlock, setShowTitleBlock] = useState(false);
     const [showMap, setShowMap] = useState(true);
     const [showTimeAndMapBlock, setShowTimeAndMapBlock] = useState(false);
-    
+
     const settings = {
         dots: true,
         infinite: true,
@@ -281,7 +279,7 @@ const CreateEvent = () => {
     return (
         <div className="h-screen flex flex-col space-y-4 p-4">
             {/* Block 1 */}
-            <div style={{ width: "60%" , height : "70%"}} className="relative flex-1 rounded-lg flex items-center justify-center border-solid border-4 border-transparent hover:border-blue-800">
+            <div style={{ width: "60%", height: "70%" }} className="relative flex-1 rounded-lg flex items-center justify-center border-solid border-4 border-transparent hover:border-blue-800">
                 {!showUploadBlock ? (
                     <>
                         {/* Slider với lớp phủ */}
@@ -319,14 +317,14 @@ const CreateEvent = () => {
             </div>
 
             {/* Block 2 */}
-            <div style={{ width: "60%" , height : "70%"}} className="relative flex-1 rounded-lg flex flex-col items-left justify-center border-solid border-4 border-gray-100 hover:border-blue-800" onClick={() => setShowTitleBlock(true)}>
+            <div style={{ width: "60%", height: "70%" }} className="relative flex-1 rounded-lg flex flex-col items-left justify-center border-solid border-4 border-gray-100 hover:border-blue-800" onClick={() => setShowTitleBlock(true)}>
                 {!showTitleBlock ? (
                     <>
-                    <h1 className="text-4xl font-bold mb-4">Event Title</h1>
-                    <p className ="text-sm text-gray-500 mb-2">A short and sweet sentence about your event</p>
-                    <button className="absolute top-2 right-2 z-20 bg-gray-100 text-black rounded-full p-2">
-                        +
-                    </button>
+                        <h1 className="text-4xl font-bold mb-4">Event Title</h1>
+                        <p className="text-sm text-gray-500 mb-2">A short and sweet sentence about your event</p>
+                        <button className="absolute top-2 right-2 z-20 bg-gray-100 text-black rounded-full p-2">
+                            +
+                        </button>
                     </>
                 ) : (
                     <TitleBlock /> // Hiển thị form khi nhấn Click Me
@@ -334,58 +332,58 @@ const CreateEvent = () => {
             </div>
 
             {/* Block 3 */}
-            <div style={{ width: "60%" , height : "150%"}} className="relative flex-1 rounded-lg flex flex-col items-left justify-center border-solid border-4 border-gray-100 hover:border-blue-800" onClick={() => setShowTimeAndMapBlock(true)}>
-            {!showTimeAndMapBlock ? (
+            <div style={{ width: "60%", height: "150%" }} className="relative flex-1 rounded-lg flex flex-col items-left justify-center border-solid border-4 border-gray-100 hover:border-blue-800" onClick={() => setShowTimeAndMapBlock(true)}>
+                {!showTimeAndMapBlock ? (
                     <>
-            <div className="flex justify-between mb-4">
-                {/* Date and Time Section */}
-                <div className="flex-1">
-                    <h2 className="text-lg font-bold">Date and time</h2>
-                    <div className="flex items-center mt-2">
-                        <i className="fas fa-calendar-alt mr-2"></i>
-                        <p>Monday, November 25 • 10am - 12pm GMT+7</p>
-                    </div>
-                </div>
+                        <div className="flex justify-between mb-4">
+                            {/* Date and Time Section */}
+                            <div className="flex-1">
+                                <h2 className="text-lg font-bold">Date and time</h2>
+                                <div className="flex items-center mt-2">
+                                    <i className="fas fa-calendar-alt mr-2"></i>
+                                    <p>Monday, November 25 • 10am - 12pm GMT+7</p>
+                                </div>
+                            </div>
 
-                {/* Location Section */}
-                <div className="flex-1">
-                    <h2 className="text-lg font-bold">Location</h2>
-                    <div className="flex items-center mt-2">
-                        <i className="fas fa-map-marker-alt mr-2"></i>
-                        <p>Enter a location</p>
-                    </div>
-                </div>
+                            {/* Location Section */}
+                            <div className="flex-1">
+                                <h2 className="text-lg font-bold">Location</h2>
+                                <div className="flex items-center mt-2">
+                                    <i className="fas fa-map-marker-alt mr-2"></i>
+                                    <p>Enter a location</p>
+                                </div>
+                            </div>
 
-                {/* Add Button */}
-                <div className="flex-shrink-0 ml-4">
-                    <button className="bg-white border rounded-full p-2">
-                        <i className="fas fa-plus"></i>
-                    </button>
-                </div>
-            </div>
+                            {/* Add Button */}
+                            <div className="flex-shrink-0 ml-4">
+                                <button className="bg-white border rounded-full p-2">
+                                    <i className="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
 
-            {/* Map Section */}
-            {showMap && (
-                <div className="relative w-full h-64 rounded-md overflow-hidden mt-4">
-                    <iframe
-                        title="Google Map"
-                        className="w-full h-full"
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.020366909241!2d-122.42179248468193!3d37.77492967975805!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085810d2e2d7001%3A0x5f0ab2079b7fa2a1!2sSan%20Francisco%2C%20CA%2094158%2C%20USA!5e0!3m2!1sen!2s!4v1602208497293!5m2!1sen!2s"
-                        allowFullScreen={true}  // boolean value instead of string
-                        aria-hidden={false}     // boolean value instead of string
-                        tabIndex={0}            // number value instead of string
-                    ></iframe>
+                        {/* Map Section */}
+                        {showMap && (
+                            <div className="relative w-full h-64 rounded-md overflow-hidden mt-4">
+                                <iframe
+                                    title="Google Map"
+                                    className="w-full h-full"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.020366909241!2d-122.42179248468193!3d37.77492967975805!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085810d2e2d7001%3A0x5f0ab2079b7fa2a1!2sSan%20Francisco%2C%20CA%2094158%2C%20USA!5e0!3m2!1sen!2s!4v1602208497293!5m2!1sen!2s"
+                                    allowFullScreen={true}  // boolean value instead of string
+                                    aria-hidden={false}     // boolean value instead of string
+                                    tabIndex={0}            // number value instead of string
+                                ></iframe>
 
-                    {/* Toggle Hide/Show Map */}
-                    <button
-                        onClick={() => setShowMap(!showMap)}
-                        className="absolute bottom-2 right-2 bg-white text-black rounded-full px-4 py-1 shadow-md"
-                    >
-                        {showMap ? "Hide map" : "Show map"}
-                    </button>
-                </div>
-            )}
-            </>
+                                {/* Toggle Hide/Show Map */}
+                                <button
+                                    onClick={() => setShowMap(!showMap)}
+                                    className="absolute bottom-2 right-2 bg-white text-black rounded-full px-4 py-1 shadow-md"
+                                >
+                                    {showMap ? "Hide map" : "Show map"}
+                                </button>
+                            </div>
+                        )}
+                    </>
                 ) : (
                     <EventDateTimeLocation /> // Hiển thị form khi nhấn Click Me
                 )}
