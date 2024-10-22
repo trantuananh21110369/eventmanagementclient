@@ -1,6 +1,6 @@
-import Login from './login';
+import Login from './Login';
 import Home from './Home';
 import Register from './Register';
-import ManageEventIndex from './ManageEventIndex';
+import ManagmentEvent from './ManagmentEvent';
 
-export { Login, Home, Register, ManageEventIndex };
+export { Login, Home, Register, ManagmentEvent };

@@ -3,12 +3,11 @@ import { Route, Routes, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import jwt_decode from 'jwt-decode';
 import { Header, Footer, Sidebar } from "../Components/Layout";
-import { Login, Home, Register, ManageEventIndex } from '../Pages';
+import { Login, Home, Register, ManagmentEvent } from '../Pages';
 import { setLoggedInUser } from '../Storage/Redux/userAuthSlice';
 import { userModel } from '../Interfaces';
-import CreateEvent from '../Pages/event';
-import OrganizationSettings from '../Pages/event/organizationSetting';
-import ManageEventPage from '../Pages/event/manageEventPage';
+import { CreateEvent, ManageEventPage } from '../Pages/ManageEvent/Event';
+import { OrganizationSettings } from '../Pages/ManageEvent/Organization';
 
 function App() {
   const dispatch = useDispatch();
@@ -31,11 +30,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/manage-event" element={<ManageEventIndex />} >
+          <Route path="/manage-event" element={<ManagmentEvent />} >
+            <Route path="event" element={<ManageEventPage />} />
             <Route path="create-event" element={<CreateEvent />} />
-            <Route path="loginPage" element={<Login />} />
-
-          </Route>
+            <Route path="organization" element={<OrganizationSettings />} />
+          </Route >
         </Routes>
       </main>
       {location.pathname !== '/manage-event' && <Footer className="col-span-2" />}

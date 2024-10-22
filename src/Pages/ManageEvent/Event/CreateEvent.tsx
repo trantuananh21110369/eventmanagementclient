@@ -5,9 +5,9 @@ import "slick-carousel/slick/slick-theme.css";
 import DatePicker from "react-datepicker";
 import TimePicker from 'react-time-picker'
 import 'react-datepicker/dist/react-datepicker.css';
-let event1 = require("../../Asset/event-1.jpg");
-let event2 = require("../../Asset/event-2.jpg");
-let event3 = require("../../Asset/event-3.jpg");
+let event1 = require("../../../Asset/event-1.jpg");
+let event2 = require("../../../Asset/event-2.jpg");
+let event3 = require("../../../Asset/event-3.jpg");
 
 const ImageVideoBlock = () => {
     const [imageSrc, setImageSrc] = useState<string | null>(null); // Move useState outside the function
@@ -277,7 +277,7 @@ const CreateEvent = () => {
     };
 
     return (
-        <div className="h-screen flex flex-col space-y-4 p-4">
+        <div className="h-screen flex flex-col space-y-4 p-4 z-10">
             {/* Block 1 */}
             <div style={{ width: "60%", height: "70%" }} className="relative flex-1 rounded-lg flex items-center justify-center border-solid border-4 border-transparent hover:border-blue-800">
                 {!showUploadBlock ? (

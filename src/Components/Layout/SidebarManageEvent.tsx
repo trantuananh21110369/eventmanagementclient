@@ -8,16 +8,16 @@ function Sidebar({ className }: { className?: string }) {
       <nav>
         <ul>
           <li className="mb-2">
-            <NavLink to="create-event" className="hover:underline">Event</NavLink>
-          </li>
-          <li className="mb-2">
-            <NavLink to="loginPage" className="hover:underline">Border</NavLink>
+            <NavLink to="event" className="hover:underline">Event</NavLink>
           </li>
           <li className="mb-2">
             <a href="#" className="hover:underline">Order</a>
           </li>
           <li className="mb-2">
-            <a href="#" className="hover:underline">Setting Organization</a>
+            <a href="#" className="hover:underline">Dash Broad</a>
+          </li>
+          <li className="mb-2">
+            <NavLink to="organization" className="hover:underline">Setting Organization</NavLink>
           </li>
         </ul>
       </nav>

@@ -136,7 +136,7 @@ const OrganizationSettings = () => {
   return (
     <div className="p-8 bg-gray-50 min-h-screen">
       <h1 className="text-4xl font-bold mb-6">Organization Settings</h1>
-      
+
       {/* Navigation Tabs */}
       <nav className="mb-6">
         <ul className="flex space-x-6 text-lg font-medium text-gray-600">
