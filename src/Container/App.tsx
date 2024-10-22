@@ -11,7 +11,7 @@ function App() {
       <Header />
       <div className="flex flex-1">
         <main className="flex-1 p-4 overflow-auto">
-          <ManageEventPage/>
+          <CreateEvent/>
         </main>
       </div>
       <Footer />
