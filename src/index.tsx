@@ -2,15 +2,23 @@ import React from 'react';
 import "./index.css";
 import ReactDOM from 'react-dom/client';
 import App from './Container/App';
-
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Provider } from 'react-redux';
+import { store } from './Storage';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <Provider store={store}>
+    <BrowserRouter>
+      <React.StrictMode>
+        <ToastContainer />
+        <App />
+      </React.StrictMode>
+    </BrowserRouter>
+  </Provider>
 );
 
