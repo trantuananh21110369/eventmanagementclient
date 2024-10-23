@@ -60,7 +60,7 @@ const Login = () => {
             </label>
             <input
               type="text"
-              placeholder="Enter Email"
+              placeholder="Enter Your Email"
               name="email"
               value={userInput.email}
               onChange={handleInputUser}
@@ -74,7 +74,7 @@ const Login = () => {
             </label>
             <input
               type="password"
-              placeholder="Enter Password"
+              placeholder="Enter Your Password"
               id="password"
               name="password"
               value={userInput.password}
