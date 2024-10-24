@@ -56,7 +56,6 @@ const ImageVideoBlock = () => {
                     ) : (
                         <>
                             <i className="fas fa-image mb-2"></i>
-                            <p>Drag and drop an image or</p>
                             <input
                                 type="file"
                                 accept="image/*"

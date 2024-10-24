@@ -31,7 +31,6 @@ function OrganizationInfo() {
 
   // Fetching Organization
   const { data, error, isFetching } = useGetOrganizationQuery(idUser);
-  console.log(data);
 
   //Get data to input
   useEffect(() => {

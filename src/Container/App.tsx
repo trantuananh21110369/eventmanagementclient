@@ -6,7 +6,7 @@ import { Header, Footer, Sidebar } from "../Components/Layout";
 import { Login, Home, Register, ManagmentEvent } from '../Pages';
 import { setLoggedInUser } from '../Storage/Redux/userAuthSlice';
 import { userModel } from '../Interfaces';
-import { CreateEvent, ManageEventPage } from '../Pages/ManageEvent/Event';
+import { CreateEvent, EventPage, ManageEventPage } from '../Pages/ManageEvent/Event';
 import { OrganizationSettings, CreateOrganization } from '../Pages/ManageEvent/Organization';
 import OrganizationInfo from '../Pages/ManageEvent/Organization/OrganizationInfo';
 import TeamManagement from '../Pages/ManageEvent/Organization/TeamManagement';
@@ -34,7 +34,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="create-organization" element={<CreateOrganization />} />
           <Route path="/manage-event" element={<ManagmentEvent />} >
-            <Route path="event" element={<ManageEventPage />} />
+            <Route path="event" element={<ManageEventPage />} >
+              <Route index element={<EventPage />} />
+              <Route path="eventpage" element={<EventPage />} />
+            </Route>
             <Route path="create-event" element={<CreateEvent />} />
             <Route path="organization" element={<OrganizationSettings />} >
               <Route path="info" element={<OrganizationInfo />} />
