@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SD_Type_Event, SD_Status_Event } from 'Utility/SD';
-import { useGetEventQuery, useUpdateEventMutation } from 'Apis/eventApi';
+import { useCreateEventMutation, useGetEventQuery, useUpdateEventMutation } from 'Apis/eventApi';
 import { inputHepler, toastNotify } from 'Helper';
 
 const TypesEvent = [
@@ -30,17 +30,18 @@ const eventData = {
 }
 
 const EventForm = () => {
-  const idEvent: any = useParams();
+  const { idEvent } = useParams();
   //Call Api
   const [updateEvent] = useUpdateEventMutation();
+  const [createEvent] = useCreateEventMutation();
   const navigate = useNavigate();
 
   const [eventInputs, setEventInput] = useState(eventData);
   const [imageToStore, setImageToStore] = useState<any>();
   const [imageToDisplay, setImageToDisplay] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  // const data = useSelector((state: RootState) => state.eventStore);
-  const { data, isFetching } = useGetEventQuery(idEvent.idEvent);
+  const organization = useSelector((state: RootState) => state.organizationStore);
+  const { data, isFetching } = useGetEventQuery(idEvent!);
 
   useEffect(() => {
     if (data) {
@@ -105,7 +106,7 @@ const EventForm = () => {
     }
 
     const formData = new FormData();
-    formData.append("idEvent", idEvent);
+    formData.append("idEvent", idEvent!);
     formData.append("nameEvent", eventInputs.nameEvent);
     formData.append("description", eventInputs.description);
     formData.append("location", eventInputs.location);
@@ -119,12 +120,14 @@ const EventForm = () => {
     if (idEvent) {
       //update
       formData.append("Id", idEvent);
-      response = await updateEvent({ data: formData, idEvent: idEvent.idEvent });
-      toastNotify("Menu Item updated successfully", "success");
+      response = await updateEvent({ data: formData, idEvent: idEvent! });
+      toastNotify("Event updated successfully", "success");
     } else {
       //create
-      // response = await createMenuItem(formData);
-      // toastNotify("Menu Item created successfully", "success");
+      formData.append("OrganizationId", organization.idOrganization);
+      console.log(organization.idUser);
+      response = await createEvent(formData);
+      toastNotify("Event created successfully", "success");
     }
 
     if (response) {

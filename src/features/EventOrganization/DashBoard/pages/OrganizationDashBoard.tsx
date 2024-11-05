@@ -12,9 +12,11 @@ function OrganizationDashBoard() {
   const idUser = useSelector((state: RootState) => state.userAuthStore.id);
   const { data, error, isFetching } = useGetOrganizationQuery(idUser);
 
+
   useEffect(() => {
+    console.log(data);
     if (error && 'status' in error && error.status === 404) {
-      navigate("/create-organization");
+      navigate("/organization/create");
     }
     else {
       const tempData = {

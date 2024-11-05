@@ -23,13 +23,11 @@ const eventApi = createApi({
 
     createEvent: builder.mutation({
       query: (eventData) => ({
-        url: "Event/",
+        url: "event/",
         method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
         body: eventData,
       }),
+      invalidatesTags: ["Event"],
     }),
 
     updateEvent: builder.mutation({
