@@ -1,16 +1,17 @@
-import { SD_Status_Event } from "../Utility/SD";
+import {
+  SD_Type_Event,
+  SD_Status_Event,
+  SD_Privacy_Event,
+} from "../Utility/SD";
 
-export default interface EventModel {
-  orderId?: string;
+export default interface eventModel {
   idEvent?: string;
   nameEvent?: string;
   organizationId?: string;
-  organization?: {
-    // Define the Organization interface or type here
-  };
   description?: string;
   urlImage?: string;
   location?: string;
   status?: SD_Status_Event;
-  eventType?: string;
+  privacy?: SD_Privacy_Event;
+  eventType?: SD_Type_Event;
 }

@@ -1,0 +1,398 @@
+import React, { useState } from "react";
+import Slider from "react-slick"; // Thêm Slider từ react-slick
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import DatePicker from "react-datepicker";
+import TimePicker from 'react-time-picker'
+import 'react-datepicker/dist/react-datepicker.css';
+import SidebarUpsertEvent from "../components/SidebarUpsertEvent";
+let event1 = require("Assets/images/event-1.jpg");
+let event2 = require("Assets/images/event-2.jpg");
+let event3 = require("Assets/images/event-3.jpg");
+
+const ImageVideoBlock = () => {
+    const [imageSrc, setImageSrc] = useState<string | null>(null); // Move useState outside the function
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0]; // Check if file is available
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImageSrc(reader.result as string); // Cast reader result to string
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    return (
+        <div className="w-full bg-gray-100 p-4 rounded-lg">
+            <h2 className="text-xl font-bold mb-4">Add images and video</h2>
+            <h3 className="text-lg font-semibold mb-2">Image</h3>
+            <div className="w-full bg-gray-200 border-dashed border-2 border-gray-300 h-48 flex flex-col justify-center items-center rounded-md mb-4 overflow-hidden">
+                <div className="text-center">
+                    {imageSrc ? (
+                        <>
+                            <button
+                                onClick={() => setImageSrc(null)} // Hàm để xóa hình ảnh
+                                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 z-10"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M6 18L18 6M6 6l12 12"
+                                    />
+                                </svg>
+                            </button>
+                            <img src={imageSrc} alt="Uploaded" className="w-full h-full object-cover " />
+
+                        </>
+                    ) : (
+                        <>
+                            <i className="fas fa-image mb-2"></i>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                id="upload-button"
+                                onChange={handleFileChange}
+                            />
+                            <label
+                                htmlFor="upload-button"
+                                className="bg-gray-300 px-4 py-2 mt-2 rounded cursor-pointer"
+                            >
+                                Upload Image
+                            </label>
+                        </>
+                    )}
+                </div>
+            </div>
+            <p className="text-sm text-gray-500">
+                Recommended image size: 2160 x 1080px • Maximum file size: 10MB • Supported image files: JPEG, PNG
+            </p>
+            <div className="mt-4">
+                <h3 className="text-lg font-semibold mb-2">Video</h3>
+                <p className="text-sm text-gray-500 mb-2">
+                    Add a video link from Youtube or Vimeo to show your event’s vibe.
+                </p>
+                <input
+                    type="text"
+                    placeholder="URL"
+                    className="w-full px-4 py-2 border rounded-md"
+                />
+            </div>
+        </div>
+    );
+};
+
+const TitleBlock = () => {
+    return (
+        <div className="w-full bg-gray-100 p-4 rounded-lg">
+            <h2 className="text-xl font-bold mb-4">Event Overview</h2>
+            <h3 className="text-lg font-semibold mb-2">Event title</h3>
+            <p className="text-sm text-gray-500">
+                Be clear and descriptive with a title that tells people what your event is about.
+            </p>
+            <input
+                type="text"
+                placeholder="Event title"
+                className="w-full px-4 py-2 border rounded-md"
+            />
+            <h3 className="text-lg font-semibold mb-2">Summary</h3>
+            <p className="text-sm text-gray-500">
+                Grab people's attention with a short description about your event. Attendees will see this at the top of your event page. (140 characters max)
+            </p>
+            <textarea
+                placeholder="Summary"
+                className="w-full px-4 py-2 border rounded-md"
+            />
+        </div>
+    );
+};
+
+const EventDateTimeLocation = () => {
+    const [showMap, setShowMap] = useState(true); // State để ẩn/hiện bản đồ
+    const [startDate, setStartDate] = useState<Date | null>(new Date('2022-04-17'));
+    const [startTimeValue, setStartTimeValue] = useState<string>('10:00');
+    const [finishTimeValue, setFinishTimeValue] = useState<string>('23:00');
+    const [selectedTypeEvent, setSelectedTypeEvent] = useState<string>('single');
+    return (
+        <div className="w-full bg-white p-6 rounded-lg border border-gray-300 space-y-6">
+            {/* Type of event */}
+            <div className="w-full">
+                <h2 className="text-xl font-bold mb-2">Type of event</h2>
+                <div className="flex space-x-4">
+                    <label
+                        className={`flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500 text-center cursor-pointer ${selectedTypeEvent === 'single' ? 'bg-blue-200' : ''
+                            }`}
+                        onClick={() => setSelectedTypeEvent('single')} // Thêm sự kiện `onClick`
+                    >
+                        <input
+                            type="radio"
+                            name="eventType"
+                            value="single"
+                            checked={selectedTypeEvent === 'single'}
+                            onChange={() => setSelectedTypeEvent('single')}
+                            className="sr-only" // Dùng `sr-only` để vẫn nhận click
+                        />
+                        Single event
+                    </label>
+
+                    <label
+                        className={`flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500 text-center cursor-pointer ${selectedTypeEvent === 'recurring' ? 'bg-blue-200' : ''
+                            }`}
+                        onClick={() => setSelectedTypeEvent('recurring')} // Thêm sự kiện `onClick`
+                    >
+                        <input
+                            type="radio"
+                            name="eventType"
+                            value="recurring"
+                            checked={selectedTypeEvent === 'recurring'}
+                            onChange={() => setSelectedTypeEvent('recurring')}
+                            className="sr-only"
+                        />
+                        Recurring event
+                    </label>
+                </div>
+            </div>
+
+            {/* Date and time */}
+            <div className="w-full">
+                <h2 className="text-xl font-bold mb-2">Date and time</h2>
+                <div className="grid grid-cols-3 gap-4">
+                    <div>
+                        <label className="block mb-1">Date</label>
+                        <div className="flex items-center border rounded-lg p-2">
+                            <i className="fas fa-calendar-alt mr-2"></i>
+                            <DatePicker
+                                label="Uncontrolled picker"
+                                defaultValue={new Date('2022-04-17')}
+                                selected={startDate}
+                                onChange={(date: Date | null) => setStartDate(date)} />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block mb-1">Start time</label>
+                        <div className="flex items-center border rounded-lg p-2">
+                            <i className="fas fa-clock mr-2"></i>
+                            <input
+                                type="time"
+                                value={startTimeValue}
+                                onChange={(e) => setStartTimeValue(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block mb-1">End time</label>
+                        <div className="flex items-center border rounded-lg p-2">
+                            <i className="fas fa-clock mr-2"></i>
+                            <input
+                                type="time"
+                                value={finishTimeValue}
+                                onChange={(e) => setFinishTimeValue(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                </div>
+                <p className="text-sm text-gray-500 mt-2">GMT+7, Display start and end time, English (US)</p>
+            </div>
+
+            {/* Location */}
+            <div className="w-full">
+                <h2 className="text-xl font-bold mb-2">Location</h2>
+                <div className="flex space-x-4">
+                    <button className="flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500">
+                        Venue
+                    </button>
+                    <button className="flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500">
+                        Online event
+                    </button>
+                    <button className="flex-1 py-2 px-4 border rounded-lg focus:outline-none focus:ring-2 ring-blue-500">
+                        To be announced
+                    </button>
+                </div>
+
+                <div className="mt-4">
+                    <div className="flex items-center border rounded-lg p-2">
+                        <i className="fas fa-map-marker-alt mr-2"></i>
+                        <input type="text" placeholder="Location" className="flex-1 focus:outline-none" />
+                    </div>
+                </div>
+
+                <div className="mt-4">
+                    {/* Toggle Show/Hide Map */}
+                    <button
+                        onClick={() => setShowMap(!showMap)}
+                        className="text-blue-500 underline"
+                    >
+                        {showMap ? "Hide location details" : "Add location details"}
+                    </button>
+
+                    {/* Map Section */}
+                    {showMap && (
+                        <div className="relative w-full h-64 rounded-md overflow-hidden mt-4">
+                            <iframe
+                                title="Google Map"
+                                className="w-full h-full"
+                                allowFullScreen={true}
+                                aria-hidden={false}
+                                tabIndex={0}
+                            ></iframe>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* Reserved seating */}
+            <div className="w-full">
+                <h2 className="text-xl font-bold mb-2">Reserved seating</h2>
+                <p>Use your venue map to set price tiers for each section and choose whether attendees can pick their seat.</p>
+            </div>
+        </div>
+    );
+};
+
+const CreateEvent = () => {
+    const [showUploadBlock, setShowUploadBlock] = useState(false); // State để quản lý việc hiển thị
+    const [showTitleBlock, setShowTitleBlock] = useState(false);
+    const [showMap, setShowMap] = useState(true);
+    const [showTimeAndMapBlock, setShowTimeAndMapBlock] = useState(false);
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        autoplay: true, // Slide tự động
+        autoplaySpeed: 2000,
+    };
+
+    return (
+        <div className="grid grid-rows-[auto,1fr,auto] grid-cols-[auto,1fr]">
+            {/* Block 1 */}
+            <div style={{ width: "60%", height: "70%" }} className="relative flex-1 rounded-lg flex items-center justify-center border-solid border-4 border-transparent hover:border-blue-800">
+                {!showUploadBlock ? (
+                    <>
+                        {/* Slider với lớp phủ */}
+                        <div className="absolute inset-0 bg-white bg-opacity-50 rounded-lg z-10"></div>
+                        <Slider {...settings} className="w-full h-full rounded-lg overflow-hidden z-0">
+                            <div>
+                                <img src={event1} alt="Slide 1" className="w-full h-full object-cover" />
+                            </div>
+                            <div>
+                                <img src={event2} alt="Slide 2" className="w-full h-full object-cover" />
+                            </div>
+                            <div>
+                                <img src={event3} alt="Slide 3" className="w-full h-full object-cover" />
+                            </div>
+                        </Slider>
+                    </>
+                ) : (
+                    <ImageVideoBlock /> // Hiển thị form khi nhấn Click Me
+                )}
+
+                {/* Nút lớn ở giữa */}
+                {!showUploadBlock && (
+                    <button
+                        onClick={() => setShowUploadBlock(true)} // Hiển thị form upload
+                        className="z-20 absolute bg-white text-black text-xl font-bold px-6 py-3 rounded-full"
+                    >
+                        Click Me
+                    </button>
+                )}
+
+                {/* Nút dấu cộng nhỏ ở góc trên bên phải */}
+                <button className="absolute top-2 right-2 z-20 bg-white text-black rounded-full p-2">
+                    +
+                </button>
+            </div>
+
+            {/* Block 2 */}
+            <div style={{ width: "60%", height: "70%" }} className="relative flex-1 rounded-lg flex flex-col items-left justify-center border-solid border-4 border-gray-100 hover:border-blue-800" onClick={() => setShowTitleBlock(true)}>
+                {!showTitleBlock ? (
+                    <>
+                        <h1 className="text-4xl font-bold mb-4">Event Title</h1>
+                        <p className="text-sm text-gray-500 mb-2">A short and sweet sentence about your event</p>
+                        <button className="absolute top-2 right-2 z-20 bg-gray-100 text-black rounded-full p-2">
+                            +
+                        </button>
+                    </>
+                ) : (
+                    <TitleBlock /> // Hiển thị form khi nhấn Click Me
+                )}
+            </div>
+
+            {/* Block 3 */}
+            <div style={{ width: "60%", height: "150%" }} className="relative flex-1 rounded-lg flex flex-col items-left justify-center border-solid border-4 border-gray-100 hover:border-blue-800" onClick={() => setShowTimeAndMapBlock(true)}>
+                {!showTimeAndMapBlock ? (
+                    <>
+                        <div className="flex justify-between mb-4">
+                            {/* Date and Time Section */}
+                            <div className="flex-1">
+                                <h2 className="text-lg font-bold">Date and time</h2>
+                                <div className="flex items-center mt-2">
+                                    <i className="fas fa-calendar-alt mr-2"></i>
+                                    <p>Monday, November 25 • 10am - 12pm GMT+7</p>
+                                </div>
+                            </div>
+
+                            {/* Location Section */}
+                            <div className="flex-1">
+                                <h2 className="text-lg font-bold">Location</h2>
+                                <div className="flex items-center mt-2">
+                                    <i className="fas fa-map-marker-alt mr-2"></i>
+                                    <p>Enter a location</p>
+                                </div>
+                            </div>
+
+                            {/* Add Button */}
+                            <div className="flex-shrink-0 ml-4">
+                                <button className="bg-white border rounded-full p-2">
+                                    <i className="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Map Section */}
+                        {showMap && (
+                            <div className="relative w-full h-64 rounded-md overflow-hidden mt-4">
+                                <iframe
+                                    title="Google Map"
+                                    className="w-full h-full"
+                                    allowFullScreen={true}  // boolean value instead of string
+                                    aria-hidden={false}     // boolean value instead of string
+                                    tabIndex={0}            // number value instead of string
+                                ></iframe>
+
+                                {/* Toggle Hide/Show Map */}
+                                <button
+                                    onClick={() => setShowMap(!showMap)}
+                                    className="absolute bottom-2 right-2 bg-white text-black rounded-full px-4 py-1 shadow-md"
+                                >
+                                    {showMap ? "Hide map" : "Show map"}
+                                </button>
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <EventDateTimeLocation /> // Hiển thị form khi nhấn Click Me
+                )}
+            </div>
+
+            {/* Block 4 */}
+            <div className="flex-1 bg-red-200 rounded-lg flex items-center justify-center">
+                Block 4
+            </div>
+        </div>
+    );
+};
+
+export default CreateEvent;

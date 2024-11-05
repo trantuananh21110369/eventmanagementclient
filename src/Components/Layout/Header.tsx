@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
 import { userModel } from '../../Interfaces';
 import { RootState } from "../../Storage/Redux/store";
 import { emptyUserState, setLoggedInUser } from '../../Storage/Redux/userAuthSlice';
 import ModeTheme from "./ModeTheme";
-let logo = require("../../Asset/logo.jpg");
+let logo = require('../../Assets/images/logo.jpg');
 
 function Header({ className }: { className?: string }) {
   const dispatch = useDispatch();
@@ -23,11 +23,13 @@ function Header({ className }: { className?: string }) {
   );
 
   return (
-    <header className={`bg-primary p-4 sticky top-0 z-50 ${className}`}>
+    <header className={`bg-primary p-3 ${className}`}>
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <img src={logo} alt="Logo" className="h-8 w-8 rounded-lg" />
-          <div className="text-second text-xl font-bold text-heading">Event</div>
+          <Link to="/" className='flex flex-row gap-3 items-center'>
+            <img src={logo} alt="Logo" className="h-10 w-10 rounded-lg" />
+            <div className="text-second text-xl font-bold text-heading">Event</div>
+          </Link>
         </div>
         <nav className="flex items-center">
           <div className='px-2'>
@@ -50,7 +52,7 @@ function Header({ className }: { className?: string }) {
                 <MenuItems className="absolute px-2 mt-2 right-0 bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none">
                   <div className='py-1'>
                     <MenuItem>
-                      <NavLink to="/manage-event" className="block w-full text-left py-2 text-sm text-gray-700">
+                      <NavLink to="/dashboard" className="block w-full text-left py-2 text-sm text-gray-700">
                         Management Event
                       </NavLink>
                     </MenuItem>

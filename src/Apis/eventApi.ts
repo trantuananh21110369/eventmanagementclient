@@ -13,12 +13,14 @@ const eventApi = createApi({
       }),
       providesTags: ["Event"],
     }),
+
     getEvent: builder.query({
       query: (id: string) => ({
         url: `Event/${id}`,
         method: "GET",
       }),
     }),
+
     createEvent: builder.mutation({
       query: (eventData) => ({
         url: "Event/",
@@ -29,15 +31,14 @@ const eventApi = createApi({
         body: eventData,
       }),
     }),
+
     updateEvent: builder.mutation({
-      query: (eventData) => ({
-        url: `Event/${eventData.id}`,
+      query: ({ data, idEvent }) => ({
+        url: `event/${idEvent}`,
         method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
-        body: eventData,
+        body: data,
       }),
+      invalidatesTags: ["Event"],
     }),
   }),
 });

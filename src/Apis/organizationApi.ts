@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { CreateOrganization } from "../Pages/ManageEvent/Organization";
 
 const organizationApi = createApi({
   reducerPath: "Organization",

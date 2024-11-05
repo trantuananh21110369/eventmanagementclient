@@ -22,3 +22,7 @@ body {
   background-color: var(--bg-color);
   color: var(--text-primary-color);
 }
+
+.border-input {
+  @apply w-full p-2 border border-solid border-gray-300 rounded-sm mb-2;
+}
