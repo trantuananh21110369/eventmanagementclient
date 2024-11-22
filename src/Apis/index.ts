@@ -4,6 +4,8 @@ import eventApi from "./eventApi";
 import eventDateApi from "./eventDateApi";
 import ticketApi from "./ticketApi";
 import searchApis from "./searchApis";
+import orderApi from "./orderApi";
+import roleApi from "./roleApi";
 
 export {
   authApi,
@@ -12,4 +14,6 @@ export {
   eventDateApi,
   ticketApi,
   searchApis,
+  orderApi,
+  roleApi,
 };

@@ -29,6 +29,25 @@ const authApi = createApi({
       }),
     }),
 
+    forgetPassword: builder.mutation({
+      query: (email) => ({
+        url: "Auth/forgot-password",
+        method: "get",
+        params: { email: email },
+      }),
+    }),
+
+    resetPassword: builder.mutation({
+      query: (resetData) => ({
+        url: "Auth/resetpassword",
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: resetData,
+      }),
+    }),
+
     googleLogin: builder.mutation({
       query: (token) => ({
         url: "Auth/loginWithGoogle",
@@ -46,5 +65,7 @@ export const {
   useLoginUserMutation,
   useRegisterUserMutation,
   useGoogleLoginMutation,
+  useResetPasswordMutation,
+  useForgetPasswordMutation,
 } = authApi;
 export default authApi;

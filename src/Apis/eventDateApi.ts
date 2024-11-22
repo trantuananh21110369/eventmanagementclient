@@ -21,7 +21,7 @@ const eventDateApi = createApi({
 
     saveEventDates: builder.mutation({
       query: ({ data, idEvent }) => ({
-        url: "EventDate/bulk/",
+        url: "EventDate/",
         method: "Post",
         params: {
           idEvent: idEvent,

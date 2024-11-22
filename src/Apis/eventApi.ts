@@ -4,13 +4,36 @@ const eventApi = createApi({
   reducerPath: "Event",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://localhost:7056/api",
+    prepareHeaders: (headers: Headers, api) => {
+      const token = localStorage.getItem("token");
+      token && headers.set("Authorization", `Bearer ` + token);
+    },
   }),
   tagTypes: ["Event"],
   endpoints: (builder) => ({
     getEvents: builder.query({
-      query: (idOrganization) => ({
-        url: `event/organization/${idOrganization}`,
+      query: ({
+        idOrganization,
+        searchString,
+        statusEvent,
+        pageSize,
+        pageNumber,
+      }) => ({
+        url: `events`,
+        params: {
+          idOrganization,
+          searchString,
+          statusEvent,
+          pageSize,
+          pageNumber,
+        },
       }),
+      transformResponse: (apiResponse: { result: any }, meta) => {
+        return {
+          apiResponse: apiResponse, // Dữ liệu chính từ API
+          totalRecords: meta?.response?.headers?.get("X-Pagination"), // Đọc số bản ghi từ header
+        };
+      },
       providesTags: ["Event"],
     }),
 
@@ -22,10 +45,13 @@ const eventApi = createApi({
     }),
 
     createEvent: builder.mutation({
-      query: (eventData) => ({
+      query: ({ eventData, idOrganization }) => ({
         url: "event/",
         method: "POST",
         body: eventData,
+        headers: {
+          IdOrganization: idOrganization,
+        },
       }),
       invalidatesTags: ["Event"],
     }),

@@ -36,6 +36,16 @@ const organizationApi = createApi({
       }),
       invalidatesTags: ["Organization"],
     }),
+
+    getOrganizationByUserId: builder.query({
+      query: (userId) => ({
+        url: `Organizations/`,
+        params: {
+          userId: userId,
+        },
+      }),
+      providesTags: ["Organization"],
+    }),
   }),
 });
 
@@ -43,6 +53,7 @@ export const {
   useGetOrganizationQuery,
   useCreateOrganizationMutation,
   useUpdateOrganizationMutation,
+  useGetOrganizationByUserIdQuery,
 } = organizationApi;
 
 export default organizationApi;

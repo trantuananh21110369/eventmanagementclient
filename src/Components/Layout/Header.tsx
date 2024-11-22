@@ -14,6 +14,7 @@ function Header({ className }: { className?: string }) {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("organization");
     dispatch(setLoggedInUser({ ...emptyUserState }));
     navigate("/");
   };
@@ -22,6 +23,7 @@ function Header({ className }: { className?: string }) {
     (state: RootState) => state.userAuthStore
   );
 
+  console.log(userData);
   return (
     <header className={`bg-primary p-3 ${className}`}>
       <div className="container mx-auto flex justify-between items-center">
@@ -54,6 +56,11 @@ function Header({ className }: { className?: string }) {
                     <MenuItem>
                       <NavLink to="/dashboard" className="block w-full text-left py-2 text-sm text-gray-700">
                         Management Event
+                      </NavLink>
+                    </MenuItem>
+                    <MenuItem>
+                      <NavLink to="/ticket" className="block w-full text-left py-2 text-sm text-gray-700">
+                        My Ticket Order
                       </NavLink>
                     </MenuItem>
                     <MenuItem>

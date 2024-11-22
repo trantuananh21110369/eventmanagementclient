@@ -5,19 +5,19 @@ import jwt_decode from 'jwt-decode';
 import { Header, Footer } from "../Components/Layout";
 import { setLoggedInUser } from '../Storage/Redux/userAuthSlice';
 import { userModel } from '../Interfaces';
-import { Login, Register } from 'features/Auth';
-import { HomePage } from 'features/Participant/Home';
-import { OrganizationDashBoard } from 'features/EventOrganization/DashBoard';
-import { CreateOrganization, OrganizationInfo, OrganizationSettings, TeamManagement } from 'features/EventOrganization/Organization';
-import { EventDateForm, EventForm, ManagementEvent, ShowEvents, UpsertEvent } from 'features/EventOrganization/EventManagement';
-import { ShowTickets, TicketForm } from 'features/EventOrganization/Ticket';
-import AgendaForm from 'features/EventOrganization/EventManagement/components/AgendaForm';
-import { EventDetail } from 'features/Participant/EventDetailOrder';
-
+import { ForgetPassword, Login, Register, ResetPassword } from 'page/Auth';
+import { HomePage } from 'page/Participant/Home';
+import { PanelPage } from 'page/EventOrganization/OrganizationPanel';
+import { CreateOrganizationPage, SettingOrganizationPage, OrganizationInfo, TeamManagement, ManageMemberPage, MemberList, RoleList } from 'page/EventOrganization/Organization';
+import { EventsOverviewPage, EventUpsertPage, ManagementEventPage, EventDateForm, EventForm } from 'page/EventOrganization/Event';
+import { TicketsOverviewPage } from 'page/EventOrganization/Ticket';
+import { EventDetailPage } from 'page/Participant/EventDetail';
+import { CheckoutPage, OrderSuccessPage } from 'page/Participant/Checkout';
+import ManagementTicketPage from 'page/Participant/ManagementTicket/page/ManagementTicketPage';
+import { LikeEvent, ListOrder, ManagementDetailOrder } from 'page/Participant/ManagementTicket';
 
 function App() {
   const dispatch = useDispatch();
-  const location = useLocation();
 
   useEffect(() => {
     const localToken = localStorage.getItem("token");
@@ -33,32 +33,44 @@ function App() {
       <main className="col-span-1 overflow-y-auto">
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/e/:idEvent" element={<EventDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/organization/create" element={<CreateOrganization />} />
-          <Route path="/dashboard" element={<OrganizationDashBoard />} >
-            <Route path="event" element={<ManagementEvent />} >
-              <Route index element={<ShowEvents />} />
-              <Route path="eventpage" element={<ShowEvents />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path='/forgot-password' element={<ForgetPassword />} />
+          <Route path="/e/:idEvent" element={<EventDetailPage />} />
+          <Route path="/organization/create" element={<CreateOrganizationPage />} />
+          <Route path="/dashboard" element={<PanelPage />} >
+            <Route path="event" element={<ManagementEventPage />} >
+              <Route index element={<EventsOverviewPage />} />
+              <Route path="eventpage" element={<EventsOverviewPage />} />
             </Route>
-            <Route path="create" element={<UpsertEvent />} >
+            <Route path="create" element={<EventUpsertPage />} >
               <Route path="edit" element={<EventForm />} />
               <Route path="eventdate" element={<EventDateForm />} />
-              <Route path="agenda" element={<AgendaForm />} />
-              <Route path="ticket" element={<ShowTickets />} />
+              <Route path="ticket" element={<TicketsOverviewPage />} />
             </Route>
-            <Route path="update/:idEvent" element={<UpsertEvent />} >
+            <Route path="update/:idEvent" element={<EventUpsertPage />} >
               <Route path="edit" element={<EventForm />} />
               <Route path="eventdate" element={<EventDateForm />} />
-              <Route path="agenda" element={<AgendaForm />} />
-              <Route path="ticket" element={<ShowTickets />} />
+              <Route path="ticket" element={<TicketsOverviewPage />} />
             </Route>
-            <Route path="organization" element={<OrganizationSettings />} >
+            <Route path="organization" element={<SettingOrganizationPage />} >
+              <Route index element={<OrganizationInfo />} />
               <Route path="info" element={<OrganizationInfo />} />
-              <Route path="permissions" element={<TeamManagement />} />
+              <Route path="permissions" element={<ManageMemberPage />} >
+                <Route path="user" element={<MemberList />} />
+                <Route path="admin" element={<RoleList />} />
+              </Route>
             </Route>
           </Route >
+          {/*User*/}
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/order-success" element={<OrderSuccessPage />} />
+          <Route path="/ticket" element={<ManagementTicketPage />} >
+            <Route path="orders" element={<ListOrder />} />
+            <Route path="like-event" element={<LikeEvent />} />
+          </Route>
+          <Route path="/detail-order/:idOrder" element={<ManagementDetailOrder />} />
         </Routes>
       </main>
     </div >

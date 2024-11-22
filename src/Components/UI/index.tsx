@@ -1,3 +1,4 @@
 import SubmitButton from "./SubmitButton";
+import PagingBar from "./PagingBar";
 
-export { SubmitButton }
+export { SubmitButton, PagingBar }
