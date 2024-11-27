@@ -8,6 +8,7 @@ import {
   searchApis,
   orderApi,
   roleApi,
+  purchasedTicketApi,
 } from "../../Apis";
 import { userAuthReducer } from "./userAuthSlice";
 import { organizationReducer } from "./organizationSlice";
@@ -26,6 +27,7 @@ const store = configureStore({
     [searchApis.reducerPath]: searchApis.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [roleApi.reducerPath]: roleApi.reducer,
+    [purchasedTicketApi.reducerPath]: purchasedTicketApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -36,7 +38,8 @@ const store = configureStore({
       .concat(ticketApi.middleware)
       .concat(searchApis.middleware)
       .concat(orderApi.middleware)
-      .concat(roleApi.middleware),
+      .concat(roleApi.middleware)
+      .concat(purchasedTicketApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

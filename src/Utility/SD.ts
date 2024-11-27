@@ -36,3 +36,9 @@ export enum SD_Sale_Method_Ticket {
   ONSITE = "On-Site",
   ONLINE_AND_ONSITE = "Online And OnSite",
 }
+
+export enum SD_EOrderCreate {
+  OUT_OF_STOCK = "OutOfStock",
+  NOT_FOUND_ITEM = "NotFoundItem",
+  DONE = "Done",
+}

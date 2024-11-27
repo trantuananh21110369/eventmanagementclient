@@ -1,4 +1,4 @@
-import SubmitButton from "./SubmitButton";
 import PagingBar from "./PagingBar";
+import Loading from "./Loading";
 
-export { SubmitButton, PagingBar }
+export { PagingBar, Loading }

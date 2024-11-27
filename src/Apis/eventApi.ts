@@ -64,6 +64,18 @@ const eventApi = createApi({
       }),
       invalidatesTags: ["Event"],
     }),
+
+    updatePrivacyEvent: builder.mutation({
+      query: ({ idEvent, privacy }) => ({
+        url: `event/${idEvent}/privacy`,
+        method: "PUT",
+        headers: {
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify(privacy),
+      }),
+      invalidatesTags: ["Event"],
+    }),
   }),
 });
 
@@ -72,5 +84,6 @@ export const {
   useGetEventQuery,
   useCreateEventMutation,
   useUpdateEventMutation,
+  useUpdatePrivacyEventMutation,
 } = eventApi;
 export default eventApi;

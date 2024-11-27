@@ -51,7 +51,7 @@ function Header({ className }: { className?: string }) {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                   </svg>
                 </MenuButton>
-                <MenuItems className="absolute px-2 mt-2 right-0 bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none">
+                <MenuItems className="absolute px-2 mt-2 right-0 bg-white border border-gray-200 rounded-md shadow-lg focus:outline-none -z-40">
                   <div className='py-1'>
                     <MenuItem>
                       <NavLink to="/dashboard" className="block w-full text-left py-2 text-sm text-gray-700">
@@ -61,6 +61,11 @@ function Header({ className }: { className?: string }) {
                     <MenuItem>
                       <NavLink to="/ticket" className="block w-full text-left py-2 text-sm text-gray-700">
                         My Ticket Order
+                      </NavLink>
+                    </MenuItem>
+                    <MenuItem>
+                      <NavLink to="/your-profile" className="block w-full text-left py-2 text-sm text-gray-700">
+                        Your Profile
                       </NavLink>
                     </MenuItem>
                     <MenuItem>

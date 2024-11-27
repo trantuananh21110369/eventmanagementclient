@@ -5,7 +5,7 @@ import {
 } from "Utility/SD";
 import EventDateModel from "./eventDateModel";
 
-export default interface TicketModel {
+export default interface ticketModel {
   idTicket: string; // Primary key
   eventId: string;
   eventDateId: string;
