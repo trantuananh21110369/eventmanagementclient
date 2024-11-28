@@ -53,7 +53,6 @@ function RolePage() {
         roleId={currentRoleId}
       />
     </div>
-
   )
 }
 

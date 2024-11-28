@@ -6,6 +6,7 @@ import ticketModel from "./ticketModel";
 import purchasedTicketModel from "./purchasedTicketModel";
 import orderDetailModel from "./orderDetailModel";
 import orderHeaderModel from "./orderHeaderModel";
+import supportChatRoomModel from "./SupportChat/supportChatRoomModel";
 
 export type {
   apiResponse,
@@ -16,4 +17,5 @@ export type {
   purchasedTicketModel,
   orderDetailModel,
   orderHeaderModel,
+  supportChatRoomModel,
 };

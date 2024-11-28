@@ -9,7 +9,6 @@ function OrderDetailPage() {
   const { idOrderHeader } = useParams();
   const { data: dataInfoOrderHeader, isFetching: isFetchingInfoOH } = useGetOrderHeaderByIdQuery(idOrderHeader);
   const { data: dataPurchasedTicket, isFetching: isFetchingPT } = useGetPurchasedTicketsByIdOrderHeaderQuery(idOrderHeader);
-  console.log(dataPurchasedTicket?.apiResponse.result)
 
   return (
     <div>

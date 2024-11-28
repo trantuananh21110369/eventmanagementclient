@@ -26,8 +26,8 @@ function EventListHome({ data, isFetching }: EventListHomeProps) {
       <h2 className="text-xl font-bold mb-4">Our top picks for you</h2>
       <div className="flex flex-wrap items-center justify-center space-x-3 my-3">
         {data.map((item, index) => (
-          <Link to={`/e/${item.eventId}`} >
-            <div key={index} className="flex flex-col basis-1/9 mb-4">
+          <Link to={`/e/${item.eventId}`} key={index}  >
+            <div className="flex flex-col basis-1/9 mb-4">
               <input type="hidden" id={item?.eventId} name="custId" />
               <img
                 src={item?.urlImage}

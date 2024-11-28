@@ -7,7 +7,7 @@ import { userModel } from '../Interfaces';
 //Auth
 import { ForgetPassword, Login, Register, ResetPassword, SettingProfile } from 'pages/Auth';
 //User
-import { Header, Footer } from "../Components/Layout";
+import { Header, Footer, PopupClientMessage } from "../Components/Layout";
 import { HomePage } from 'pages/Participant/Home';
 import { PanelPage } from 'pages/EventOrganization/OrganizationPanel';
 import { EventDetailPage } from 'pages/Participant/EventDetail';
@@ -20,6 +20,7 @@ import { CreateOrganizationPage, SettingOrganizationPage, OrganizationInfo, Mana
 import ManagementTicketPage from 'pages/Participant/ManagementTicket/page/ManagementTicketPage';
 import { TicketsOverviewPage } from 'pages/EventOrganization/Ticket';
 import ChatPage from 'pages/EventOrganization/Chat';
+import ChatPopup from 'Components/Layout/ChatPopup';
 
 function App() {
   const dispatch = useDispatch();
@@ -85,6 +86,7 @@ function App() {
           </Route>
         </Routes>
       </main>
+      <PopupClientMessage />
     </div >
   );
 }

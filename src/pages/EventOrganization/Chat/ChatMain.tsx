@@ -1,0 +1,89 @@
+import React, { useEffect, useRef, useState } from "react";
+import { Avatar, TextField, IconButton, Box, Typography } from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+import messageModel from "Interfaces/SupportChat/messageModel";
+import { apiResponse, supportChatRoomModel } from "Interfaces";
+import { useSelector } from "react-redux";
+import { RootState } from "Storage/Redux/store";
+import { useSendMessageMutation } from "Apis/supportChatApi";
+
+interface chatSidebarProps {
+  dataMessage: messageModel[];
+  selectedChat: supportChatRoomModel | null;
+}
+
+interface sendMessageModel {
+  senderId: string;
+  roomId: string;
+  content: string;
+  isSupport: boolean;
+}
+
+const ChatMain = ({ dataMessage, selectedChat }: chatSidebarProps) => {
+  const [sendMessage] = useSendMessageMutation();
+  const [inputMessage, setInputMessage] = useState<string>("");
+  // Refs
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const userId = useSelector((state: RootState) => state.userAuthStore.id);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [dataMessage]);
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData: sendMessageModel = {
+      senderId: userId,
+      roomId: selectedChat?.supportChatRoomId || "",
+      content: inputMessage,
+      isSupport: true,
+    };
+
+    const response: apiResponse = await sendMessage({ sendMessage: formData });
+    if (response.data?.isSuccess) {
+      setInputMessage("");
+    }
+  };
+
+  return (
+    <div className="h-full flex flex-col">
+      <div className="flex items-center p-4 border-b">
+        <Avatar className="mr-2">D</Avatar>
+        <div>
+          <p className="font-bold">Dianne Johnson</p>
+          <p className="text-sm text-gray-500">Junior Developer</p>
+        </div>
+      </div>
+      <Box height="300px" overflow="auto" bgcolor="#f9f9f9" padding={2} border="1px solid #ddd" borderRadius={2}>
+        {dataMessage.length ? (
+          dataMessage.map((message, index) => (
+            <div key={index} className={`flex flex-col ${message.isSupport ? 'items-end' : 'items-start'}`}>
+              <Typography variant="body2" className="bg-blue-300 rounded-full px-3 py-1">{message.content}</Typography>
+              <Typography variant="caption" color="textSecondary" className="mx-3">{message.sendAt}</Typography>
+            </div>
+          ))
+        ) : (
+          <Typography variant="body2" color="textSecondary">
+            No messages available.
+          </Typography>
+        )}
+        <div ref={messagesEndRef} />
+      </Box>
+      <div className="p-4 border-t flex items-center">
+        <TextField
+          fullWidth
+          placeholder="Write something..."
+          value={inputMessage}
+          onChange={(e) => setInputMessage(e.target.value)}
+        />
+        <IconButton onClick={handleSendMessage}>
+          <SendIcon color="primary" />
+        </IconButton>
+      </div>
+    </div>
+  );
+};
+
+export default ChatMain;
