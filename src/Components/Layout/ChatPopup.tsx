@@ -32,7 +32,10 @@ interface sendMessageModel {
 }
 
 const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
+  const connectionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const refCountFetch = useRef<number>(0);
+  const [isConnected, setIsConnected] = useState(false);
   const userId = useSelector((state: RootState) => state.userAuthStore.id);
   const [sendMessage] = useSendMessageMutation();
 
@@ -40,35 +43,33 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
   const [selectedChat, setSelectedChat] = useState<supportChatRoomModel | null>(null);
   const [dataMessage, setDataMessage] = useState<messageModel[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
+  const { data: listChat, isFetching: isFetchingRooms, refetch: refecthChatRoom } = useGetAllChatRoomByUserIdQuery(userId, {
+    skip: !isConnected, // Chỉ lấy dữ liệu khi đã kết nối
+  });
 
-  const { data: listChat } = useGetAllChatRoomByUserIdQuery(userId);
-  const { data: listMessage } = useGetMessageByIdRoomQuery(
-    selectedChat?.supportChatRoomId, { skip: !selectedChat?.supportChatRoomId }
-  );
+  const { data: listMessage, isFetching: isFetchingMessage, refetch: refetchMessage } = useGetMessageByIdRoomQuery(
+    selectedChat?.supportChatRoomId, { skip: !selectedChat?.supportChatRoomId });
 
   const hubUrl = "https://localhost:7056/hubs/supportchat";
-
+  // console.log("2 isconnected out " + isConnected)
+  // console.log("datalist " + listChat?.result + "Isfetching" + isFetchingRooms)
+  // console.log("messagelist " + listMessage?.result + "IsFetching" + isFetchingMessage)
   useEffect(() => {
-    if (listChat?.result) {
-      setDataListRoom(listChat.result);
-      setSelectedChat(listChat.result[0]);
+    // Chỉ gọi refetch nếu query đã hoàn tất và có dữ liệu
+    if (isConnected && !isFetchingRooms) {
+      refecthChatRoom();
     }
-  }, [listChat]);
+  }, [isConnected]);
 
   useEffect(() => {
-    if (listMessage?.result) {
-      setDataMessage(listMessage.result);
-    }
-    console.log("list message useEffect");
-  }, [listMessage, selectedChat]);
-
-  useEffect(() => {
+    console.log("3")
     const setupConnection = async () => {
       try {
         const connection = await hubService.startConnection(hubUrl);
+        connectionRef.current = connection;
+        setIsConnected(true);
 
         connection.on("ReceiveMessage", (message: messageModel) => {
-          console.log("ReceiveMessage", message);
           setDataMessage((prevMessages) => [...prevMessages, message]);
         });
 
@@ -86,11 +87,47 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
 
     return () => {
       hubService.stopConnection(hubUrl);
+      setDataMessage([]);
+      setIsConnected(false);
     };
-  }, [open, selectedChat]);
+  }, [open]);
 
-  const handleSelectChat = (chat: supportChatRoomModel) => {
+  useEffect(() => {
+    console.log("1")
+    if (listChat) {
+      setDataListRoom(listChat.result);
+      console.log(listChat.result[0])
+      setSelectedChat({ ...listChat.result[0] }); // Tạo một bản sao, khiến tham chiếu thay đổi.
+    }
+  }, [isFetchingRooms, isConnected]);
+
+  useEffect(() => {
+    console.log("2")
+    if (selectedChat?.supportChatRoomId && listMessage) {
+      console.log("Vao trong duoclist roi")
+      setDataMessage(listMessage.result); // Gán tin nhắn thay vì append
+    }
+  }, [isFetchingMessage, selectedChat]);
+
+  useEffect(() => {
+    // Chỉ gọi refetchMessage nếu selectedChat đã có supportChatRoomId
+    console.log("Vao trong duoc roi  2")
+
+    console.log(selectedChat?.supportChatRoomId)
+    if (selectedChat?.supportChatRoomId) {
+      console.log("Goi refetch  ")
+      refetchMessage();  // Gọi lại query để lấy tin nhắn cho phòng chat mới
+    }
+  }, [selectedChat]);  // Chạy lại khi selectedChat thay đổi
+
+  const handleSelectChat = async (chat: supportChatRoomModel) => {
+    if (connectionRef.current && selectedChat?.supportChatRoomId) {
+      await connectionRef.current.invoke("LeaveRoom", selectedChat.supportChatRoomId);
+    }
     setSelectedChat(chat);
+    if (connectionRef.current) {
+      await connectionRef.current.invoke("JoinRoom", chat.supportChatRoomId);
+    }
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
