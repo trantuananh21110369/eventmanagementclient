@@ -5,7 +5,7 @@ function SidebarUpsertEvent({ className }: { className?: string }) {
 
   return (
     <aside className={`bg-gray-500 text-white p-4 ${className}`}>
-      <h2 className="text-2xl font-bold mb-4">Event Name</h2>
+      <h2 className="text-2xl font-bold mb-4">Set up event</h2>
       <nav>
         <ul>
           <li className="mb-2">

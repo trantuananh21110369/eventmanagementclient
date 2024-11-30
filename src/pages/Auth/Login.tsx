@@ -37,9 +37,9 @@ const Login = () => {
 
     if (response.data) {
       const { token } = response.data.result;
-      const { fullName, id, email, role }: userModel = jwt_decode(token);
+      const { fullName, id, email, role, urlImage }: userModel = jwt_decode(token);
       localStorage.setItem("token", token);
-      dispatch(setLoggedInUser({ fullName, id, email, role }));
+      dispatch(setLoggedInUser({ fullName, id, email, role, urlImage }));
       navigate("/");
       toastNotify("Login Successful");
     } else {

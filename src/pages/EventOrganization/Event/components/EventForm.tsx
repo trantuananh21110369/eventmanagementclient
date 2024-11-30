@@ -170,17 +170,20 @@ const EventForm = () => {
 
       {/*Image event*/}
       <div className="mb-4 border-input">
-        <h2 className="text-xl font-bold mb-2">Add images and video</h2>
+        <div className="flex justify-start items-center space-x-10 mb-2">
+          <h2 className="text-xl font-bold">Add images and video</h2>
+          <input type="file" accept="image/*" className="hidden" id="upload-button" onChange={handleFileChange} />
+          <label htmlFor="upload-button" className="bg-gray-300 px-4 py-2 rounded cursor-pointer">
+            Upload Image
+          </label>
+        </div>
         <div className="border-dashed border-2 border-gray-300 h-48 flex flex-col justify-center items-center rounded-md mb-4">
           {imageToDisplay ? (
             <img src={imageToDisplay} alt="Uploaded" className="w-48 h-48 object-cover" />
           ) : (
-            <>
-              <input type="file" accept="image/*" className="hidden" id="upload-button" onChange={handleFileChange} />
-              <label htmlFor="upload-button" className="bg-gray-300 px-4 py-2 rounded cursor-pointer">
-                Upload Image
-              </label>
-            </>
+            <div>
+              None Image
+            </div>
           )}
         </div>
         <input type="text" placeholder="Video URL" className="w-full px-4 py-2 border rounded-md" />

@@ -28,7 +28,6 @@ const VisibilityTicket = [
 const SaleMethodTicket = [
   SD_Sale_Method_Ticket.ONLINE,
   SD_Sale_Method_Ticket.ONSITE,
-  SD_Sale_Method_Ticket.ONLINE_AND_ONSITE,
 ];
 
 const ticketData = {

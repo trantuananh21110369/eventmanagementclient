@@ -2,6 +2,7 @@ import { useGetTicketsQuery } from 'Apis/ticketApi';
 import { useEffect, useState } from 'react';
 import TicketModel from 'Interfaces/ticketModel';
 import { useNavigate } from 'react-router-dom';
+import { SD_Sale_Method_Ticket, SD_Status_Ticket, SD_Visibility_Ticket } from 'Utility/SD';
 
 interface TicketOrderProps {
   idEvent: string;
@@ -65,56 +66,64 @@ function TicketOrder({ idEvent }: TicketOrderProps) {
     <div className="flex justify-between gap-8 p-4 bg-gray-100 rounded-lg shadow-md">
       {/* Tickets Order */}
       <div className="flex flex-col gap-3 overflow-y-auto">
-        {dataTickets.map((ticket, index) => (
-          <div
-            key={index}
-            className="max-w-md mx-auto p-4 bg-white border border-gray-300 rounded-lg shadow-lg"
-          >
-            {/* Header Section */}
-            <div className="flex justify-between items-center mb-2 gap-3">
-              <div>
-                <h2 className="text-sm font-semibold text-gray-800 w-[200px]">
-                  {ticket?.nameTicket}
-                </h2>
-                <p className="text-sm text-gray-600">
-                  {ticket.eventDate.startTime} - {ticket.eventDate.endTime}
-                </p>
-              </div>
+        {dataTickets.map((ticket, index) => {
+          // Kiểm tra Visibility của ticket
+          if (ticket.visibility !== SD_Visibility_Ticket.VISIBLE) {
+            return null; // Bỏ qua ticket nếu Visibility không phải là "Visible"
+          }
 
-              {/* Quantity Controls */}
-              {ticket.quantity > 0 ? (
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => handleDecrement(ticket.idTicket)}
-                    className="px-2 py-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none"
-                  >
-                    –
-                  </button>
-                  <span className="px-3">
-                    {quantities.find((q) => q.TicketId === ticket.idTicket)?.quantity || 0}
-                  </span>
-                  <button
-                    onClick={() => handleIncrement(ticket.idTicket)}
-                    className="px-2 py-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none"
-                  >
-                    +
-                  </button>
+          return (
+            <div
+              key={index}
+              className="max-w-md mx-auto p-4 bg-white border border-gray-300 rounded-lg shadow-lg"
+            >
+              {/* Header Section */}
+              <div className="flex justify-between items-center mb-2 gap-3">
+                <div>
+                  <h2 className="text-sm font-semibold text-gray-800 w-[200px]">
+                    {ticket?.nameTicket}
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    {ticket.eventDate.startTime} - {ticket.eventDate.endTime}
+                  </p>
                 </div>
-              ) : (
-                <div className="text-red-500">Sold out</div>
-              )}
-            </div>
 
-            {/* Content Section */}
-            <div className="mt-3 border-t pt-3 text-gray-700">
-              <div className="flex flex-row justify-between">
-                <p className="text-base font-semibold">Price</p>
-                <p className="text-base font-semibold">{ticket.price} $</p>
+
+                {/* Quantity Controls */}
+                {ticket.saleMethod === SD_Sale_Method_Ticket.ONLINE ? (ticket.quantity > 0 && ticket.status === SD_Status_Ticket.ON_SALE) ? (
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => handleDecrement(ticket.idTicket)}
+                      className="px-2 py-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none"
+                    >
+                      –
+                    </button>
+                    <span className="px-3">
+                      {quantities.find((q) => q.TicketId === ticket.idTicket)?.quantity || 0}
+                    </span>
+                    <button
+                      onClick={() => handleIncrement(ticket.idTicket)}
+                      className="px-2 py-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none"
+                    >
+                      +
+                    </button>
+                  </div>
+                ) : (
+                  <div className="text-red-500">Sold out</div>
+                ) : (<div className="text-yellow-700">Ticket sale ON SITE</div>)}
               </div>
-              <p className="text-sm">{ticket.description}</p>
+
+              {/* Content Section */}
+              <div className="mt-3 border-t pt-3 text-gray-700">
+                <div className="flex flex-row justify-between">
+                  <p className="text-base font-semibold">Price</p>
+                  <p className="text-base font-semibold">{ticket.price} $</p>
+                </div>
+                <p className="text-sm">{ticket.description}</p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Area Summary Order */}

@@ -3,7 +3,7 @@ import { useGetEventDatesQuery } from 'Apis/eventDateApi';
 import { useParams } from 'react-router-dom';
 import { useDeleteTicketMutation, useGetTicketsQuery } from 'Apis/ticketApi';
 import TicketModel from 'Interfaces/ticketModel';
-import TicketForm from 'Components/Page/Ticket/TicketForm';
+import TicketForm from 'pages/EventOrganization/Ticket/TicketForm';
 
 function TicketsOverviewPage() {
   const [isTicketFormVisible, setTicketFormVisible] = useState(false);

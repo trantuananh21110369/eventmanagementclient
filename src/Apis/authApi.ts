@@ -58,6 +58,21 @@ const authApi = createApi({
         body: { token: token },
       }),
     }),
+
+    settingProfile: builder.mutation({
+      query: ({ profile, userId }) => ({
+        url: "Auth/profile/" + userId,
+        method: "PUT",
+        body: profile,
+      }),
+    }),
+
+    getProfile: builder.query({
+      query: (userId) => ({
+        url: "Auth/profile/" + userId,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
@@ -67,5 +82,7 @@ export const {
   useGoogleLoginMutation,
   useResetPasswordMutation,
   useForgetPasswordMutation,
+  useSettingProfileMutation,
+  useGetProfileQuery,
 } = authApi;
 export default authApi;

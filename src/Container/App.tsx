@@ -28,8 +28,8 @@ function App() {
   useEffect(() => {
     const localToken = localStorage.getItem("token");
     if (localToken) {
-      const { fullName, id, email, role }: userModel = jwt_decode(localToken);
-      dispatch(setLoggedInUser({ fullName, id, email, role }));
+      const { fullName, id, email, role, urlImage }: userModel = jwt_decode(localToken);
+      dispatch(setLoggedInUser({ fullName, id, email, role, urlImage }));
     }
   }, []);
 
@@ -55,14 +55,12 @@ function App() {
             </Route>
             <Route path="create" element={<EventUpsertPage />} >
               <Route path="edit" element={<EventForm />} />
-              <Route path="eventdate" element={<EventDateForm />} />
-              <Route path="ticket" element={<TicketsOverviewPage />} />
             </Route>
             <Route path="update/:idEvent" element={<EventUpsertPage />} >
               <Route path="edit" element={<EventForm />} />
               <Route path="eventdate" element={<EventDateForm />} />
               <Route path="ticket" element={<TicketsOverviewPage />} />
-            </Route>
+            </Route>  
             <Route path="chatOrganization" element={<ChatPage />} />
             <Route path="organization" element={<SettingOrganizationPage />} >
               <Route index element={<OrganizationInfo />} />

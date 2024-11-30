@@ -22,7 +22,7 @@ export enum SD_Privacy_Event {
 }
 
 export enum SD_Status_Ticket {
-  ON_SALE = "On Sale",
+  ON_SALE = "OnSale",
   SOLD = "Sold",
 }
 
@@ -33,8 +33,7 @@ export enum SD_Visibility_Ticket {
 
 export enum SD_Sale_Method_Ticket {
   ONLINE = "Online",
-  ONSITE = "On-Site",
-  ONLINE_AND_ONSITE = "Online And OnSite",
+  ONSITE = "OnSite",
 }
 
 export enum SD_EOrderCreate {
