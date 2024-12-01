@@ -8,6 +8,7 @@ export const emptyUserState: organizationModel = {
   description: "",
   city: "",
   country: "",
+  urlImage: "",
 };
 
 export const organizationSlice = createSlice({
@@ -21,6 +22,7 @@ export const organizationSlice = createSlice({
       state.description = action.payload.description;
       state.city = action.payload.city;
       state.country = action.payload.country;
+      state.urlImage = action.payload.urlImage;
     },
   },
 });

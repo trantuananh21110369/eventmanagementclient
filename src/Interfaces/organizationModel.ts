@@ -5,4 +5,5 @@ export default interface organizationModel {
   description: string;
   city: string;
   country: string;
+  urlImage: string;
 }

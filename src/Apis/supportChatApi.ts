@@ -53,7 +53,6 @@ const supportChatApi = createApi({
         method: "POST",
         body: sendMessage,
       }),
-      invalidatesTags: ["SupportChat"],
     }),
   }),
 });

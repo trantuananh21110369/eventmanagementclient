@@ -24,7 +24,11 @@ const Dropdown = () => {
     const selected = e.target.value;
     const tempData = dataJoinedEvent.find((org: any) => org.idOrganization == selected);
     localStorage.setItem("organization", JSON.stringify(tempData));
-    dispatch(setOrganization({ idUser: tempData?.idUser, idOrganization: tempData?.idOrganization, nameOrganization: tempData?.nameOrganization, description: tempData?.description, city: tempData?.city, country: tempData?.country }));
+    dispatch(setOrganization({
+      idUser: tempData?.idUser, idOrganization: tempData?.idOrganization,
+      nameOrganization: tempData?.nameOrganization, description: tempData?.description,
+      city: tempData?.city, country: tempData?.country, urlImage: tempData?.urlImage
+    }));
   }
 
   return (

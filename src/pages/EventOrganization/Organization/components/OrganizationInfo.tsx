@@ -26,6 +26,8 @@ function OrganizationInfo() {
     city: "",
     country: "",
   });
+  const [imageToStore, setImageToStore] = useState<any>();
+  const [imageToDisplay, setImageToDisplay] = useState<string>("");
 
   // Fetching Organization
   const currentOrganization = useSelector((state: RootState) => state.organizationStore);
@@ -38,8 +40,10 @@ function OrganizationInfo() {
         description: currentOrganization.description,
         city: currentOrganization.city,
         country: currentOrganization.country,
+        urlImage: currentOrganization.urlImage
       }
       setOrganizationInput(tempData);
+      setImageToDisplay(currentOrganization.urlImage || "");
       dispatch(setOrganization({ idUser: idUser, idOrganization: currentOrganization.idOrganization, ...tempData }));
     }
   }, [currentOrganization]);
@@ -49,13 +53,52 @@ function OrganizationInfo() {
     setOrganizationInput(tempData);
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) {
+      const imgType = file.type.split("/")[1];
+      const validImgTypes = ["jpeg", "jpg", "png"];
+
+      const isImageTypeValid = validImgTypes.filter((e) => {
+        return e === imgType;
+      });
+
+      if (file.size > 1000 * 1024) {
+        setImageToStore("");
+        toastNotify("File Must be less than 1 MB", "error");
+        return;
+      } else if (isImageTypeValid.length === 0) {
+        setImageToStore("");
+        toastNotify("File Must be in jpeg, jpg or png", "error");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      setImageToStore(file);
+      reader.onload = (e) => {
+        const imgUrl = e.target?.result as string;
+        setImageToDisplay(imgUrl);
+      };
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const response: apiResponse = await updateOrganization({ data: { idOrganization: currentOrganization.idOrganization, ...organizationInput }, idUser });
+
+    const formData = new FormData();
+    formData.append("IdOrganization", currentOrganization.idOrganization);
+    formData.append("nameOrganization", organizationInput.nameOrganization);
+    formData.append("description", organizationInput.description);
+    formData.append("city", organizationInput.city);
+    formData.append("country", organizationInput.country);
+    if (imageToStore) formData.append("File", imageToStore);
+
+    const response: apiResponse = await updateOrganization({ data: formData, idUser: idUser });
 
     if (response.data) {
-      toastNotify("Organization Created Successfully");
+      toastNotify("Organization Updated Successfully");
     } else {
       setError(response.error?.data?.errorMessages?.[0]);
     }
@@ -70,6 +113,23 @@ function OrganizationInfo() {
           <section className="bg-white p-6 rounded-md shadow-md">
             <h2 className="text-2xl font-semibold mb-4">Organization</h2>
             <p className="text-gray-600 mb-6">Details that apply across your events and venues.</p>
+            {/* Image organization */}
+            <div className="mb-6">
+              <label className="block text-gray-700 mb-2">Organization Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="mt-1 block w-full max-w-xs"
+              />
+              {imageToDisplay && (
+                <img
+                  src={imageToDisplay}
+                  alt="Organization"
+                  className="mt-2 w-32 h-32 object-cover rounded-full"
+                />
+              )}
+            </div>
 
             <div className="mb-6">
               <label className="block text-gray-700 mb-2">Name Organization</label>
@@ -109,7 +169,7 @@ function OrganizationInfo() {
               <label className="block text-gray-700 mb-2">Preferred Country</label>
               <select
                 className="border border-gray-300 p-2 rounded-md w-full"
-                name="Country"
+                name="country"
                 value={organizationInput.country}
                 onChange={handleInputOrganization}
               >
@@ -121,7 +181,7 @@ function OrganizationInfo() {
 
             {errorM && (<div className="mb-2 text-red-500">{errorM}</div>)}
             <button className="bg-indigo-600 text-white px-6 py-2 rounded-md" disabled={loading}>
-              Save
+              {loading ? "Saving..." : "Save"}
             </button>
           </section>
         </form>

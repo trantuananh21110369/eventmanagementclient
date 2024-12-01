@@ -34,7 +34,6 @@ interface sendMessageModel {
 const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
   const connectionRef = useRef<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const refCountFetch = useRef<number>(0);
   const [isConnected, setIsConnected] = useState(false);
   const userId = useSelector((state: RootState) => state.userAuthStore.id);
   const [sendMessage] = useSendMessageMutation();
@@ -43,31 +42,29 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
   const [selectedChat, setSelectedChat] = useState<supportChatRoomModel | null>(null);
   const [dataMessage, setDataMessage] = useState<messageModel[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
-  const { data: listChat, isFetching: isFetchingRooms, refetch: refecthChatRoom } = useGetAllChatRoomByUserIdQuery(userId, {
-    skip: !isConnected, // Chỉ lấy dữ liệu khi đã kết nối
+
+  // Get chat rooms list
+  const { data: listChat, isFetching: isFetchingRooms } = useGetAllChatRoomByUserIdQuery(userId, {
+    skip: !isConnected,
   });
 
-  const { data: listMessage, isFetching: isFetchingMessage, refetch: refetchMessage } = useGetMessageByIdRoomQuery(
-    selectedChat?.supportChatRoomId, { skip: !selectedChat?.supportChatRoomId });
+  // Get messages of the selected chat room
+  const { data: listMessage, isFetching: isFetchingMessage, refetch } = useGetMessageByIdRoomQuery(
+    selectedChat?.supportChatRoomId,
+    {
+      skip: !selectedChat?.supportChatRoomId,
+    }
+  );
 
   const hubUrl = "https://localhost:7056/hubs/supportchat";
-  // console.log("2 isconnected out " + isConnected)
-  // console.log("datalist " + listChat?.result + "Isfetching" + isFetchingRooms)
-  // console.log("messagelist " + listMessage?.result + "IsFetching" + isFetchingMessage)
-  useEffect(() => {
-    // Chỉ gọi refetch nếu query đã hoàn tất và có dữ liệu
-    if (isConnected && !isFetchingRooms) {
-      refecthChatRoom();
-    }
-  }, [isConnected]);
 
   useEffect(() => {
-    console.log("3")
     const setupConnection = async () => {
       try {
         const connection = await hubService.startConnection(hubUrl);
         connectionRef.current = connection;
         setIsConnected(true);
+        refetch();
 
         connection.on("ReceiveMessage", (message: messageModel) => {
           setDataMessage((prevMessages) => [...prevMessages, message]);
@@ -90,35 +87,20 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
       setDataMessage([]);
       setIsConnected(false);
     };
-  }, [open]);
+  }, [open]); // Khởi tạo kết nối khi popup mở lại
 
   useEffect(() => {
-    console.log("1")
     if (listChat) {
       setDataListRoom(listChat.result);
-      console.log(listChat.result[0])
-      setSelectedChat({ ...listChat.result[0] }); // Tạo một bản sao, khiến tham chiếu thay đổi.
+      setSelectedChat({ ...listChat.result[0] });
     }
   }, [isFetchingRooms, isConnected]);
 
   useEffect(() => {
-    console.log("2")
-    if (selectedChat?.supportChatRoomId && listMessage) {
-      console.log("Vao trong duoclist roi")
-      setDataMessage(listMessage.result); // Gán tin nhắn thay vì append
+    if (listMessage) {
+      setDataMessage(listMessage.result);
     }
   }, [isFetchingMessage, selectedChat]);
-
-  useEffect(() => {
-    // Chỉ gọi refetchMessage nếu selectedChat đã có supportChatRoomId
-    console.log("Vao trong duoc roi  2")
-
-    console.log(selectedChat?.supportChatRoomId)
-    if (selectedChat?.supportChatRoomId) {
-      console.log("Goi refetch  ")
-      refetchMessage();  // Gọi lại query để lấy tin nhắn cho phòng chat mới
-    }
-  }, [selectedChat]);  // Chạy lại khi selectedChat thay đổi
 
   const handleSelectChat = async (chat: supportChatRoomModel) => {
     if (connectionRef.current && selectedChat?.supportChatRoomId) {
@@ -149,7 +131,7 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [dataMessage]);
+  }, [dataMessage]); // Scroll đến cuối mỗi khi có tin nhắn mới
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>

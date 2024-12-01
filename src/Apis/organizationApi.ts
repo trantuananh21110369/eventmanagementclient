@@ -29,9 +29,6 @@ const organizationApi = createApi({
       query: ({ data, idUser }) => ({
         url: "Organization/" + idUser,
         method: "PUT",
-        headers: {
-          "Content-type": "application/json",
-        },
         body: data,
       }),
       invalidatesTags: ["Organization"],

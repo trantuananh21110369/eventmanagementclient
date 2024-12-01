@@ -15,8 +15,8 @@ function PanelPage() {
   const { data: dataOwner, error, isFetching } = useGetOrganizationQuery(idUser);
   const currentOraganization: organizationModel = useSelector((state: RootState) => state.organizationStore);
 
-  //Kiem tra user có Organization hay chưa
   useEffect(() => {
+    //Kiem tra user có Organization hay chưa
     if (error && 'status' in error && error.status === 404) {
       navigate("/organization/create");
     }
@@ -24,7 +24,11 @@ function PanelPage() {
       const storedData = localStorage.getItem("organization");
       if (storedData) {
         const organizationData: organizationModel = JSON.parse(storedData) as organizationModel;
-        dispatch(setOrganization({ idUser: organizationData.idUser, idOrganization: organizationData.idOrganization, nameOrganization: organizationData.nameOrganization, description: organizationData.description, city: organizationData.city, country: organizationData.country }));
+        dispatch(setOrganization({
+          idUser: organizationData.idUser, idOrganization: organizationData.idOrganization, nameOrganization: organizationData.nameOrganization,
+          description: organizationData.description, city: organizationData.city,
+          country: organizationData.country, urlImage: organizationData.urlImage
+        }));
         navigate("event");
       }
       else {
@@ -33,6 +37,7 @@ function PanelPage() {
           description: dataOwner?.result?.description,
           city: dataOwner?.result?.city,
           country: dataOwner?.result?.country,
+          urlImage: dataOwner?.result?.urlImage,
         };
         dispatch(setOrganization({ idUser: idUser, idOrganization: dataOwner?.result?.idOrganization, ...tempData })); navigate("event");
       }

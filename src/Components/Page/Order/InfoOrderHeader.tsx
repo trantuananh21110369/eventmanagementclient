@@ -14,10 +14,12 @@ function InfoOrderHeader({ orderHeader, isLoading }: InfoOrderHeaderProps) {
   return (
     <div>
       <h1>Order Details</h1>
-      <p>Order ID: {orderHeader.numberPhone}</p>
+      <p>Order ID: {orderHeader.idOrderHeader}</p>
+      <p>Full Name: {orderHeader.user.fullName}</p>
+      <p>Email: {orderHeader.user.email}</p>
+      <p>Total Type Of Ticket: {orderHeader.totalItem} </p>
       <p>Order Date: {orderHeader.orderDate}</p>
       <p>Status: {orderHeader.status}</p>
-      <p>Total Item: {orderHeader.totalItem} </p>
     </div>
   );
 }

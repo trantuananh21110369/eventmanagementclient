@@ -7,6 +7,7 @@ import { PagingBar } from 'Components/UI';
 import { inputHepler, toastNotify } from 'Helper';
 import { RootState } from 'Storage/Redux/store';
 import { apiResponse } from 'Interfaces';
+import { toast } from 'react-toastify';
 
 // Constants
 const filterOptions = ["All", "Active", "Inactive"];
@@ -61,6 +62,10 @@ function MemberPage() {
     if (res.data?.isSuccess) {
       toastNotify("Add member success", "success");
       setInput({ email: '' }); // Clear input after adding
+    }
+    else {
+      const error = res.data?.errorMessages?.[0];
+      toastNotify(error?.toString() || "Add member is fail", "error");
     }
   };
 
