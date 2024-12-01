@@ -16,7 +16,7 @@ function PopupMessage() {
   return (
     <div>
       <div className='fixed bottom-0 right-0 m-1'>
-        <Button className="px-4 py-2 bg-primary rounded-sm" onClick={handleOpen}>Chat</Button>
+        <Button className="px-4 py-2 bg-primary rounded-sm text-second" onClick={handleOpen}>Chat</Button>
       </div>
       <ChatPopup open={isOpened} handleClose={handleClose} />
     </div>

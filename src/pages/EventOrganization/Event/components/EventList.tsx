@@ -43,10 +43,11 @@ function EventList({ isFetching, eventData }: eventListProps) {
           src={row.urlImage || 'https://via.placeholder.com/50'}
           alt="Event"
           className="w-12 h-12 rounded-md"
+          style={{ width: "50px", height: "50px", borderRadius: "6px" }}
         />
       ),
       sortable: false,
-      width: "80px", // Cố định độ rộng cột
+      width: "80px",
     },
     {
       name: 'Event Name',
@@ -64,7 +65,16 @@ function EventList({ isFetching, eventData }: eventListProps) {
         const badgeColor = getStatusColor(row.status!);
         return (
           <span
-            className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium text-${badgeColor}-400 ring-2 ring-${badgeColor}-500`}
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              borderRadius: "6px",
+              padding: "2px 8px",
+              fontSize: "12px",
+              fontWeight: 500,
+              color: `${badgeColor}`,
+              border: `1px solid ${badgeColor}`,
+            }}
           >
             {row.status}
           </span>
@@ -75,57 +85,100 @@ function EventList({ isFetching, eventData }: eventListProps) {
       name: "Privacy",
       cell: row => {
         return (
-          <div>
-            <select
-              className='w-full px-4 py-2 border rounded-md mb-2'
-              value={row.privacy}
-              onChange={(e) => handleUpdatePrivacy(e, row.idEvent!)}
-            >
-              {
-                StatusPrivacy.map((item, index) => {
-                  return (
-                    <option key={index} value={item}>{item}</option>
-                  )
-                })
-              }
-            </select>
-          </div >
+          <select
+            style={{
+              minWidth: "100%",
+              padding: "8px",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              fontSize: "14px",
+              marginBottom: "8px",
+            }}
+            value={row.privacy}
+            onChange={(e) => handleUpdatePrivacy(e, row.idEvent!)}
+          >
+            {StatusPrivacy.map((item, index) => (
+              <option key={index} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
         );
-      }
+      },
     },
     {
       name: 'Action',
       cell: row => (
-        <div className="flex gap-2">
+        <div style={{ display: "flex", gap: "8px" }}>
           <button
-            className="px-3 py-1 text-white bg-blue-500 rounded"
+            style={{
+              padding: "6px 12px",
+              backgroundColor: "#3b82f6",
+              color: "white",
+              borderRadius: "4px",
+              fontSize: "14px",
+              cursor: "pointer",
+              border: "none",
+              minWidth: "80px", // Thêm minWidth để đảm bảo nút không bị nhỏ lại
+            }}
             onClick={() => handleUpdate(row.idEvent!)}
           >
             Update
           </button>
           <button
-            className="px-3 py-1 text-white bg-red-500 rounded"
+            style={{
+              padding: "6px 12px",
+              backgroundColor: "#ef4444",
+              color: "white",
+              borderRadius: "4px",
+              fontSize: "14px",
+              cursor: "pointer",
+              border: "none",
+              minWidth: "80px", // Thêm minWidth để đồng bộ kích thước
+            }}
             onClick={() => console.log(`Viewing event ${row.idEvent}`)}
           >
             View
           </button>
         </div>
       ),
-    },
+    },    
   ];
 
   return (
-    <div className="p-3 shadow-lg">
-      <h2 className="text-lg font-bold mb-3">Event List</h2>
+    <div
+      style={{
+        padding: "16px",
+        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+        borderRadius: "6px",
+      }}
+    >
+      <h2 style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "16px" }}>
+        Event List
+      </h2>
       {isFetching ? (
         <p>Loading...</p>
       ) : (
-        <DataTable
-          columns={columns}
-          data={eventData}
-          highlightOnHover
-          striped
-        />
+        <div
+          style={{
+            overflowX: "auto",
+          }}
+        >
+          <DataTable
+            columns={columns}
+            data={eventData}
+            highlightOnHover
+            striped
+            customStyles={{
+              table: {
+                style: {
+                  width: "100%",
+                  minWidth: "700px",
+                },
+              },
+            }}
+          />
+        </div>
       )}
     </div>
   );

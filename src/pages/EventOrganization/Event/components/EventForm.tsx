@@ -6,6 +6,7 @@ import { SD_Type_Event, SD_Status_Event } from 'Utility/SD';
 import { useCreateEventMutation, useGetEventQuery, useUpdateEventMutation } from 'Apis/eventApi';
 import { inputHepler, toastNotify } from 'Helper';
 import { Button } from '@headlessui/react';
+import { maxHeaderSize } from 'http';
 
 const TypesEvent = [
   SD_Type_Event.SINGLE,
@@ -182,7 +183,7 @@ const EventForm = () => {
             <img src={imageToDisplay} alt="Uploaded" className="w-48 h-48 object-cover" />
           ) : (
             <div>
-              None Image
+              No Image
             </div>
           )}
         </div>
