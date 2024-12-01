@@ -9,7 +9,8 @@ import ChatIcon from '@mui/icons-material/Chat'; // Chat icon
 function SidebarDashBoard({ className }: { className?: string }) {
   return (
     <aside className={`bg-gray-800 text-white p-4 ${className}`}>
-      <h2 className="text-2xl font-bold mb-4">Manage</h2>
+      {/* Chỉ hiển thị chữ "Manage" khi màn hình từ kích thước "md" trở lên */}
+      <h2 className="text-2xl font-bold mb-4 hidden md:block">Manage</h2>
       <nav>
         <ul className="space-y-8">
           <li className="flex justify-center">
@@ -72,11 +73,11 @@ function SidebarDashBoard({ className }: { className?: string }) {
               <SettingsIcon />
             </NavLink>
           </li>
-
         </ul>
       </nav>
     </aside>
   );
 }
+
 
 export default SidebarDashBoard;

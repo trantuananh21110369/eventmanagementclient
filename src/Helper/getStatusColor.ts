@@ -6,8 +6,8 @@ const getStatusColor = (status: SD_Status_Event) => {
     : status === SD_Status_Event.SOLD_OUT
     ? "red"
     : status === SD_Status_Event.CANCELLED
-    ? "yellow"
-    : status === SD_Status_Event.POSTPONED && "yellow";
+    ? "blue"
+    : status === SD_Status_Event.POSTPONED && "blue";
 };
 
 export default getStatusColor;

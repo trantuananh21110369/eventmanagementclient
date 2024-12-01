@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetEventDatesQuery, useSaveEventDatesMutation } from 'Apis/eventDateApi';
 import EventDateModel from 'Interfaces/eventDateModel';
 import inputHelper from 'Helper/inputHelper';
@@ -13,16 +13,28 @@ function EventDateForm() {
   const navigate = useNavigate();
   const [saveEventDates] = useSaveEventDatesMutation();
   const [isLoading, setLoading] = useState(false);
-  const [eventDateData, setEventDateData] = useState<EventDateModel[]>([]);
+  const [eventDateData, setEventDateData] = useState<EventDateModel[]>([]);  
   const [eventDateDeleteData, setEventDateDeleteData] = useState<EventDateModel[]>([]);
-  console.log(eventDateData);
-  console.log(eventDateDeleteData)
+  const [isZoomedIn, setIsZoomedIn] = useState(false);  // State to track zoom level
 
   useEffect(() => {
     if (data) {
       setEventDateData(data.result);
     }
   }, [data]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsZoomedIn(window.innerWidth < 1024);  // Adjust threshold based on your needs
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();  // Call on mount to set the initial zoom state
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleAddDate = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -71,66 +83,70 @@ function EventDateForm() {
   }
 
   return (
-    <form method="post" className='flex flex-col' onSubmit={handleSubmit}>
-      {eventDateData && eventDateData.map((eventDate: any, index: number) => {
+    <form method="post" className='flex flex-col space-y-6' onSubmit={handleSubmit}>
+      {eventDateData && eventDateData.map((eventDate, index) => {
         return (
-          <div key={index} className="mb-4 border-input">
-            <div className='flex flex-row justify-between'>
-              <h2 className="text-xl font-bold mb-2">Event Date</h2>
-              <button className='bg-red-400 p-1 rounded-full' onClick={(e) => handleDeleteDate(e, index)}> Remove </button>
+          <div 
+            key={index} 
+            className={`mb-6 border-2 border-gray-300 p-4 rounded-md shadow-md ${isZoomedIn ? 'pr-4' : ''}`}
+          >
+            <div className={`flex justify-between items-center ${isZoomedIn ? 'space-x-6' : ''}`}>
+              <h2 className="text-xl font-bold mb-2 whitespace-nowrap">Event Date</h2>
+              <button className='bg-red-400 p-2 rounded-full' onClick={(e) => handleDeleteDate(e, index)}>Remove</button>
             </div>
 
-            <div className="grid grid-cols-4 gap-4">
-              <div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="flex flex-col">
                 <label className="block text-sm font-medium text-gray-700">Date Title</label>
                 <input
                   type="text"
                   name="dateTitle"
                   value={eventDate.dateTitle}
-                  className="w-full px-4 py-2 border rounded-md"
+                  className="w-full min-w-[200px] px-4 py-2 border rounded-md mb-2"
                   onChange={(e) => handleEventInput(index, e)}
                 />
               </div>
-              <div>
+              <div className="flex flex-col">
                 <label className="block text-sm font-medium text-gray-700">Scheduled Date</label>
                 <input
                   type="date"
                   name="scheduledDate"
                   value={eventDate.scheduledDate}
-                  className="w-full px-4 py-2 border rounded-md"
+                  className="w-full min-w-[200px] px-4 py-2 border rounded-md mb-2"
                   onChange={(e) => handleEventInput(index, e)}
                 />
               </div>
-              <div>
+              <div className="flex flex-col">
                 <label className="block text-sm font-medium text-gray-700">Start Time</label>
                 <input
                   type="time"
                   name="startTime"
                   value={eventDate.startTime}
-                  className="w-full px-4 py-2 border rounded-md"
+                  className="w-full min-w-[200px] px-4 py-2 border rounded-md mb-2"
                   onChange={(e) => handleEventInput(index, e)}
                 />
               </div>
-              <div>
+              <div className="flex flex-col">
                 <label className="block text-sm font-medium text-gray-700">End Time</label>
                 <input
                   type="time"
                   name="endTime"
                   value={eventDate.endTime}
-                  className="w-full px-4 py-2 border rounded-md"
+                  className="w-full min-w-[200px] px-4 py-2 border rounded-md mb-2"
                   onChange={(e) => handleEventInput(index, e)}
                 />
               </div>
             </div>
           </div>
-        )
+        );
       })}
-      <div className='self-end space-x-3'>
-        <button className='p-1 px-2 bg-green-300 rounded-full' onClick={(e) => handleAddDate(e)}> Add Date </button>
-        <Button type="submit" disabled={isLoading} className='bg-blue-500 text-white rounded-md px-4 py-2'>Save and Continue</Button>
+      <div className={`self-end content-center space-x-6 ${isZoomedIn ? 'space-y-6' : 'space-y-4'}`}>
+        <button className='p-2 px-4 bg-green-300 rounded-full' onClick={(e) => handleAddDate(e)}>Add Date</button>
+        <Button type="submit" disabled={isLoading} className='bg-blue-500 text-white rounded-md px-6 py-3'>Save and Continue</Button>
       </div>
+
     </form>
-  )
+  );
 }
 
-export default EventDateForm
+export default EventDateForm;

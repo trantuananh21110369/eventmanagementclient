@@ -66,20 +66,24 @@ function EventsOverviewPage() {
 
   return (
     <div>
-      {/* Header Section: Create Event & Filters */}
-      <div className="flex justify-between items-center mb-6">
-        <button onClick={createEvent} className="px-4 py-2 border">Create Event</button>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 p-4 bg-white shadow-lg rounded-lg">
+        <button
+          onClick={createEvent}
+          className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition duration-200 mb-4 md:mb-0"
+        >
+          Create Event
+        </button>
 
-        <div>
+        <div className="flex flex-col md:flex-row space-y-4 md:space-x-4 md:space-y-0 items-center w-full md:w-auto">
           <input
             type="text"
             placeholder="Search events"
-            className="border p-2 rounded mr-4"
+            className="border p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 w-64"
             onChange={handleChange}
             name="searchString"
           />
           <select
-            className="border p-2 rounded mr-4"
+            className="border p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 w-64"
             onChange={handleChange}
             name="statusEvent"
           >
@@ -89,9 +93,15 @@ function EventsOverviewPage() {
               </option>
             ))}
           </select>
-          <button className="p-2 rounded-xl bg-green-200" onClick={handleFilter}>Filter</button>
+          <button
+            className="px-6 py-3 bg-green-200 text-green-800 rounded-lg hover:bg-green-300 transition duration-200"
+            onClick={handleFilter}
+          >
+            Filter
+          </button>
         </div>
       </div>
+
 
       {/* Event List */}
       <EventList isFetching={isFetching} eventData={eventData} />
