@@ -33,6 +33,8 @@ interface sendMessageModel {
 
 const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
   const connectionRef = useRef<any>(null);
+  const fetchRoomCount = useRef<number>(0);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isConnected, setIsConnected] = useState(false);
   const userId = useSelector((state: RootState) => state.userAuthStore.id);
@@ -44,12 +46,12 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
   const [inputMessage, setInputMessage] = useState<string>("");
 
   // Get chat rooms list
-  const { data: listChat, isFetching: isFetchingRooms } = useGetAllChatRoomByUserIdQuery(userId, {
+  const { data: listChat, isFetching: isFetchingRooms, refetch: refecthRooms } = useGetAllChatRoomByUserIdQuery(userId, {
     skip: !isConnected,
   });
 
   // Get messages of the selected chat room
-  const { data: listMessage, isFetching: isFetchingMessage, refetch } = useGetMessageByIdRoomQuery(
+  const { data: listMessage, isFetching: isFetchingMessage, refetch: refecthMessage } = useGetMessageByIdRoomQuery(
     selectedChat?.supportChatRoomId,
     {
       skip: !selectedChat?.supportChatRoomId,
@@ -64,15 +66,16 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
         const connection = await hubService.startConnection(hubUrl);
         connectionRef.current = connection;
         setIsConnected(true);
-        refetch();
-
         connection.on("ReceiveMessage", (message: messageModel) => {
+          console.log("New Message: ", message);
           setDataMessage((prevMessages) => [...prevMessages, message]);
         });
 
         if (selectedChat?.supportChatRoomId) {
           await connection.invoke("JoinRoom", selectedChat.supportChatRoomId);
         }
+
+        refecthRooms();
       } catch (err) {
         console.error("SignalR Connection Error: ", err);
       }
@@ -91,13 +94,19 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
 
   useEffect(() => {
     if (listChat) {
+      console.log("lay phong moi")
       setDataListRoom(listChat.result);
       setSelectedChat({ ...listChat.result[0] });
+      if (fetchRoomCount.current > 0) {
+        refecthMessage();
+      }
+      fetchRoomCount.current++;
     }
   }, [isFetchingRooms, isConnected]);
 
   useEffect(() => {
     if (listMessage) {
+      console.log("lay hoi thoai moi")
       setDataMessage(listMessage.result);
     }
   }, [isFetchingMessage, selectedChat]);
