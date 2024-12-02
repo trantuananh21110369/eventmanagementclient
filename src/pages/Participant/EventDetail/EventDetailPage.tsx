@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import TicketOrder from './TicketOrder';
 import { Loading } from 'Components/UI';
 import { SD_Privacy_Event, SD_Status_Event } from 'Utility/SD';
+import ChatPopup from 'Components/Layout/ChatPopup';
 
 export interface EventDetail {
   eventId: string;
@@ -11,7 +12,9 @@ export interface EventDetail {
   urlImage: string;
   location: string;
   description: string;
+  organizationId: string;
   nameOrganization: string;
+  urlImageOrganization: string;
   status: string;
   tickets: TicketTimeDetail[];
 }
@@ -28,6 +31,16 @@ const EventDetailPage = () => {
   const [isTicketOrderVisible, setTicketOrderVisible] = useState(false); // State to manage popup visibility
   const [privacy, setPrivacy] = useState<string>(SD_Privacy_Event.PUBLIC);
   const [statusEvent, setStatusEvent] = useState<string>("");
+
+  //Popup chat create 
+  const [isOpened, setIsOpened] = useState(false)
+  const handleClose = () => {
+    setIsOpened(false)
+  }
+  const handleOpen = () => {
+    console.log("Lay id" + eventDetailView?.organizationId)
+    setIsOpened(true)
+  }
 
   useEffect(() => {
     console.log(data?.result);
@@ -48,6 +61,7 @@ const EventDetailPage = () => {
   const handleCloseTicketOrder = () => {
     setTicketOrderVisible(false);
   };
+
 
   return (
     privacy === SD_Privacy_Event.PRIVATE ? (<div className="px-8 md:px-40 py-10 bg-gray-100">Event is private</div>) : (
@@ -85,9 +99,18 @@ const EventDetailPage = () => {
             </div>
 
             {/* Organization Section */}
-            <div className="flex mb-6 bg-slate-200 rounded-xl w-[60%] items-center p-2">
-              <img src="https://placehold.co/800x400" className="rounded-full w-16 h-16 object-cover" />
-              <p className="text-gray-600 ml-4">{eventDetailView?.nameOrganization}</p>
+            <div className="flex justify-between mb-6 bg-slate-200 rounded-xl w-[60%] items-center p-2">
+              <div className="flex items-center">
+                <img
+                  src={eventDetailView?.urlImageOrganization}
+                  alt="Organization Logo"
+                  className="rounded-full w-16 h-16 object-cover"
+                />
+                <p className="text-gray-600 ml-4">
+                  {eventDetailView?.nameOrganization}
+                </p>
+              </div>
+              <button className='bg-white rounded-sm p-2' onClick={handleOpen}> Chat </button>
             </div>
 
             {/* Date/Time Section */}
@@ -143,6 +166,7 @@ const EventDetailPage = () => {
             </div>
           </div>
         )}
+        <ChatPopup open={isOpened} handleClose={handleClose} organizationId={eventDetailView?.organizationId} />
       </div>))
   );
 };

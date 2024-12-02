@@ -60,7 +60,7 @@ function App() {
               <Route path="edit" element={<EventForm />} />
               <Route path="eventdate" element={<EventDateForm />} />
               <Route path="ticket" element={<TicketsOverviewPage />} />
-            </Route>  
+            </Route>
             <Route path="chatOrganization" element={<ChatPage />} />
             <Route path="organization" element={<SettingOrganizationPage />} >
               <Route index element={<OrganizationInfo />} />
@@ -84,7 +84,7 @@ function App() {
           </Route>
         </Routes>
       </main>
-      <PopupClientMessage />
+      <PopupClientMessage organizationId={undefined} />
     </div >
   );
 }
