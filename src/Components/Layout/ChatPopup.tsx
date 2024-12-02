@@ -12,16 +12,26 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import { useGetAllChatRoomByUserIdQuery, useGetMessageByIdRoomQuery, useSendMessageMutation } from "Apis/supportChatApi";
+import { useCreateChatRoomMutation, useGetAllChatRoomByUserIdQuery, useGetChatRoomByOrganizationIdQuery, useGetMessageByIdRoomQuery, useLazyGetAllChatRoomByUserIdQuery, useLazyGetMessageByIdRoomQuery, useSendMessageMutation } from "Apis/supportChatApi";
 import { useSelector } from "react-redux";
 import { RootState } from "Storage/Redux/store";
 import { apiResponse, supportChatRoomModel } from "Interfaces";
 import messageModel from "Interfaces/SupportChat/messageModel";
 import { hubService } from "Service/HubService";
+import { toastNotify } from "Helper";
+import { useGetOrdersByOrganizationIdQuery } from "Apis/orderApi";
+import { get } from "http";
 
 interface ChatPopupProps {
   open: boolean;
   handleClose: () => void;
+  organizationId: string | undefined;
+}
+
+interface SendCreateChatRoomDto {
+  organizationId?: string;
+  senderId?: string;
+  content?: string;
 }
 
 interface sendMessageModel {
@@ -31,35 +41,28 @@ interface sendMessageModel {
   isSupport: boolean;
 }
 
-const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
+const ChatPopup = ({ open, handleClose, organizationId }: ChatPopupProps) => {
+  const hubUrl = "https://localhost:7056/hubs/supportchat";
   const connectionRef = useRef<any>(null);
   const fetchRoomCount = useRef<number>(0);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isConnected, setIsConnected] = useState(false);
   const userId = useSelector((state: RootState) => state.userAuthStore.id);
+  //Api
   const [sendMessage] = useSendMessageMutation();
+  const [createChatRoom] = useCreateChatRoomMutation();
 
   const [dataListRoom, setDataListRoom] = useState<supportChatRoomModel[]>([]);
   const [selectedChat, setSelectedChat] = useState<supportChatRoomModel | null>(null);
   const [dataMessage, setDataMessage] = useState<messageModel[]>([]);
   const [inputMessage, setInputMessage] = useState<string>("");
 
-  // Get chat rooms list
-  const { data: listChat, isFetching: isFetchingRooms, refetch: refecthRooms } = useGetAllChatRoomByUserIdQuery(userId, {
-    skip: !isConnected,
-  });
+  const [getAllChatRooms, { data: listChat, isFetching: isFetchingRooms }] = useLazyGetAllChatRoomByUserIdQuery();
+  const [getAllMessages, { data: listMessage, isFetching: isFetchingMessage }] = useLazyGetMessageByIdRoomQuery();
+  const { data: chatRoom, isFetching: isFetchingRoom } = useGetChatRoomByOrganizationIdQuery(organizationId || "");
 
-  // Get messages of the selected chat room
-  const { data: listMessage, isFetching: isFetchingMessage, refetch: refecthMessage } = useGetMessageByIdRoomQuery(
-    selectedChat?.supportChatRoomId,
-    {
-      skip: !selectedChat?.supportChatRoomId,
-    }
-  );
-
-  const hubUrl = "https://localhost:7056/hubs/supportchat";
-
+  //Ket noi voi hub khi popup mở
   useEffect(() => {
     const setupConnection = async () => {
       try {
@@ -67,15 +70,33 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
         connectionRef.current = connection;
         setIsConnected(true);
         connection.on("ReceiveMessage", (message: messageModel) => {
-          console.log("New Message: ", message);
           setDataMessage((prevMessages) => [...prevMessages, message]);
+        });
+
+        connection.on("ReceiveChatRoom", (supportChatRoom: supportChatRoomModel) => {
+          setDataListRoom((prevListChatRoom) => {
+            // Tìm phòng chat trùng
+            const existingRoomIndex = prevListChatRoom.findIndex(
+              (room) => room.supportChatRoomId === supportChatRoom.supportChatRoomId
+            );
+
+            if (existingRoomIndex !== -1) {
+              // Nếu tồn tại, di chuyển lên đầu
+              const updatedList = [...prevListChatRoom];
+              const [existingRoom] = updatedList.splice(existingRoomIndex, 1); // Loại bỏ phòng chat cũ
+              return [existingRoom, ...updatedList];
+            }
+
+            // Nếu chưa tồn tại, thêm mới
+            return [supportChatRoom, ...prevListChatRoom];
+          });
         });
 
         if (selectedChat?.supportChatRoomId) {
           await connection.invoke("JoinRoom", selectedChat.supportChatRoomId);
         }
 
-        refecthRooms();
+        getAllChatRooms(userId);
       } catch (err) {
         console.error("SignalR Connection Error: ", err);
       }
@@ -90,17 +111,31 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
       setDataMessage([]);
       setIsConnected(false);
     };
-  }, [open]); // Khởi tạo kết nối khi popup mở lại
+  }, [open]);
 
+  //Lay danh sach phong
   useEffect(() => {
     if (listChat) {
-      console.log("lay phong moi")
-      setDataListRoom(listChat.result);
-      setSelectedChat({ ...listChat.result[0] });
+      console.log("lay danh sach phong")
+      setDataListRoom(() => (listChat.result));
       if (fetchRoomCount.current > 0) {
-        refecthMessage();
+        getAllMessages(selectedChat?.supportChatRoomId);
       }
       fetchRoomCount.current++;
+      if (organizationId) {
+        if (chatRoom?.result) {
+          console.log("Organization da ton tai");
+          setSelectedChat(chatRoom.result);
+        }
+        else {
+          const emptyRoom: supportChatRoomModel = { organizationId: organizationId }
+          setSelectedChat(emptyRoom);
+        }
+      }
+      else {
+        console.log("Organization lay lai tu danh sach phong");
+        setSelectedChat({ ...listChat.result[0] });
+      }
     }
   }, [isFetchingRooms, isConnected]);
 
@@ -112,35 +147,72 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
   }, [isFetchingMessage, selectedChat]);
 
   const handleSelectChat = async (chat: supportChatRoomModel) => {
-    if (connectionRef.current && selectedChat?.supportChatRoomId) {
-      await connectionRef.current.invoke("LeaveRoom", selectedChat.supportChatRoomId);
-    }
-    setSelectedChat(chat);
-    if (connectionRef.current) {
-      await connectionRef.current.invoke("JoinRoom", chat.supportChatRoomId);
+    try {
+      setSelectedChat(chat);
+
+      if (connectionRef.current) {
+        // Tham gia phòng chat
+        await connectionRef.current.invoke("JoinRoom", chat.supportChatRoomId);
+
+        // Đánh dấu tin nhắn trong phòng là đã đọc
+        await connectionRef.current.invoke("MarkAsMessage", chat.supportChatRoomId);
+
+        // Cập nhật danh sách các phòng chat
+        setDataListRoom((prevListChatRoom) =>
+          prevListChatRoom.map((room) =>
+            room.supportChatRoomId === chat.supportChatRoomId
+              ? { ...room, isReadFromUser: 1 } // Cập nhật trạng thái đã đọc
+              : room
+          )
+        );
+        getAllMessages(chat.supportChatRoomId);
+        toastNotify("Bang da tham gia phong chat moi", "success");
+
+      }
+    } catch (error) {
+      console.error("Error handling chat selection:", error);
     }
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData: sendMessageModel = {
-      senderId: userId,
-      roomId: selectedChat?.supportChatRoomId || "",
-      content: inputMessage,
-      isSupport: false,
-    };
+    let rsChatRoomId: string = "";
+    if (organizationId && !selectedChat?.supportChatRoomId) {
+      const form = new FormData();
+      form.append("organizationId", organizationId);
+      form.append("senderId", userId);
+      form.append("content", inputMessage);
 
-    const response: apiResponse = await sendMessage({ sendMessage: formData });
-    if (response.data?.isSuccess) {
+      const response: apiResponse = await createChatRoom({ sendCreateChatRoom: form });
+      if (response.data?.isSuccess) {
+        rsChatRoomId = response.data.result.supportChatRoomId
+        await handleSelectChat(response.data.result);
+        toastNotify("Ban dang chat" + response.data.result.supportChatRoomId, "success");
+      }
+    }
+    console.log(selectedChat?.supportChatRoomId);
+    if (selectedChat?.supportChatRoomId || rsChatRoomId) {
+      console.log(selectedChat?.supportChatRoomId);
+      console.log(rsChatRoomId);
+
+      const formData: sendMessageModel = {
+        senderId: userId,
+        roomId: selectedChat?.supportChatRoomId ?? rsChatRoomId,
+        content: inputMessage,
+        isSupport: false,
+      };
+
+      connectionRef.current.send("SendMessage", formData);
       setInputMessage("");
     }
   };
 
+  // Scroll đến cuối mỗi khi có tin nhắn mới
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  }, [dataMessage]); // Scroll đến cuối mỗi khi có tin nhắn mới
+  }, [dataMessage]);
 
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
@@ -157,15 +229,29 @@ const ChatPopup = ({ open, handleClose }: ChatPopupProps) => {
                   onClick={() => handleSelectChat(chat)}
                   style={{
                     cursor: "pointer",
-                    backgroundColor: chat.organizationId === selectedChat?.organizationId ? "#e0f7fa" : "transparent",
+                    backgroundColor: chat?.organizationId === selectedChat?.organizationId ? "#e0f7fa" : "transparent",
                   }}
                 >
                   <ListItemAvatar>
-                    <Avatar>Chưa có</Avatar>
+                    <Avatar src={chat?.organization?.urlImage} alt={chat?.organization?.nameOrganization} />
                   </ListItemAvatar>
                   <ListItemText
-                    primary={chat.organization?.nameOrganization}
-                    secondary={`${chat.organization?.country} - ${chat.organization?.city}`}
+                    primary={
+                      <Box display="flex" alignItems="center">
+                        {chat?.organization?.nameOrganization}
+                        {!chat?.isReadFromUser && (
+                          <Box
+                            component="span"
+                            width={8}
+                            height={8}
+                            bgcolor="blue"
+                            borderRadius="50%"
+                            marginLeft={1}
+                          />
+                        )}
+                      </Box>
+                    }
+                    secondary={`${chat?.organization?.country} - ${chat?.organization?.city}`}
                   />
                 </ListItem>
               ))}

@@ -27,6 +27,14 @@ const supportChatApi = createApi({
       providesTags: ["SupportChat"],
     }),
 
+    getChatRoomByOrganizationId: builder.query({
+      query: (organizationId: string) => ({
+        url: `SupportChatRoom/` + organizationId,
+        method: "GET",
+      }),
+      providesTags: ["SupportChat"],
+    }),
+
     getMessageByIdRoom: builder.query({
       query: (chatRoomId) => ({
         url: `messages`,
@@ -38,20 +46,19 @@ const supportChatApi = createApi({
       providesTags: ["SupportChat"],
     }),
 
-    createSupportChatRoom: builder.mutation({
-      query: ({ sendCreateChatRoom }) => ({
-        url: "SupportChatRoom",
-        method: "POST",
-        body: sendCreateChatRoom,
-      }),
-      invalidatesTags: ["SupportChat"],
-    }),
-
     sendMessage: builder.mutation({
       query: ({ sendMessage }) => ({
         url: "message",
         method: "POST",
         body: sendMessage,
+      }),
+    }),
+
+    createChatRoom: builder.mutation({
+      query: ({ sendCreateChatRoom }) => ({
+        url: "SupportChatRoom",
+        method: "POST",
+        body: sendCreateChatRoom,
       }),
     }),
   }),
@@ -60,8 +67,12 @@ const supportChatApi = createApi({
 export const {
   useGetAllChatRoomByUserIdQuery,
   useGetAllChatRoomByOrganizationIdQuery,
-  useCreateSupportChatRoomMutation,
+  useGetChatRoomByOrganizationIdQuery,
+  useLazyGetAllChatRoomByOrganizationIdQuery,
+  useLazyGetAllChatRoomByUserIdQuery,
+  useLazyGetMessageByIdRoomQuery,
   useGetMessageByIdRoomQuery,
   useSendMessageMutation,
+  useCreateChatRoomMutation,
 } = supportChatApi;
 export default supportChatApi;
