@@ -3,9 +3,9 @@ import { NavLink, Outlet } from 'react-router-dom';
 
 const ManageTeamPage = () => {
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex flex-col lg:flex-row h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-1/5 bg-white shadow-lg">
+      <div className="w-full lg:w-1/5 bg-white shadow-lg">
         <div className="p-4 border-b">
           <h1 className="text-lg font-bold text-gray-700">Manage Members</h1>
         </div>
@@ -40,7 +40,7 @@ const ManageTeamPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="w-4/5 p-6">
+      <div className="w-full lg:w-4/5 p-6 overflow-x-auto">
         <Outlet />
       </div>
     </div>

@@ -25,7 +25,7 @@ function RolePage() {
   }, [data]);
 
   const handleCreatePopup = () => {
-    setCurrentRoleId("");
+    setCurrentRoleId('');
     toggleModal();
   }
 
@@ -34,11 +34,11 @@ function RolePage() {
   };
 
   return (
-    <div className="p-3 shadow-lg">
-      <div className="flex justify-between">
-        <h2 className="text-lg font-bold mb-3">List Roles</h2>
+    <div className="p-4 sm:p-6 md:p-8 shadow-lg bg-gray-50">
+      <div className="flex justify-between flex-wrap">
+        <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-3">List Roles</h2>
         <button
-          className="px-3 py-1 text-white bg-green-500 rounded items-end"
+          className="px-3 py-2 text-white bg-green-500 rounded"
           onClick={handleCreatePopup}
         >
           Create Role
@@ -56,4 +56,4 @@ function RolePage() {
   )
 }
 
-export default RolePage
+export default RolePage;

@@ -10,7 +10,7 @@ function ManagementEventPage() {
       <nav className="mb-6">
         <ul className="flex space-x-4">
           <NavLink to="eventpage" className="active font-semibold border-b-2 border-blue-600">Events</NavLink>
-          <li>Collections</li>
+          <li></li>
         </ul>
       </nav>
       <Outlet />

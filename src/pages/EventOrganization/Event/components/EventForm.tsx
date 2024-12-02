@@ -6,13 +6,12 @@ import { SD_Type_Event, SD_Status_Event } from 'Utility/SD';
 import { useCreateEventMutation, useGetEventQuery, useUpdateEventMutation } from 'Apis/eventApi';
 import { inputHepler, toastNotify } from 'Helper';
 import { Button } from '@headlessui/react';
-import { maxHeaderSize } from 'http';
 
 const TypesEvent = [
   SD_Type_Event.SINGLE,
   SD_Type_Event.MULTIPLE,
   "None",
-]
+];
 
 const StatusEvent = [
   SD_Status_Event.ON_SALE,
@@ -28,11 +27,10 @@ const eventData = {
   location: '',
   status: StatusEvent[0],
   eventType: TypesEvent[0],
-}
+};
 
 const EventForm = () => {
   const { idEvent } = useParams();
-  //Call Api
   const [updateEvent] = useUpdateEventMutation();
   const [createEvent] = useCreateEventMutation();
   const navigate = useNavigate();
@@ -52,7 +50,7 @@ const EventForm = () => {
         location: data.result.location || '',
         status: data.result.status || StatusEvent[StatusEvent.length - 1],
         eventType: data.result.eventType || TypesEvent[TypesEvent.length - 1],
-      }
+      };
       setEventInput(tempData);
       setImageToDisplay(data.result.urlImage || "");
     }
@@ -73,17 +71,15 @@ const EventForm = () => {
       const imgType = file.type.split("/")[1];
       const validImgTypes = ["jpeg", "jpg", "png"];
 
-      const isImageTypeValid = validImgTypes.filter((e) => {
-        return e === imgType;
-      });
+      const isImageTypeValid = validImgTypes.filter((e) => e === imgType);
 
       if (file.size > 1000 * 1024) {
         setImageToStore("");
-        toastNotify("File Must be less then 1 MB", "error");
+        toastNotify("File must be less than 1 MB", "error");
         return;
       } else if (isImageTypeValid.length === 0) {
         setImageToStore("");
-        toastNotify("File Must be in jpeg, jpg or png", "error");
+        toastNotify("File must be in jpeg, jpg, or png format", "error");
         return;
       }
 
@@ -119,7 +115,6 @@ const EventForm = () => {
     let response;
 
     if (idEvent) {
-      //update
       formData.append("Id", idEvent);
       response = await updateEvent({ data: formData, idEvent: idEvent! });
       toastNotify("Event updated successfully", "success");
@@ -128,18 +123,14 @@ const EventForm = () => {
         navigate("../eventdate");
       }
     } else {
-      //create
       formData.append("OrganizationId", organization.idOrganization);
-      console.log(organization.idUser);
       try {
-        // Gọi API và lấy phản hồi, sử dụng unwrap() để xử lý lỗi nếu xảy ra
         const response = await createEvent({
           eventData: formData,
           idOrganization: organization.idOrganization,
         }).unwrap();
         if (response.isSuccess) {
           const eventId = response.result.eventId;
-          console.log("Tra ve ", eventId);
           toastNotify("Event created successfully", "success");
           navigate(`../../update/${eventId}/eventdate`);
         } else {
@@ -150,86 +141,107 @@ const EventForm = () => {
           toastNotify("You are not authorized to perform this action", "error");
         }
       }
-
-      if (response) {
-        setLoading(false);
-        navigate("../eventdate");
-      }
-
       setLoading(false);
     }
   };
 
   return (
-    <form className='flex flex-col' onSubmit={handleSubmit}>
-      {/*Over view*/}
-      <div className="mb-4 border-input ">
-        <h2 className="text-xl font-bold mb-2">Event Overview</h2>
-        <input type="text" placeholder="Event title" name="nameEvent" value={eventInputs.nameEvent} onChange={handleEventInput} className="w-full px-4 py-2 border rounded-md mb-2" />
-        <textarea placeholder="Description" name="description" value={eventInputs.description} onChange={handleEventInput} className="w-full px-4 py-2 border rounded-md" />
+    <form className="flex flex-col p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-lg space-y-6" onSubmit={handleSubmit}>
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold text-gray-700">Event Overview</h2>
+        <input
+          type="text"
+          placeholder="Event title"
+          name="nameEvent"
+          value={eventInputs.nameEvent}
+          onChange={handleEventInput}
+          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <textarea
+          placeholder="Description"
+          name="description"
+          value={eventInputs.description}
+          onChange={handleEventInput}
+          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
 
-      {/*Image event*/}
-      <div className="mb-4 border-input">
-        <div className="flex justify-start items-center space-x-10 mb-2">
-          <h2 className="text-xl font-bold">Add images and video</h2>
-          <input type="file" accept="image/*" className="hidden" id="upload-button" onChange={handleFileChange} />
-          <label htmlFor="upload-button" className="bg-gray-300 px-4 py-2 rounded cursor-pointer">
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold text-gray-700">Add images and video</h2>
+        <div className="flex justify-start items-center space-x-4">
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            id="upload-button"
+            onChange={handleFileChange}
+          />
+          <label htmlFor="upload-button" className="bg-gray-300 px-6 py-3 rounded cursor-pointer text-gray-700 font-medium hover:bg-gray-400">
             Upload Image
           </label>
         </div>
-        <div className="border-dashed border-2 border-gray-300 h-48 flex flex-col justify-center items-center rounded-md mb-4">
+        <div className="border-dashed border-2 border-gray-300 h-48 flex justify-center items-center rounded-md mb-4">
           {imageToDisplay ? (
             <img src={imageToDisplay} alt="Uploaded" className="w-48 h-48 object-cover" />
           ) : (
-            <div>
-              No Image
-            </div>
+            <div className="text-gray-400">No Image</div>
           )}
         </div>
-        <input type="text" placeholder="Video URL" className="w-full px-4 py-2 border rounded-md" />
       </div>
 
-      {/*Location event*/}
-      <div className="mb-4 border-input">
-        <h2 className="text-xl font-bold mb-2">Location</h2>
-        <input type="text" placeholder="Location" name="location" value={eventInputs.location} onChange={handleEventInput} className="w-full px-4 py-2 border rounded-md mb-2" />
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold text-gray-700">Location</h2>
+        <input
+          type="text"
+          placeholder="Location"
+          name="location"
+          value={eventInputs.location}
+          onChange={handleEventInput}
+          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
 
-      <div className="mb-4 border-input ">
-        {/*Type event*/}
-        <h2 className="text-xl font-bold mb-2">Type of Event</h2>
-        <div className="grid grid-cols-3 gap-4">
-          <select
-            className='w-full px-4 py-2 border rounded-md mb-2'
-            name="eventType"
-            value={eventInputs.eventType}
-            onChange={handleEventInput}>
-            {TypesEvent.map((eventType) => (
-              <option key={eventType} value={eventType}>{eventType}</option>
-            ))}
-          </select>
-        </div>
-        {/*Status event*/}
-        <h2 className="text-xl font-bold mb-2">Status</h2>
-        <div className="grid grid-cols-3 gap-4">
-          <select
-            className='w-full px-4 py-2 border rounded-md mb-2'
-            name="status"
-            value={eventInputs.status}
-            onChange={handleEventInput}>
-            {StatusEvent.map((item) => (
-              <option key={item} value={item}>{item}</option>
-            ))}
-          </select>
-        </div>
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold text-gray-700">Event Type</h2>
+        <select
+          name="eventType"
+          value={eventInputs.eventType}
+          onChange={handleEventInput}
+          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {TypesEvent.map((eventType) => (
+            <option key={eventType} value={eventType}>
+              {eventType}
+            </option>
+          ))}
+        </select>
       </div>
-      <div className='self-end'>
+
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold text-gray-700">Status</h2>
+        <select
+          name="status"
+          value={eventInputs.status}
+          onChange={handleEventInput}
+          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {StatusEvent.map((status) => (
+            <option key={status} value={status}>
+              {status}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className="flex justify-end">
         <Button
           type="submit"
           disabled={loading}
+          className={`px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md ${
+            loading ? 'opacity-50' : 'hover:bg-blue-600'
+          }`}
         >
-          {loading ? "Saving..." : "Save and Continue"}
+          {loading ? "Processing..." : idEvent ? "Update Event" : "Create Event"}
         </Button>
       </div>
     </form>

@@ -1,127 +1,107 @@
-import React, { useState } from 'react';
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useRegisterUserMutation } from 'Apis/authApi';
-import { apiResponse } from 'Interfaces';
-import { inputHepler, toastNotify } from "Helper";
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-function Register() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [registerUser] = useRegisterUserMutation();
-
+const Register = () => {
   const [userInput, setUserInput] = useState({
-    email: '',
-    fullName: '',
-    password: '',
-    confirmPassword: '',
+    fullName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    // Add form submission logic here
-
-    const response: apiResponse = await registerUser({
-      email: userInput.email,
-      fullname: userInput.fullName,
-      password: userInput.password
-    });
-
-    console.log(response);
-
-    setLoading(false);
-
-    if (response.data && response.data?.isSuccess) {
-      toastNotify("Register Successful");
-      navigate("/login");
-    } else {
-      setError(response.error?.data?.errorMessages?.[0]);
-    }
-  };
 
   const handleInputUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUserInput({
-      ...userInput,
-      [name]: value,
-    });
+    setUserInput({ ...userInput, [name]: value });
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Registering user:", userInput);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
-        <form method="post" onSubmit={handleSubmit} className="flex flex-col items-center justify-center w-full px-2">
-          <div className="mb-4 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2 w-full px-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              type="text"
-              placeholder="Enter Email"
-              name="email"
-              value={userInput.email}
-              onChange={handleInputUser}
-              className="shadow appearance-none border rounded py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full px-2"
-              required
-            />
-          </div>
-          <div className="mb-4 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2 w-full px-2" htmlFor="fullName">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Register</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div>
+            <label className="block text-gray-600 text-sm font-medium mb-1" htmlFor="fullName">
               Full Name
             </label>
             <input
               type="text"
-              placeholder="Enter Full Name"
               name="fullName"
+              id="fullName"
+              placeholder="Enter your full name"
               value={userInput.fullName}
               onChange={handleInputUser}
-              className="shadow appearance-none border rounded py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full px-2"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
               required
             />
           </div>
-          <div className="mb-4 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2 w-full px-2" htmlFor="password">
+          <div>
+            <label className="block text-gray-600 text-sm font-medium mb-1" htmlFor="email">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="Enter your email"
+              value={userInput.email}
+              onChange={handleInputUser}
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600 text-sm font-medium mb-1" htmlFor="password">
               Password
             </label>
             <input
               type="password"
-              placeholder="Enter Password"
               name="password"
+              id="password"
+              placeholder="Create a password"
               value={userInput.password}
               onChange={handleInputUser}
-              className="shadow appearance-none border rounded py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full px-2"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
               required
             />
           </div>
-          <div className="mb-6 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2 w-full px-2" htmlFor="confirmPassword">
+          <div>
+            <label className="block text-gray-600 text-sm font-medium mb-1" htmlFor="confirmPassword">
               Confirm Password
             </label>
             <input
               type="password"
-              placeholder="Confirm Password"
               name="confirmPassword"
+              id="confirmPassword"
+              placeholder="Confirm your password"
               value={userInput.confirmPassword}
               onChange={handleInputUser}
-              className="shadow appearance-none border rounded py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full px-2"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
               required
             />
           </div>
-          {error && <div className="mb-2 text-red-500">{error}</div>}
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-green-500 hover:bg-green-600 text-white py-2 rounded-md font-semibold transition"
           >
-            {loading ? "Registering..." : "Register"}
+            Register
           </button>
         </form>
+        <div className="mt-4 text-center text-sm">
+          <p>
+            Already have an account?{" "}
+            <Link to="/login" className="text-blue-500 hover:underline">
+              Login
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
-}
+};
 
 export default Register;

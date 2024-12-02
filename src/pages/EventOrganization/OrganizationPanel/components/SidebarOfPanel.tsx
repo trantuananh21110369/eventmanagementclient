@@ -8,9 +8,7 @@ import ChatIcon from '@mui/icons-material/Chat'; // Chat icon
 
 function SidebarDashBoard({ className }: { className?: string }) {
   return (
-    <aside className={`bg-gray-800 text-white p-4 ${className}`}>
-      {/* Chỉ hiển thị chữ "Manage" khi màn hình từ kích thước "md" trở lên */}
-      <h2 className="text-2xl font-bold mb-4 hidden md:block">Manage</h2>
+    <aside className={`bg-gray-800 text-white p-4 pt-10 ${className}`}>
       <nav>
         <ul className="space-y-8">
           <li className="flex justify-center">
@@ -22,6 +20,7 @@ function SidebarDashBoard({ className }: { className?: string }) {
                   : "border-transparent hover:border-gray-400"
                 } p-2 rounded transition duration-300`
               }
+              title="Event" // Tag tên
             >
               <EventIcon />
             </NavLink>
@@ -35,6 +34,7 @@ function SidebarDashBoard({ className }: { className?: string }) {
                   : "border-transparent hover:border-gray-400"
                 } p-2 rounded transition duration-300`
               }
+              title="Order" // Tag tên
             >
               <ShoppingCartIcon />
             </NavLink>
@@ -43,6 +43,7 @@ function SidebarDashBoard({ className }: { className?: string }) {
             <a
               href="#"
               className="flex justify-center items-center text-4xl border-2 border-transparent hover:border-gray-400 focus:ring-4 focus:ring-blue-500 p-2 rounded transition duration-300"
+              title="Dashboard" // Tag tên
             >
               <DashboardIcon />
             </a>
@@ -56,6 +57,7 @@ function SidebarDashBoard({ className }: { className?: string }) {
                   : "border-transparent hover:border-gray-400"
                 } p-2 rounded transition duration-300`
               }
+              title="Chat" // Tag tên
             >
               <ChatIcon />
             </NavLink>
@@ -69,6 +71,7 @@ function SidebarDashBoard({ className }: { className?: string }) {
                   : "border-transparent hover:border-gray-400"
                 } p-2 rounded transition duration-300`
               }
+              title="Organization" // Tag tên
             >
               <SettingsIcon />
             </NavLink>
@@ -78,6 +81,5 @@ function SidebarDashBoard({ className }: { className?: string }) {
     </aside>
   );
 }
-
 
 export default SidebarDashBoard;
