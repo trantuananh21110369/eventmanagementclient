@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import { apiResponse, userModel } from "Interfaces";
@@ -8,7 +7,6 @@ import { setLoggedInUser } from "Storage/Redux/userAuthSlice";
 import { inputHepler, toastNotify } from "Helper";
 import jwt_decode from "jwt-decode";
 
-//Check login file again
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,8 +31,6 @@ const Login = () => {
       password: userInput.password,
     });
 
-    console.log(response);
-
     if (response.data) {
       const { token } = response.data.result;
       const { fullName, id, email, role, urlImage }: userModel = jwt_decode(token);
@@ -45,67 +41,62 @@ const Login = () => {
     } else {
       setError(response.error?.data?.errorMessages?.[0]);
     }
-
     setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
-        <form method="post" onSubmit={handleSubmit} className="flex flex-col items-center justify-center w-full px-2">
-          <div className="mb-4 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2 w-full px-2" htmlFor="email">
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Login</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div>
+            <label className="block text-gray-600 text-sm font-medium mb-1" htmlFor="email">
               Email
             </label>
             <input
-              type="text"
-              placeholder="Enter Your Email"
+              type="email"
               name="email"
+              id="email"
+              placeholder="Enter your email"
               value={userInput.email}
               onChange={handleInputUser}
-              className="shadow appearance-none border rounded py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full px-2"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
               required
             />
           </div>
-          <div className="mb-2 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2 w-full px-2" htmlFor="password">
+          <div>
+            <label className="block text-gray-600 text-sm font-medium mb-1" htmlFor="password">
               Password
             </label>
             <input
               type="password"
-              placeholder="Enter Your Password"
-              id="password"
               name="password"
+              id="password"
+              placeholder="Enter your password"
               value={userInput.password}
               onChange={handleInputUser}
-              minLength={3}
-              maxLength={18}
-              className="shadow appearance-none border rounded py-2 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline w-full px-2"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
               required
             />
           </div>
-          {error && <div className="mb-2 text-red-500">{error}</div>}
-
+          {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md font-semibold transition"
           >
-            Sign In
+            {loading ? "Signing in..." : "Sign In"}
           </button>
-          <div className="flex justify-center w-full pt-3 text-blue-500 hover:text-blue-700">
-            <Link to="/forgot-password">
-              Forgot Password?
-            </Link>
-          </div>
         </form>
-        <div className="mt-6 text-center">
-          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            Sign in with Google
-          </button>
+        <div className="flex justify-between items-center mt-4 text-sm">
+          <Link to="/forgot-password" className="text-blue-500 hover:underline">
+            Forgot Password?
+          </Link>
+          <Link to="/register" className="text-blue-500 hover:underline">
+            Create an Account
+          </Link>
         </div>
-      </div >
-    </div >
+      </div>
+    </div>
   );
 };
 

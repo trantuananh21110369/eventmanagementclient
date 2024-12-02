@@ -7,7 +7,6 @@ import { useGetOrdersByOrganizationIdQuery } from 'Apis/orderApi';
 import { inputHepler, toastNotify } from 'Helper';
 import { PagingBar } from 'Components/UI';
 import { ListOrder } from 'Components/Page/Order';
-// import OrderDetailPopup from './OrderDetailPopup';
 
 const OrdersOverviewPage = () => {
   const idOrganization = useSelector((state: RootState) => state.organizationStore.idOrganization);
@@ -35,7 +34,6 @@ const OrdersOverviewPage = () => {
       setOrderData(data?.apiResponse?.result);
       const { TotalRecords } = JSON.parse(data?.totalRecords || "{}");
       setTotalRecords(TotalRecords);
-      console.log(data)
     }
   }, [data]);
 
@@ -55,30 +53,38 @@ const OrdersOverviewPage = () => {
   };
 
   return (
-    <div className="p-3 shadow-lg">
-      <h2 className="text-lg font-bold mb-3">Orders Overview</h2>
+    <div className="p-6 max-w-7xl mx-auto bg-white shadow-lg rounded-lg">
+      <h2 className="text-2xl font-semibold mb-5 text-gray-700">Orders Overview</h2>
 
       {/* Filter Section */}
-      <div className="flex mb-4">
-        <input
-          type="text"
-          placeholder="Search by order ID"
-          value={filters.searchString}
-          onChange={handleChange}
-          name="searchString"
-          className="w-full px-4 py-2 border rounded-md mb-2"
-        />
-        <button className="px-4 py-2 text-white bg-green-500 rounded" onClick={handleFilter}>
-          Filter
+      <div className="flex mb-6 items-center">
+        <div className="bg-gray-50 p-4 rounded-md shadow-sm">
+          <input
+            type="text"
+            placeholder="Search by Order ID"
+            value={filters.searchString}
+            onChange={handleChange}
+            name="searchString"
+            className="w-full sm:w-80 px-4 py-2 border rounded-md text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <button
+          className="ml-2 px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition duration-200"
+          onClick={handleFilter}
+        >
+          Search
         </button>
       </div>
 
       {/* Order List */}
-      <ListOrder dataOrder={orderData} isLoading={isFetching} />
+      <div className="mb-6">
+        <ListOrder dataOrder={orderData} isLoading={isFetching} />
+      </div>
+
       {/* Paging Bar */}
-      <PagingBar
-        totalRecords={totalRecords}
-      />
+      <div className="flex justify-end">
+        <PagingBar totalRecords={totalRecords} />
+      </div>
     </div>
   );
 }

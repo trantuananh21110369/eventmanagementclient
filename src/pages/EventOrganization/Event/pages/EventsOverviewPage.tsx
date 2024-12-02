@@ -83,16 +83,17 @@ function EventsOverviewPage() {
             name="searchString"
           />
           <select
-            className="border p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 w-64"
-            onChange={handleChange}
-            name="statusEvent"
-          >
-            {filterOptions.map((item, index) => (
-              <option key={index} value={item === "All" ? "" : item}>
-                {item}
-              </option>
-            ))}
-          </select>
+          className="border p-3 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 w-64 text-sm max-h-48 overflow-y-auto"
+          onChange={handleChange}
+          name="statusEvent"
+        >
+          {filterOptions.map((item, index) => (
+            <option key={index} value={item === "All" ? "" : item}>
+              {item}
+            </option>
+          ))}
+        </select>
+
           <button
             className="px-6 py-3 bg-green-200 text-green-800 rounded-lg hover:bg-green-300 transition duration-200"
             onClick={handleFilter}

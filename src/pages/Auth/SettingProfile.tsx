@@ -15,7 +15,7 @@ const SettingProfile = () => {
   const [imageToDisplay, setImageToDisplay] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [settingProfile] = useSettingProfileMutation();
-  const { data, isFetching } = useGetProfileQuery(userId!);
+  const { data } = useGetProfileQuery(userId!);
 
   useEffect(() => {
     if (data) {
@@ -37,24 +37,19 @@ const SettingProfile = () => {
     setProfile(tempData);
   };
 
-  //Xu ly thay doi anh
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     if (file) {
       const imgType = file.type.split("/")[1];
       const validImgTypes = ["jpeg", "jpg", "png"];
 
-      const isImageTypeValid = validImgTypes.filter((e) => {
-        return e === imgType;
-      });
-
       if (file.size > 1000 * 1024) {
         setImageToStore("");
-        toastNotify("File Must be less then 1 MB", "error");
+        toastNotify("File must be less than 1 MB", "error");
         return;
-      } else if (isImageTypeValid.length === 0) {
+      } else if (!validImgTypes.includes(imgType)) {
         setImageToStore("");
-        toastNotify("File Must be in jpeg, jpg or png", "error");
+        toastNotify("File must be in jpeg, jpg, or png", "error");
         return;
       }
 
@@ -68,7 +63,6 @@ const SettingProfile = () => {
     }
   };
 
-  //Xu ly submit form
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
@@ -101,51 +95,58 @@ const SettingProfile = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col space-y-4 items-center justify-center min-h-screen"
+      className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-8 px-4"
     >
-      <div className="flex flex-col items-center">
-        <label className="block text-sm font-medium text-gray-700">Profile Image</label>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-          className="mt-1 block w-full max-w-xs"
-        />
-        {imageToDisplay && (
-          <img
-            src={imageToDisplay}
-            alt="Profile"
-            className="mt-2 w-32 h-32 object-cover rounded-full"
+      <div className="bg-white shadow-md rounded-lg p-6 space-y-6 w-full max-w-lg">
+        <div className="flex flex-col items-center">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
+          {imageToDisplay && (
+            <img
+              src={imageToDisplay}
+              alt="Profile"
+              className="w-32 h-32 object-cover rounded-full"
+            />
+          )}
+          <Button
+            as="label"
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md cursor-pointer hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            Choose Image
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </Button>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Your Email</label>
+          <input
+            type="text"
+            name="email"
+            value={profile.email}
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100"
+            disabled
           />
-        )}
-      </div>
+        </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Your Email</label>
-        <input
-          type="text"
-          name="email"
-          value={profile.email}
-          className="mt-1 block w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md"
-          disabled
-        />
-      </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Full Name</label>
+          <input
+            type="text"
+            name="fullname"
+            value={profile.fullname}
+            onChange={handleInputChange}
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
-      <div>
-        <label className="block text-sm font-medium text-gray-700">Full Name</label>
-        <input
-          type="text"
-          name="fullname"
-          value={profile.fullname}
-          onChange={handleInputChange}
-          className="mt-1 block w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md"
-        />
-      </div>
-
-      <div className='self-end'>
         <Button
           type="submit"
           disabled={loading}
+          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           {loading ? "Saving..." : "Save Profile"}
         </Button>

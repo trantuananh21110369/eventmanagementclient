@@ -1,17 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { SD_Status_Ticket, SD_Visibility_Ticket, SD_Sale_Method_Ticket } from 'Utility/SD';
-import { inputHepler, toastNotify } from 'Helper';
-import { formatDateTime } from 'Utility/formatDate';
-import { useCreateTicketMutation, useUpdateTicketMutation } from 'Apis/ticketApi';
-import TicketModel from 'Interfaces/ticketModel';
-import { Button } from '@headlessui/react';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  SD_Status_Ticket,
+  SD_Visibility_Ticket,
+  SD_Sale_Method_Ticket,
+} from "Utility/SD";
+import { inputHepler, toastNotify } from "Helper";
+import { formatDateTime } from "Utility/formatDate";
+import { useCreateTicketMutation, useUpdateTicketMutation } from "Apis/ticketApi";
+import TicketModel from "Interfaces/ticketModel";
+import { Button } from "@headlessui/react";
 
 interface ticketFormProps {
   listEventDates: { dateTitle: string; eventDateId: string }[];
-
   ticket: TicketModel | null;
-
   onClose: () => void;
 }
 
@@ -31,15 +33,15 @@ const SaleMethodTicket = [
 ];
 
 const ticketData = {
-  idTicket: '',
-  eventId: '',
-  eventDateId: '',
-  nameTicket: '',
+  idTicket: "",
+  eventId: "",
+  eventDateId: "",
+  nameTicket: "",
   quantity: 0,
   price: 0,
   saleStartDate: formatDateTime(new Date()),
   saleEndDate: formatDateTime(new Date()),
-  description: '',
+  description: "",
   status: StatusTicket[0],
   visibility: VisibilityTicket[0],
   saleMethod: SaleMethodTicket[0],
@@ -48,14 +50,13 @@ const ticketData = {
 const TicketForm = ({ listEventDates, ticket, onClose }: ticketFormProps) => {
   const navigate = useNavigate();
   const { idEvent } = useParams();
-  console.log(idEvent);
   const [ticketInputs, setTicketInputs] = useState(ticketData);
   const [updateTicket] = useUpdateTicketMutation();
   const [createTicket] = useCreateTicketMutation();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setTicketInputs({ ...ticketInputs, eventId: idEvent ?? '' });
+    setTicketInputs({ ...ticketInputs, eventId: idEvent ?? "" });
     if (ticket) {
       setTicketInputs({
         ...ticket,
@@ -74,20 +75,54 @@ const TicketForm = ({ listEventDates, ticket, onClose }: ticketFormProps) => {
     setTicketInputs(tempData);
   };
 
-  console.log(ticketInputs)
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
+    const now = new Date();
+    const startDate = new Date(ticketInputs.saleStartDate);
+    const endDate = new Date(ticketInputs.saleEndDate);
+
+    if (!ticketInputs.nameTicket.trim()) {
+      toastNotify("Ticket name cannot be empty!", "error");
+      setLoading(false);
+      return;
+    }
+    if (startDate < now) {
+      toastNotify("Start date cannot be in the past!", "error");
+      setLoading(false);
+      return;
+    }
+    if (endDate < startDate) {
+      toastNotify("End date must be later than the start date!", "error");
+      setLoading(false);
+      return;
+    }
+    if (
+      startDate.toDateString() === endDate.toDateString() &&
+      endDate.getTime() <= startDate.getTime()
+    ) {
+      toastNotify("End time must be later than start time on the same day!", "error");
+      setLoading(false);
+      return;
+    }
+    if (ticketInputs.quantity <= 0) {
+      toastNotify("Quantity must be greater than 0!", "error");
+      setLoading(false);
+      return;
+    }
+    if (ticketInputs.price <= 0) {
+      toastNotify("Price must be greater than 0!", "error");
+      setLoading(false);
+      return;
+    }
+
     try {
       if (ticket?.idTicket) {
         await updateTicket({ data: ticketInputs, idTicket: ticket.idTicket });
-      }
-      else {
+      } else {
         await createTicket(ticketInputs);
       }
-
       toastNotify("Ticket saved successfully!", "success");
       onClose();
     } catch (error) {
@@ -98,114 +133,163 @@ const TicketForm = ({ listEventDates, ticket, onClose }: ticketFormProps) => {
   };
 
   return (
-    <form className='flex flex-col' onSubmit={handleSubmit}>
-      <div className="mb-4 border-input">
-        <h2 className="text-xl font-bold mb-2">Ticket Overview</h2>
-        <input type="text" placeholder="Ticket Name" name="nameTicket" value={ticketInputs.nameTicket} onChange={handleTicketInput} className="w-full px-4 py-2 border rounded-md mb-2" />
-        <textarea placeholder="Description" name="description" value={ticketInputs.description} onChange={handleTicketInput} className="w-full px-4 py-2 border rounded-md" />
+    <form className="flex flex-col gap-6 w-full max-w-4xl mx-auto p-4" onSubmit={handleSubmit}>
+      <div className="p-4 bg-white shadow-md rounded-lg">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Ticket Overview</h2>
+        <input
+          type="text"
+          placeholder="Ticket Name"
+          name="nameTicket"
+          value={ticketInputs.nameTicket}
+          onChange={handleTicketInput}
+          className="w-full px-4 py-2 border rounded-md mb-4"
+        />
+        <textarea
+          placeholder="Description"
+          name="description"
+          value={ticketInputs.description}
+          onChange={handleTicketInput}
+          className="w-full px-4 py-2 border rounded-md"
+        />
       </div>
 
-      <div className="mb-4 border-input">
-        <h2 className="text-xl font-bold mb-2">Select Ticket For Date</h2>
+      <div className="p-4 bg-white shadow-md rounded-lg">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Select Event Date</h2>
         <select
-          className='w-full px-4 py-2 border rounded-md mb-2'
+          className="w-full px-4 py-2 border rounded-md mb-4"
           name="eventDateId"
           value={ticketInputs.eventDateId}
-          onChange={handleTicketInput}>
-          <option value="" disabled>Select Event Date</option>
-          {listEventDates.map((item: { dateTitle: string, eventDateId: string }, index: number) => (
-            <option key={index} value={item.eventDateId}>{item.dateTitle}</option>
+          onChange={handleTicketInput}
+        >
+          <option value="" disabled>
+            Select Event Date
+          </option>
+          {listEventDates.map((item, index) => (
+            <option key={index} value={item.eventDateId}>
+              {item.dateTitle}
+            </option>
           ))}
         </select>
       </div>
 
-      {/*Ticket Deatils*/}
-      <div className="mb-4 border-input">
-        <h2 className="text-xl font-bold mb-2">Ticket Details</h2>
-        <div className="flex flex-row justify-between items-center gap-2">
-          <h3 className="w-1/4">Quantity: </h3>
-          <input type="number" placeholder="Quantity" name="quantity" value={ticketInputs.quantity} onChange={handleTicketInput} className="w-3/4 px-4 py-2 border rounded-md mb-2" />
+      <div className="p-4 bg-white shadow-md rounded-lg">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Ticket Details</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-gray-600">Quantity</label>
+            <input
+              type="number"
+              placeholder="Quantity"
+              name="quantity"
+              value={ticketInputs.quantity}
+              onChange={handleTicketInput}
+              className="w-full px-4 py-2 border rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600">Price</label>
+            <input
+              type="number"
+              placeholder="Price"
+              name="price"
+              value={ticketInputs.price}
+              onChange={handleTicketInput}
+              className="w-full px-4 py-2 border rounded-md"
+            />
+          </div>
         </div>
-        <div className="flex flex-row justify-between items-center gap-2">
-          <h3 className="w-1/4">Price: </h3>
-          <input type="number" placeholder="Price" name="price" value={ticketInputs.price} onChange={handleTicketInput} className="w-3/4 px-4 py-2 border rounded-md mb-2" />
-        </div>
-        <div className="flex flex-row justify-between items-center gap-2">
-          <h3 className="w-1/4">Sale Start Date: </h3>
-          <input
-            type="datetime-local"
-            placeholder="Sale Start Date and Time"
-            name="saleStartDate"
-            value={ticketInputs.saleStartDate} // Format for datetime-local
-            onChange={handleTicketInput}
-            className="w-3/4 px-4 py-2 border rounded-md mb-2"
-          />
-        </div>
-        <div className="flex flex-row justify-between items-center gap-2">
-          <h3 className="w-1/4">Sale End Date: </h3>
-          <input
-            type="datetime-local"
-            placeholder="Sale End Date and Time"
-            name="saleEndDate"
-            value={ticketInputs.saleEndDate} // Format for datetime-local
-            onChange={handleTicketInput}
-            className="w-3/4 px-4 py-2 border rounded-md mb-2"
-          />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+          <div>
+            <label className="block text-gray-600">Sale Start Date</label>
+            <input
+              type="datetime-local"
+              name="saleStartDate"
+              value={ticketInputs.saleStartDate}
+              onChange={handleTicketInput}
+              className="w-full px-4 py-2 border rounded-md"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-600">Sale End Date</label>
+            <input
+              type="datetime-local"
+              name="saleEndDate"
+              value={ticketInputs.saleEndDate}
+              onChange={handleTicketInput}
+              className="w-full px-4 py-2 border rounded-md"
+            />
+          </div>
         </div>
       </div>
 
-      {/*Ticket Settings*/}
-      <div className="mb-4 border-input">
-        <h2 className="text-xl font-bold mb-2">Ticket Settings</h2>
-        <div className="grid grid-cols-3 gap-4">
+      <div className="p-4 bg-white shadow-md rounded-lg">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Ticket Settings</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <h2 className="text-base mb-1">Status Ticket</h2>
+            <label className="block text-gray-600">Status</label>
             <select
-              className='w-full px-4 py-2 border rounded-md mb-2'
+              className="w-full px-4 py-2 border rounded-md"
               name="status"
               value={ticketInputs.status}
-              onChange={handleTicketInput}>
+              onChange={handleTicketInput}
+            >
               {StatusTicket.map((status) => (
-                <option key={status} value={status}>{status}</option>
+                <option key={status} value={status}>
+                  {status}
+                </option>
               ))}
             </select>
           </div>
           <div>
-            <h2 className="text-base mb-1">Visibility</h2>
+            <label className="block text-gray-600">Visibility</label>
             <select
-              className='w-full px-4 py-2 border rounded-md mb-2'
+              className="w-full px-4 py-2 border rounded-md"
               name="visibility"
               value={ticketInputs.visibility}
-              onChange={handleTicketInput}>
+              onChange={handleTicketInput}
+            >
               {VisibilityTicket.map((visibility) => (
-                <option key={visibility} value={visibility}>{visibility}</option>
+                <option key={visibility} value={visibility}>
+                  {visibility}
+                </option>
               ))}
             </select>
           </div>
-
           <div>
-            <h2 className="text-base mb-1">Sale Method</h2>
+            <label className="block text-gray-600">Sale Method</label>
             <select
-              className='w-full px-4 py-2 border rounded-md mb-2'
+              className="w-full px-4 py-2 border rounded-md"
               name="saleMethod"
               value={ticketInputs.saleMethod}
-              onChange={handleTicketInput}>
-              {SaleMethodTicket.map((saleMethod) => (
-                <option key={saleMethod} value={saleMethod}>{saleMethod}</option>
+              onChange={handleTicketInput}
+            >
+              {SaleMethodTicket.map((method) => (
+                <option key={method} value={method}>
+                  {method}
+                </option>
               ))}
             </select>
           </div>
-
         </div>
       </div>
 
-      <div className='self-end'>
+      <div className="flex justify-end gap-4 mt-4">
+        <Button
+          type="button"
+          onClick={onClose}
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+        >
+          Cancel
+        </Button>
         <Button
           type="submit"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md"
           disabled={loading}
         >
-          {loading ? "Saving..." : "Save and Continue"}
-        </Button>      </div>
+          {loading ? "Saving..." : "Save Ticket"}
+        </Button>
+      </div>
     </form>
   );
 };

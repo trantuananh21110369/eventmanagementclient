@@ -1,5 +1,6 @@
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
+
 interface SidebarUpsertEventProps {
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
@@ -7,7 +8,6 @@ interface SidebarUpsertEventProps {
 }
 
 function SidebarUpsertEvent({ isSidebarOpen, toggleSidebar, className }: SidebarUpsertEventProps) {
- 
   const location = useLocation();
 
   const isCreatePage = location.pathname === '/dashboard/create/edit';
@@ -31,22 +31,22 @@ function SidebarUpsertEvent({ isSidebarOpen, toggleSidebar, className }: Sidebar
           <nav>
             <ul>
               <li className="p-2.5 mt-3 flex items-center rounded-md cursor-pointer hover:bg-blue-600">
-                <NavLink to="edit" className="text-gray-200 font-bold text-[15px] ml-4">
+                <NavLink to="edit" className="w-full text-gray-200 font-bold text-[15px] ml-4 block">
                   Build Event
                 </NavLink>
               </li>
               <li className={`p-2.5 mt-3 flex items-center rounded-md cursor-pointer hover:bg-blue-600 ${isCreatePage ? 'opacity-50 pointer-events-none' : ''}`}>
-                <NavLink to="eventdate" className="text-gray-200 font-bold text-[15px] ml-4">
+                <NavLink to="eventdate" className="w-full text-gray-200 font-bold text-[15px] ml-4 block">
                   Event Date
                 </NavLink>
               </li>
               <li className={`p-2.5 mt-3 flex items-center rounded-md cursor-pointer hover:bg-blue-600 ${isCreatePage ? 'opacity-50 pointer-events-none' : ''}`}>
-                <NavLink to="agenda" className="text-gray-200 font-bold text-[15px] ml-4">
+                <NavLink to="agenda" className="w-full text-gray-200 font-bold text-[15px] ml-4 block">
                   Agenda
                 </NavLink>
               </li>
               <li className={`p-2.5 mt-3 flex items-center rounded-md cursor-pointer hover:bg-blue-600 ${isCreatePage ? 'opacity-50 pointer-events-none' : ''}`}>
-                <NavLink to="ticket" className="text-gray-200 font-bold text-[15px] ml-4">
+                <NavLink to="ticket" className="w-full text-gray-200 font-bold text-[15px] ml-4 block">
                   Ticket
                 </NavLink>
               </li>

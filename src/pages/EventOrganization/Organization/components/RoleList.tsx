@@ -29,15 +29,15 @@ function RoleList({ dataRoleList, isLoading }: RoleListProps) {
     {
       name: 'Action',
       cell: (row: ListRoleView) => (
-        <div>
+        <div className="flex space-x-2">
           <button
-            className="px-3 py-1 text-white bg-blue-500 rounded"
+            className="px-4 py-2 text-white bg-blue-500 rounded w-20"
             onClick={() => handleDetail(row.id)}
           >
             Detail
           </button>
           <button
-            className="px-3 py-1 text-white bg-red-500 rounded"
+            className="px-4 py-2 text-white bg-red-500 rounded w-20"
             onClick={() => handleDelete(row.id)}
           >
             Delete
@@ -46,12 +46,13 @@ function RoleList({ dataRoleList, isLoading }: RoleListProps) {
       ),
     },
   ];
+  
+  
 
   const handleDetail = (id: string) => {
     setCurrentRoleId(id);
     toggleModal();
   };
-
 
   const handleDelete = async (id: string) => {
     const apiRes: apiResponse = await deleteRole(id);
@@ -62,8 +63,16 @@ function RoleList({ dataRoleList, isLoading }: RoleListProps) {
   };
 
   return (
-    <div>
-      <DataTable columns={columns} data={dataRoleList} />
+    <div className="overflow-x-auto">
+      <DataTable
+        columns={columns}
+        data={dataRoleList}
+        progressPending={isLoading}
+        pagination
+        responsive
+        highlightOnHover
+        pointerOnHover
+      />
 
       {/* Modal component */}
       <UpsertRolePopup
