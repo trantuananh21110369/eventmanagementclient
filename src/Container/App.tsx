@@ -21,6 +21,8 @@ import ManagementTicketPage from 'pages/Participant/ManagementTicket/page/Manage
 import { TicketsOverviewPage } from 'pages/EventOrganization/Ticket';
 import ChatPage from 'pages/EventOrganization/Chat';
 import ChatPopup from 'Components/Layout/ChatPopup';
+import SearchPage from 'pages/Participant/Home/pages/SearchPage';
+import SearchStringBar from 'Components/Layout/SearchStringBar';
 
 function App() {
   const dispatch = useDispatch();
@@ -48,7 +50,8 @@ function App() {
           <Route path='/your-profile' element={<SettingProfile />} />
           {/*Tim kiem*/}
           <Route path="/" element={<HomePage />} />
-
+          <Route path="/" element={<SearchStringBar />} />
+          <Route path="/searchpage" element={<SearchPage />} />
           {/*Organization*/}
           <Route path="/organization/create" element={<CreateOrganizationPage />} />
           <Route path="/dashboard" element={<PanelPage />} >

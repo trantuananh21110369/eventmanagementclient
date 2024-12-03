@@ -6,6 +6,7 @@ import { userModel } from '../../Interfaces';
 import { RootState } from "../../Storage/Redux/store";
 import { emptyUserState, setLoggedInUser } from '../../Storage/Redux/userAuthSlice';
 import ModeTheme from "./ModeTheme";
+import SearchStringBar from './SearchStringBar'; // Import component tìm kiếm
 let logo = require('../../Assets/images/logo.jpg');
 
 function Header({ className }: { className?: string }) {
@@ -33,6 +34,8 @@ function Header({ className }: { className?: string }) {
           </Link>
         </div>
         <nav className="flex items-center ml-auto">
+          {/* Thêm SearchStringBar vào đây */}
+          <SearchStringBar />
           <div className='px-2'>
             <ModeTheme />
           </div>
