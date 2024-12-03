@@ -10,6 +10,7 @@ import { useSendMessageMutation } from "Apis/supportChatApi";
 interface chatSidebarProps {
   dataMessage: messageModel[];
   selectedChat: supportChatRoomModel | null;
+  connectionRef: any;
 }
 
 interface sendMessageModel {
@@ -19,10 +20,10 @@ interface sendMessageModel {
   isSupport: boolean;
 }
 
-const ChatMain = ({ dataMessage, selectedChat }: chatSidebarProps) => {
-  const [sendMessage] = useSendMessageMutation();
+
+const ChatMain = ({ dataMessage, selectedChat, connectionRef }: chatSidebarProps) => {
   const [inputMessage, setInputMessage] = useState<string>("");
-  // Refs
+  // Make scroll down
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const userId = useSelector((state: RootState) => state.userAuthStore.id);
 
@@ -41,11 +42,10 @@ const ChatMain = ({ dataMessage, selectedChat }: chatSidebarProps) => {
       isSupport: true,
     };
 
-    const response: apiResponse = await sendMessage({ sendMessage: formData });
-    if (response.data?.isSuccess) {
-      setInputMessage("");
-    }
+    connectionRef.current.send("SendMessage", formData);
+    setInputMessage("");
   };
+
 
   return (
     <div className="h-full flex flex-col">

@@ -28,9 +28,13 @@ const supportChatApi = createApi({
     }),
 
     getChatRoomByOrganizationId: builder.query({
-      query: (organizationId: string) => ({
-        url: `SupportChatRoom/` + organizationId,
+      query: ({ organizationId, senderId }) => ({
+        url: `SupportChatRoom/`,
         method: "GET",
+        params: {
+          organizationId: organizationId,
+          senderId: senderId,
+        },
       }),
       providesTags: ["SupportChat"],
     }),
@@ -65,12 +69,11 @@ const supportChatApi = createApi({
 });
 
 export const {
-  useGetAllChatRoomByUserIdQuery,
-  useGetAllChatRoomByOrganizationIdQuery,
-  useGetChatRoomByOrganizationIdQuery,
   useLazyGetAllChatRoomByOrganizationIdQuery,
   useLazyGetAllChatRoomByUserIdQuery,
+  useLazyGetChatRoomByOrganizationIdQuery,
   useLazyGetMessageByIdRoomQuery,
+  useGetChatRoomByOrganizationIdQuery,
   useGetMessageByIdRoomQuery,
   useSendMessageMutation,
   useCreateChatRoomMutation,
