@@ -24,6 +24,8 @@ import ChatPopup from 'Components/Layout/ChatPopup';
 
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation(); // Get the current location
+  const isDashboardPage = location.pathname.startsWith('/dashboard');
 
   useEffect(() => {
     const localToken = localStorage.getItem("token");
@@ -39,12 +41,14 @@ function App() {
       <main className="col-span-1 overflow-y-auto">
         <Routes>
           {/*Auth*/}
-          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path='/forgot-password' element={<ForgetPassword />} />
           <Route path='/your-profile' element={<SettingProfile />} />
+          {/*Tim kiem*/}
+          <Route path="/" element={<HomePage />} />
+
           {/*Organization*/}
           <Route path="/organization/create" element={<CreateOrganizationPage />} />
           <Route path="/dashboard" element={<PanelPage />} >
@@ -84,7 +88,7 @@ function App() {
           </Route>
         </Routes>
       </main>
-      <PopupClientMessage organizationId={undefined} />
+      {!isDashboardPage && <PopupClientMessage organizationId={undefined} />}
     </div >
   );
 }

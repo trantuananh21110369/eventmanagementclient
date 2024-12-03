@@ -14,10 +14,8 @@ const root = ReactDOM.createRoot(
 root.render(
   <Provider store={store}>
     <BrowserRouter>
-      <React.StrictMode>
-        <ToastContainer />
-        <App />
-      </React.StrictMode>
+      <ToastContainer />
+      <App />
     </BrowserRouter>
   </Provider>
 );

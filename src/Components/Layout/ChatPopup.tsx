@@ -12,15 +12,16 @@ import {
   Box,
   Button,
 } from "@mui/material";
-import { useCreateChatRoomMutation, useGetAllChatRoomByUserIdQuery, useGetChatRoomByOrganizationIdQuery, useGetMessageByIdRoomQuery, useLazyGetAllChatRoomByUserIdQuery, useLazyGetMessageByIdRoomQuery, useSendMessageMutation } from "Apis/supportChatApi";
+import {
+  useCreateChatRoomMutation, useGetChatRoomByOrganizationIdQuery, useLazyGetAllChatRoomByUserIdQuery,
+  useLazyGetMessageByIdRoomQuery, useSendMessageMutation
+} from "Apis/supportChatApi";
 import { useSelector } from "react-redux";
 import { RootState } from "Storage/Redux/store";
 import { apiResponse, supportChatRoomModel } from "Interfaces";
 import messageModel from "Interfaces/SupportChat/messageModel";
 import { hubService } from "Service/HubService";
 import { toastNotify } from "Helper";
-import { useGetOrdersByOrganizationIdQuery } from "Apis/orderApi";
-import { get } from "http";
 
 interface ChatPopupProps {
   open: boolean;
@@ -44,7 +45,6 @@ interface sendMessageModel {
 const ChatPopup = ({ open, handleClose, organizationId }: ChatPopupProps) => {
   const hubUrl = "https://localhost:7056/hubs/supportchat";
   const connectionRef = useRef<any>(null);
-  const fetchRoomCount = useRef<number>(0);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isConnected, setIsConnected] = useState(false);
@@ -60,7 +60,7 @@ const ChatPopup = ({ open, handleClose, organizationId }: ChatPopupProps) => {
 
   const [getAllChatRooms, { data: listChat, isFetching: isFetchingRooms }] = useLazyGetAllChatRoomByUserIdQuery();
   const [getAllMessages, { data: listMessage, isFetching: isFetchingMessage }] = useLazyGetMessageByIdRoomQuery();
-  const { data: chatRoom, isFetching: isFetchingRoom } = useGetChatRoomByOrganizationIdQuery(organizationId || "");
+  const { data: chatRoom, isFetching: isFetchingRoom } = useGetChatRoomByOrganizationIdQuery({ organizationId: organizationId, senderId: userId });
 
   //Ket noi voi hub khi popup mở
   useEffect(() => {
@@ -96,7 +96,9 @@ const ChatPopup = ({ open, handleClose, organizationId }: ChatPopupProps) => {
           await connection.invoke("JoinRoom", selectedChat.supportChatRoomId);
         }
 
+        console.log("Ket noi thanh cong");
         getAllChatRooms(userId);
+        console.log(chatRoom.data);
       } catch (err) {
         console.error("SignalR Connection Error: ", err);
       }
@@ -115,17 +117,13 @@ const ChatPopup = ({ open, handleClose, organizationId }: ChatPopupProps) => {
 
   //Lay danh sach phong
   useEffect(() => {
-    if (listChat) {
-      console.log("lay danh sach phong")
+    if (listChat && !isFetchingRooms) {
       setDataListRoom(() => (listChat.result));
-      if (fetchRoomCount.current > 0) {
-        getAllMessages(selectedChat?.supportChatRoomId);
-      }
-      fetchRoomCount.current++;
+      getAllMessages(selectedChat?.supportChatRoomId);
       if (organizationId) {
         if (chatRoom?.result) {
           console.log("Organization da ton tai");
-          setSelectedChat(chatRoom.result);
+          handleSelectChat(chatRoom.result);
         }
         else {
           const emptyRoom: supportChatRoomModel = { organizationId: organizationId }
@@ -134,7 +132,7 @@ const ChatPopup = ({ open, handleClose, organizationId }: ChatPopupProps) => {
       }
       else {
         console.log("Organization lay lai tu danh sach phong");
-        setSelectedChat({ ...listChat.result[0] });
+        handleSelectChat({ ...listChat.result[0] });
       }
     }
   }, [isFetchingRooms, isConnected]);
@@ -190,10 +188,7 @@ const ChatPopup = ({ open, handleClose, organizationId }: ChatPopupProps) => {
         toastNotify("Ban dang chat" + response.data.result.supportChatRoomId, "success");
       }
     }
-    console.log(selectedChat?.supportChatRoomId);
     if (selectedChat?.supportChatRoomId || rsChatRoomId) {
-      console.log(selectedChat?.supportChatRoomId);
-      console.log(rsChatRoomId);
 
       const formData: sendMessageModel = {
         senderId: userId,
