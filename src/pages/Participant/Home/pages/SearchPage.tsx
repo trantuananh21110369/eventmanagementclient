@@ -111,7 +111,7 @@ const SearchPage: React.FC = () => {
       <Link
         to={`../e/${event.eventId}`}
         key={index}
-        className="event-card flex flex-col items-center bg-white p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg"
+        className="event-card flex flex-col items-center bg-[#F5F5F5] p-4 rounded-lg shadow-md transition-transform transform hover:scale-105 hover:shadow-lg"
         style={{
           maxWidth: "300px",
         }}

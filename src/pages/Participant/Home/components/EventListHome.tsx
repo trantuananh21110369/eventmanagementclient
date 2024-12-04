@@ -34,7 +34,7 @@ function EventListHome({ data, isFetching }: EventListHomeProps) {
       >
         {data.map((item, index) => (
           <Link to={`/e/${item.eventId}`} key={index} className="group">
-            <div className="flex flex-col items-center bg-white shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+            <div className="flex flex-col items-center bg-[#F5F5F5] shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
               <input type="hidden" id={item?.eventId} name="custId" />
               {/* Hình ảnh với chiều cao cố định */}
               <div className="flex-shrink-0">
