@@ -7,7 +7,7 @@ import { useGetHomeEventQuery } from "Apis/searchApis";
 
 
 const HomePage = () => {
-  const { data, isFetching } = useGetHomeEventQuery(null);
+  const { data, isFetching } = useGetHomeEventQuery({ searchString: "", fromDate: "", toDate: "" });
   console.log(data, isFetching);
   // Cấu hình cho react-slick slider
   const settings = {

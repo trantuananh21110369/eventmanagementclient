@@ -8,8 +8,13 @@ const searchApis = createApi({
   tagTypes: ["Search"],
   endpoints: (builder) => ({
     getHomeEvent: builder.query({
-      query: () => ({
+      query: ({ fromDate, toDate, searchString }) => ({
         url: `search/`,
+        params: {
+          fromDate: fromDate,
+          toDate: toDate,
+          searchString: searchString,
+        },
       }),
       providesTags: ["Search"],
     }),

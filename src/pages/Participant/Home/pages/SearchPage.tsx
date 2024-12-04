@@ -1,41 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import FilterDateComponent from "../components/FilterDateComponent"; // Import FilterDateComponent
+import { useGetHomeEventQuery } from "Apis/searchApis";
 
-// Định nghĩa kiểu dữ liệu cho sự kiện
-interface Event {
-  id: number;
-  name: string;
-  price: string;
-  date: string;
-  image: string;
+interface EventHome {
+  eventId: string;
+  eventName: string;
+  urlImage: string;
+  location: string;
+  priceLow: number;
+  priceHigh: number;
+  nearDate: string;
 }
-
-// Dữ liệu giả lập cho danh sách sự kiện
-const mockEvents: Event[] = [
-  {
-    id: 1,
-    name: "Anh Trai 'Say Hi' Hà Nội - Concert 3",
-    price: "500.000đ",
-    date: "07 tháng 12, 2024",
-    image: "/images/concert3.png",
-  },
-  {
-    id: 2,
-    name: "Anh Trai 'Say Hi' Hà Nội - Concert 4",
-    price: "500.000đ",
-    date: "09 tháng 12, 2024",
-    image: "/images/concert4.png",
-  },
-  {
-    id: 3,
-    name: "Say Hi Tháng 7 cùng Vạn Phúc Water Show",
-    price: "50.000đ",
-    date: "27 tháng 07, 2024",
-    image: "/images/water_show.png",
-  },
-  // Thêm các sự kiện khác...
-];
 
 const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -44,18 +20,15 @@ const SearchPage: React.FC = () => {
   const to: string = searchParams.get("to") || "";
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
   const [showFilter, setShowFilter] = useState<boolean>(false); // Trạng thái để điều khiển việc hiển thị FilterDateComponent
+  const [dataEventHome, setDataEventHome] = useState<EventHome[]>([]);
   const navigate = useNavigate();
+
+  const { data, isFetching } = useGetHomeEventQuery({ searchString: searchQuery, fromDate: from, toDate: to });
   useEffect(() => {
-    // Lọc danh sách sự kiện dựa trên query và thời gian (nếu có)
-    const results = mockEvents.filter((event) => {
-      const isInRange =
-        (from && to)
-          ? new Date(event.date) >= new Date(from) && new Date(event.date) <= new Date(to)
-          : true; // Kiểm tra nếu có thời gian, thì lọc theo khoảng thời gian
-      return event.name.toLowerCase().includes(searchQuery) && isInRange;
-    });
-    setFilteredEvents(results);
-  }, [searchQuery, from, to]); // Sử dụng các tham số tìm kiếm và thời gian để lọc lại
+    if (data && !isFetching) {
+      setDataEventHome(data.result);
+    }
+  }, [data]);
 
   // Hàm xử lý sự kiện khi bấm nút
   const handleButtonClick = () => {
@@ -113,31 +86,36 @@ const SearchPage: React.FC = () => {
 
       <h1 className="search-page-title">Kết quả tìm kiếm:</h1>
       <div className="events-grid" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px" }}>
-        {filteredEvents.length > 0 ? (
-          filteredEvents.map((event) => (
-            <div
-              key={event.id}
-              className="event-card"
-              style={{
-                border: "1px solid #ddd",
-                padding: "10px",
-                borderRadius: "5px",
-              }}
-            >
-              <img
-                src={event.image}
-                alt={event.name}
-                onError={(e) => (e.currentTarget.src = "/images/placeholder.png")}
-                style={{ width: "100%", borderRadius: "5px" }}
-              />
-              <h3 className="event-name">{event.name}</h3>
-              <p className="event-price">
-                <strong>Giá:</strong> {event.price}
-              </p>
-              <p className="event-date">
-                <strong>Ngày:</strong> {event.date}
-              </p>
-            </div>
+        {dataEventHome.length > 0 ? (
+          dataEventHome.map((event, index) => (
+            <Link to={`../e/${event.eventId}`} key={index}  >
+              <div
+                key={index}
+                className="event-card"
+                style={{
+                  border: "1px solid #ddd",
+                  padding: "10px",
+                  borderRadius: "5px",
+                }}
+              >
+                <img
+                  src={event.urlImage}
+                  alt="/images/concert3.png"
+                  onError={(e) => (e.currentTarget.src = "/images/placeholder.png")}
+                  style={{ width: "100%", borderRadius: "5px" }}
+                />
+                <h3 className="event-name">{event.eventName}</h3>
+                <p className="event-price">
+                  <strong>Giá:</strong>  {event.priceLow} - {event.priceHigh} $
+                </p>
+                <p>
+                  <strong>Location:</strong> {event.location}
+                </p>
+                <p className="event-date">
+                  <strong>Date near:</strong> {event.nearDate}
+                </p>
+              </div>
+            </Link>
           ))
         ) : (
           <p>Không tìm thấy kết quả nào cho "{searchQuery}"</p>

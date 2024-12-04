@@ -10,11 +10,10 @@ interface FilterDateComponentProps {
 }
 
 const FilterDateComponent = ({ onFilter, onClose }: FilterDateComponentProps) => {
-    const [startDate, setStartDate] = useState<string>("");
-    const [endDate, setEndDate] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false);
-    const [searchParams, setSearchParams] = useSearchParams();
-
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setStartDate(e.target.value);
@@ -32,12 +31,6 @@ const FilterDateComponent = ({ onFilter, onClose }: FilterDateComponentProps) =>
     const start = new Date(startDate);
     const end = new Date(endDate);
 
-    // Kiểm tra ngày bắt đầu và kết thúc
-    if (start < now) {
-      toastNotify("Start date cannot be in the past!", "error");
-      setLoading(false);
-      return;
-    }
     if (end < start) {
       toastNotify("End date must be later than the start date!", "error");
       setLoading(false);
@@ -78,17 +71,17 @@ const FilterDateComponent = ({ onFilter, onClose }: FilterDateComponentProps) =>
         </div>
       </div>
 
-      <div className="flex justify-end gap-4 mt-4">
+      <div className="flex flex-col sm:flex-row justify-between gap-4 mt-4">
         <Button
           type="button"
           onClick={onClose}
-          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
+          className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md w-full sm:w-auto"
         >
           Cancel
         </Button>
         <Button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md w-full sm:w-auto"
           disabled={loading}
         >
           {loading ? "Applying..." : "Apply Filter"}
