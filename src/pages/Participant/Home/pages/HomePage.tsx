@@ -5,10 +5,10 @@ import "slick-carousel/slick/slick-theme.css";
 import EventListHome from "../components/EventListHome";
 import { useGetHomeEventQuery } from "Apis/searchApis";
 
-
 const HomePage = () => {
   const { data, isFetching } = useGetHomeEventQuery({ searchString: "", fromDate: "", toDate: "" });
   console.log(data, isFetching);
+
   // Cấu hình cho react-slick slider
   const settings = {
     dots: true,
@@ -21,38 +21,31 @@ const HomePage = () => {
   };
 
   const [homeEvent, setHomeEvent] = useState([]);
+  const [sliderEvents, setSliderEvents] = useState([]);  // Dành cho các sự kiện trong slider
+
   useEffect(() => {
     if (data) {
-      setHomeEvent(data?.result);
+      const firstThreeEvents = data?.result?.slice(0, 3);
+      setHomeEvent(data?.result); // Cập nhật tất cả các sự kiện cho phần list
+      setSliderEvents(firstThreeEvents); // Cập nhật chỉ 3 sự kiện đầu tiên cho slider
+      console.log(data?.result?.slice(0, 3));
     }
-  }, [data])
+  }, [data]);
 
   return (
     <div className="p-6 flex flex-col items-center h-auto w-full">
       {/* Top Banner Section (Slider) */}
       <div className="w-3/4 mb-8">
         <Slider {...settings}>
-          <div className="relative">
-            <img
-              src="https://placehold.co/600x400"
-              alt="Dracula Drag Shows"
-              className="w-full h-64 object-cover rounded-lg"
-            />
-          </div>
-          <div className="relative">
-            <img
-              src="https://placehold.co/600x400"
-              alt="Boo-it-yourself Decorations"
-              className="w-full h-64 object-cover rounded-lg"
-            />
-          </div>
-          <div className="relative">
-            <img
-              src="https://placehold.co/600x400"
-              alt="Kooky or Spooky"
-              className="w-full h-64 object-cover rounded-lg"
-            />
-          </div>
+          {sliderEvents.map((event: any, index) => (
+            <div key={index} className="relative">
+              <img
+                src={event?.urlImage || "https://placehold.co/600x400"}  // Giả sử sự kiện có trường imageUrl
+                alt={event?.eventName || "Event image"}  // Giả sử sự kiện có trường name
+                className="w-full h-64 object-cover rounded-lg"
+              />
+            </div>
+          ))}
         </Slider>
       </div>
 

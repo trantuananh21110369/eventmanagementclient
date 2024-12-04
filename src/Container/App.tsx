@@ -23,7 +23,6 @@ import ChatPage from 'pages/EventOrganization/Chat';
 import ChatPopup from 'Components/Layout/ChatPopup';
 import SearchPage from 'pages/Participant/Home/pages/SearchPage';
 import SearchStringBar from 'Components/Layout/SearchStringBar';
-import MapboxSearch from 'Components/Page/Mapbox/mapbox';
 
 function App() {
   const dispatch = useDispatch();
@@ -90,7 +89,6 @@ function App() {
             <Route path="like-event" element={<LikeEvent />} />
             <Route path="order-detail/:idOrderHeader" element={<UserOrderDetailPage />} />
           </Route>
-          <Route path="/mapbox" element={<MapboxSearch />}></Route>
         </Routes>
       </main>
       {!isDashboardPage && <PopupClientMessage organizationId={undefined} />}

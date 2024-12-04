@@ -5,12 +5,14 @@ import TicketOrder from './TicketOrder';
 import { Loading } from 'Components/UI';
 import { SD_Privacy_Event, SD_Status_Event } from 'Utility/SD';
 import ChatPopup from 'Components/Layout/ChatPopup';
+import MapDisplay from 'Components/Page/Mapbox/MapDisplay';
 
 export interface EventDetail {
   eventId: string;
   eventName: string;
   urlImage: string;
   location: string;
+  coordinates: string;
   description: string;
   organizationId: string;
   nameOrganization: string;
@@ -31,6 +33,7 @@ const EventDetailPage = () => {
   const [isTicketOrderVisible, setTicketOrderVisible] = useState(false); // State to manage popup visibility
   const [privacy, setPrivacy] = useState<string>(SD_Privacy_Event.PUBLIC);
   const [statusEvent, setStatusEvent] = useState<string>("");
+  const [coordinates, setCoordinates] = useState<{ longitude: number; latitude: number }>();
 
   //Popup chat create 
   const [isOpened, setIsOpened] = useState(false)
@@ -49,6 +52,11 @@ const EventDetailPage = () => {
     }
     else {
       setEventDetailView(data?.result);
+      if (data?.result?.coordinates) {
+        const [longitude, latitude] = data.result.coordinates.split(" ").map(Number); // Tách và chuyển thành số
+        setCoordinates({ longitude, latitude });
+        console.log("Lay toa do" + data.result.coordinates)
+      }
       setStatusEvent(data?.result.status);
       console.log(data?.result.status);
     }
@@ -123,18 +131,23 @@ const EventDetailPage = () => {
               }
             </div>
 
-            {/* Location Section */}
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold text-gray-700">Location</h2>
-              <p className="text-gray-600 mt-2">{eventDetailView?.location}</p>
-            </div>
-
             {/* Event Description */}
             <div className="mb-6">
               <h2 className="text-xl font-semibold text-gray-700">Description</h2>
               <p className="text-gray-600 mt-2">
                 {eventDetailView?.description}
               </p>
+            </div>
+
+            {/*Show map*/}
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold text-gray-700">Location</h2>
+              <p className="text-gray-600 mt-2">{eventDetailView?.location}</p>
+              <MapDisplay
+                accessToken='pk.eyJ1IjoiZHVvbmdsYXRvaSIsImEiOiJjbTI3c21qemMwb2JuMmpwdm9yOHh3YjhxIn0.RP4bO-ejWjEhO2JyPTsuZw'
+                longitude={coordinates?.longitude || 106.660172}
+                latitude={coordinates?.latitude || 10.762622}
+              />
             </div>
           </div>
 

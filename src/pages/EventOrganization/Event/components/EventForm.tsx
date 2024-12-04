@@ -6,6 +6,8 @@ import { SD_Type_Event, SD_Status_Event } from 'Utility/SD';
 import { useCreateEventMutation, useGetEventQuery, useUpdateEventMutation } from 'Apis/eventApi';
 import { inputHepler, toastNotify } from 'Helper';
 import { Button } from '@headlessui/react';
+import SearchBox from 'Components/Page/Mapbox/SearchMap';
+import SearchMap from 'Components/Page/Mapbox/SearchMap';
 
 const TypesEvent = [
   SD_Type_Event.SINGLE,
@@ -24,7 +26,6 @@ const StatusEvent = [
 const eventData = {
   nameEvent: '',
   description: '',
-  location: '',
   status: StatusEvent[0],
   eventType: TypesEvent[0],
 };
@@ -42,19 +43,36 @@ const EventForm = () => {
   const organization = useSelector((state: RootState) => state.organizationStore);
   const { data, isFetching } = useGetEventQuery(idEvent!);
 
+  const [selectedAddress, setSelectedAddress] = useState<string>("");
+  const [coordinates, setCoordinates] = useState<{ longitude: number; latitude: number }>();
+
+  const handleAddressSelect = (address: string, longitude: number, latitude: number) => {
+    console.log("Selected Address:", address);
+    console.log("Coordinates:", longitude, latitude);
+    setSelectedAddress(address);
+    setCoordinates({ longitude, latitude });
+  };
+
   useEffect(() => {
     if (data) {
       const tempData = {
         nameEvent: data.result.nameEvent || '',
         description: data.result.description || '',
-        location: data.result.location || '',
         status: data.result.status || StatusEvent[StatusEvent.length - 1],
         eventType: data.result.eventType || TypesEvent[TypesEvent.length - 1],
       };
+      // Tách chuỗi tọa độ từ data.result.coordinates
+      if (data.result.coordinates) {
+        const [longitude, latitude] = data.result.coordinates.split(" ").map(Number); // Tách và chuyển thành số
+        setCoordinates({ longitude, latitude });
+        console.log("Lay toa do" + data.result.coordinates)
+      }
+      setSelectedAddress(data.result.location);
       setEventInput(tempData);
       setImageToDisplay(data.result.urlImage || "");
     }
   }, [data]);
+  console.log(selectedAddress);
 
   const handleEventInput = (
     e: React.ChangeEvent<
@@ -102,11 +120,13 @@ const EventForm = () => {
       return;
     }
 
+    const coordinateString = coordinates ? `${coordinates.longitude} ${coordinates.latitude}` : '';
     const formData = new FormData();
     formData.append("idEvent", idEvent!);
     formData.append("nameEvent", eventInputs.nameEvent);
     formData.append("description", eventInputs.description);
-    formData.append("location", eventInputs.location);
+    formData.append("location", selectedAddress);
+    formData.append("coordinates", coordinateString)
     formData.append("eventType", eventInputs.eventType);
     formData.append("status", eventInputs.status);
 
@@ -146,7 +166,7 @@ const EventForm = () => {
   };
 
   return (
-    <form className="flex flex-col p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-lg space-y-6" onSubmit={handleSubmit}>
+    <form className="flex flex-col p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-lg space-y-7" onSubmit={handleSubmit}>
       <div className="space-y-4">
         <h2 className="text-2xl font-semibold text-gray-700">Event Overview</h2>
         <input
@@ -189,15 +209,14 @@ const EventForm = () => {
         </div>
       </div>
 
-      <div className="space-y-4">
+      {/*Search map*/}
+      <div className="space-y-4 my-20">
         <h2 className="text-2xl font-semibold text-gray-700">Location</h2>
-        <input
-          type="text"
-          placeholder="Location"
-          name="location"
-          value={eventInputs.location}
-          onChange={handleEventInput}
-          className="w-full px-4 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        <SearchMap
+          accessToken="pk.eyJ1IjoiZHVvbmdsYXRvaSIsImEiOiJjbTI3c21qemMwb2JuMmpwdm9yOHh3YjhxIn0.RP4bO-ejWjEhO2JyPTsuZw" // Replace with your Mapbox access token
+          initialLongitude={coordinates?.longitude}
+          initialLatitude={coordinates?.latitude}
+          onAddressSelect={handleAddressSelect}
         />
       </div>
 
@@ -237,14 +256,13 @@ const EventForm = () => {
         <Button
           type="submit"
           disabled={loading}
-          className={`px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md ${
-            loading ? 'opacity-50' : 'hover:bg-blue-600'
-          }`}
+          className={`px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md ${loading ? 'opacity-50' : 'hover:bg-blue-600'
+            }`}
         >
           {loading ? "Processing..." : idEvent ? "Update Event" : "Create Event"}
         </Button>
       </div>
-    </form>
+    </form >
   );
 };
 
