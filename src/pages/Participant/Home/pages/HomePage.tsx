@@ -26,9 +26,8 @@ const HomePage = () => {
   useEffect(() => {
     if (data) {
       const firstThreeEvents = data?.result?.slice(0, 3);
-      setHomeEvent(data?.result); // Cập nhật tất cả các sự kiện cho phần list
+      setHomeEvent(data.result);
       setSliderEvents(firstThreeEvents); // Cập nhật chỉ 3 sự kiện đầu tiên cho slider
-      console.log(data?.result?.slice(0, 3));
     }
   }, [data]);
 
@@ -38,16 +37,19 @@ const HomePage = () => {
       <div className="w-3/4 mb-8">
         <Slider {...settings}>
           {sliderEvents.map((event: any, index) => (
-            <div key={index} className="relative">
-              <img
-                src={event?.urlImage || "https://placehold.co/600x400"}  // Giả sử sự kiện có trường imageUrl
-                alt={event?.eventName || "Event image"}  // Giả sử sự kiện có trường name
-                className="w-full h-64 object-cover rounded-lg"
-              />
+            <div key={index} className="relative p-4">
+              <div className="w-[900px] h-[250px] bg-gray-200 overflow-hidden rounded-lg shadow-md mx-auto">
+                <img
+                  src={event?.urlImage || "https://placehold.co/600x400"}
+                  alt={event?.eventName || "Event image"}
+                  className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                />
+              </div>
             </div>
           ))}
         </Slider>
       </div>
+
 
       {/* Category Icons */}
       <div className="flex flex-col space-y-4 mb-8 w-3/4">
