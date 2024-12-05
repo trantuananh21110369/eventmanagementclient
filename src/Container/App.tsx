@@ -23,6 +23,7 @@ import ChatPage from 'pages/EventOrganization/Chat';
 import ChatPopup from 'Components/Layout/ChatPopup';
 import SearchPage from 'pages/Participant/Home/pages/SearchPage';
 import SearchStringBar from 'Components/Layout/SearchStringBar';
+import EventReportPage from 'pages/EventOrganization/Event/pages/EventReportPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -59,6 +60,7 @@ function App() {
             <Route path="event" element={<ManagementEventPage />} >
               <Route index element={<EventsOverviewPage />} />
               <Route path="eventpage" element={<EventsOverviewPage />} />
+              <Route path="report/:idEvent" element={<EventReportPage />} />
             </Route>
             <Route path="create" element={<EventUpsertPage />} >
               <Route path="edit" element={<EventForm />} />

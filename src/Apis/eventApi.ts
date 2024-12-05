@@ -76,6 +76,17 @@ const eventApi = createApi({
       }),
       invalidatesTags: ["Event"],
     }),
+
+    getReportEvent: builder.query({
+      query: ({ idEvent }) => ({
+        url: `ReportEvent`,
+        method: "GET",
+        params: {
+          eventId: idEvent,
+        },
+      }),
+      providesTags: ["Event"],
+    }),
   }),
 });
 
@@ -85,5 +96,6 @@ export const {
   useCreateEventMutation,
   useUpdateEventMutation,
   useUpdatePrivacyEventMutation,
+  useGetReportEventQuery,
 } = eventApi;
 export default eventApi;

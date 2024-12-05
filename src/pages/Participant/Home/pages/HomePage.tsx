@@ -11,7 +11,7 @@ const HomePage = () => {
 
   // Cấu hình cho react-slick slider
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -38,7 +38,7 @@ const HomePage = () => {
         <Slider {...settings}>
           {sliderEvents.map((event: any, index) => (
             <div key={index} className="relative p-4">
-              <div className="w-[900px] h-[250px] bg-gray-200 overflow-hidden rounded-lg shadow-md mx-auto">
+              <div className="w-[900px] h-[250px] bg-gray-300 overflow-hidden rounded-lg shadow-md mx-auto">
                 <img
                   src={event?.urlImage || "https://placehold.co/600x400"}
                   alt={event?.eventName || "Event image"}
@@ -48,33 +48,6 @@ const HomePage = () => {
             </div>
           ))}
         </Slider>
-      </div>
-
-
-      {/* Category Icons */}
-      <div className="flex flex-col space-y-4 mb-8 w-3/4">
-        <div className="flex justify-around space-x-2">
-          <div className="text-center hover:text-yellow-500 cursor-pointer">
-            <span className="text-4xl border border-5 rounded-full transition-colors hover:border-yellow-500">🎤</span>
-            <p className="mt-2 text-sm hover:text-yellow-500">Music</p>
-          </div>
-          <div className="text-center hover:text-yellow-500 cursor-pointer">
-            <span className="text-4xl border border-5 rounded-full transition-colors hover:border-yellow-500">🌃</span>
-            <p className="mt-2 text-sm hover:text-yellow-500">Nightlife</p>
-          </div>
-          <div className="text-center hover:text-yellow-500 cursor-pointer">
-            <span className="text-4xl border border-5 rounded-full transition-colors hover:border-yellow-500">🎭</span>
-            <p className="mt-2 text-sm hover:text-yellow-500">Performing & Visual Arts</p>
-          </div>
-          <div className="text-center hover:text-yellow-500 cursor-pointer">
-            <span className="text-4xl border border-5 rounded-full transition-colors hover:border-yellow-500">🎃</span>
-            <p className="mt-2 text-sm hover:text-yellow-500">Halloween</p>
-          </div>
-          <div className="text-center hover:text-yellow-500 cursor-pointer">
-            <span className="text-4xl border border-5 rounded-full transition-colors hover:border-yellow-500">💘</span>
-            <p className="mt-2 text-sm hover:text-yellow-500">Dating</p>
-          </div>
-        </div>
       </div>
 
       {/* Event Listings */}

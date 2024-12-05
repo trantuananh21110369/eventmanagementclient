@@ -26,7 +26,7 @@ interface UpsertRoleUserPopupProps {
 function UpsertRoleUserPopup({ isOpen, toggleModal, userId }: UpsertRoleUserPopupProps) {
   const idOrganization = useSelector((state: RootState) => state.organizationStore.idOrganization);
   const { data: rolesData } = useGetRolesByIdOrganizationQuery(idOrganization);
-  const { data: userRolesData } = useGetUserRoleDetailQuery(userId);
+  const { data: userRolesData } = useGetUserRoleDetailQuery({ userId: userId, organizationId: idOrganization });
   const [updateUserRoles] = useAddUserRolesMutation();
   const [roles, setRoles] = useState<roleModel[]>([]);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);

@@ -23,7 +23,7 @@ function EventListHome({ data, isFetching }: EventListHomeProps) {
 
   return (
     <div className="w-full flex flex-col items-center px-5">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Our Top Picks for You</h2>
+      <h2 className="text-2xl font-bold text-primary-800 mb-6">Our Top Picks for You</h2>
       <div
         className="grid gap-6"
         style={{
@@ -34,7 +34,7 @@ function EventListHome({ data, isFetching }: EventListHomeProps) {
       >
         {data.map((item, index) => (
           <Link to={`/e/${item.eventId}`} key={index} className="group">
-            <div className="flex flex-col items-center bg-[#F5F5F5] shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+            <div className="flex flex-col items-center bg-gray-200 shadow-lg rounded-lg transform transition-all duration-300 hover:scale-105 hover:shadow-2xl">
               <input type="hidden" id={item?.eventId} name="custId" />
               {/* Hình ảnh với chiều cao cố định */}
               <div className="flex-shrink-0">

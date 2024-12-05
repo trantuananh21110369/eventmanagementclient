@@ -7,6 +7,7 @@ import { SD_Privacy_Event } from 'Utility/SD';
 import { useUpdatePrivacyEventMutation } from 'Apis/eventApi';
 import { apiResponse } from 'Interfaces';
 import { toastNotify } from 'Helper';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 
 interface eventListProps {
   isFetching: boolean;
@@ -34,6 +35,10 @@ function EventList({ isFetching, eventData }: eventListProps) {
       toastNotify("Event updated successfully", "success");
     }
   };
+
+  const handleViewReport = (eventId: string) => {
+    navigate("report/" + eventId);
+  }
 
   const columns: TableColumn<EventModel>[] = [
     {
@@ -136,13 +141,14 @@ function EventList({ isFetching, eventData }: eventListProps) {
               border: "none",
               minWidth: "80px", // Thêm minWidth để đồng bộ kích thước
             }}
-            onClick={() => console.log(`Viewing event ${row.idEvent}`)}
+            onClick={() => handleViewReport(row.idEvent!)}
           >
-            View
+            View Report
+            <DashboardIcon />
           </button>
         </div>
       ),
-    },    
+    },
   ];
 
   return (

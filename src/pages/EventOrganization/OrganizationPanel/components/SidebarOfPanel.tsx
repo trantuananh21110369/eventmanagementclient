@@ -40,15 +40,6 @@ function SidebarDashBoard({ className }: { className?: string }) {
             </NavLink>
           </li>
           <li className="flex justify-center">
-            <a
-              href="#"
-              className="flex justify-center items-center text-4xl border-2 border-transparent hover:border-gray-400 focus:ring-4 focus:ring-blue-500 p-2 rounded transition duration-300"
-              title="Dashboard" // Tag tên
-            >
-              <DashboardIcon />
-            </a>
-          </li>
-          <li className="flex justify-center">
             <NavLink
               to="chatOrganization"
               className={({ isActive }) =>

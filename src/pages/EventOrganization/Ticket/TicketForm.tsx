@@ -88,11 +88,11 @@ const TicketForm = ({ listEventDates, ticket, onClose }: ticketFormProps) => {
       setLoading(false);
       return;
     }
-    if (startDate < now) {
-      toastNotify("Start date cannot be in the past!", "error");
-      setLoading(false);
-      return;
-    }
+    // if (startDate < now) {
+    //   toastNotify("Start date cannot be in the past!", "error");
+    //   setLoading(false);
+    //   return;
+    // }
     if (endDate < startDate) {
       toastNotify("End date must be later than the start date!", "error");
       setLoading(false);

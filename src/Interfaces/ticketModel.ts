@@ -13,8 +13,8 @@ export default interface ticketModel {
   nameTicket: string;
   quantity: number;
   price: number;
-  saleStartDate: Date;
-  saleEndDate: Date;
+  saleStartDate: string;
+  saleEndDate: string;
   description: string;
   status: SD_Status_Ticket; // enum
   visibility: SD_Visibility_Ticket; // enum

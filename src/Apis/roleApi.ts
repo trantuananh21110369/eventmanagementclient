@@ -42,10 +42,12 @@ const roleApi = createApi({
     }),
 
     getUserRoleDetail: builder.query({
-      query: (userId) => ({
-        url: `user-roles/`,
+      query: ({ userId, organizationId }) => ({
+        url: `user-roles`,
+        method: "GET",
         params: {
           userId: userId,
+          organizationId: organizationId,
         },
       }),
 

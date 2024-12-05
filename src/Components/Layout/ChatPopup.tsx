@@ -164,8 +164,6 @@ const ChatPopup = ({ open, handleClose, organizationId }: ChatPopupProps) => {
           )
         );
         getAllMessages(chat.supportChatRoomId);
-        toastNotify("Bang da tham gia phong chat moi", "success");
-
       }
     } catch (error) {
       console.error("Error handling chat selection:", error);
@@ -185,7 +183,6 @@ const ChatPopup = ({ open, handleClose, organizationId }: ChatPopupProps) => {
       if (response.data?.isSuccess) {
         rsChatRoomId = response.data.result.supportChatRoomId
         await handleSelectChat(response.data.result);
-        toastNotify("Ban dang chat" + response.data.result.supportChatRoomId, "success");
       }
     }
     if (selectedChat?.supportChatRoomId || rsChatRoomId) {
