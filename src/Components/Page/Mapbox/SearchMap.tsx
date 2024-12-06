@@ -4,6 +4,7 @@ import { SearchBox } from "@mapbox/search-js-react";
 
 interface SearchMapProps {
   accessToken: string; // Pass Mapbox Access Token as prop
+  location?: string; // Optional initial location
   initialLongitude?: number; // Optional initial longitude
   initialLatitude?: number; // Optional initial latitude
   onAddressSelect: (address: string, longitude: number, latitude: number) => void; // Callback when an address is selected
@@ -11,12 +12,13 @@ interface SearchMapProps {
 
 const SearchMap: React.FC<SearchMapProps> = ({
   accessToken,
-  initialLongitude = 106.660172, // Default coordinates
-  initialLatitude = 10.762622, // Default coordinates
+  location = "", // Default to an empty string
+  initialLongitude = 106.660172, // Default longitude
+  initialLatitude = 10.762622, // Default latitude
   onAddressSelect,
 }) => {
   const [information, setInformation] = useState({
-    address: "",
+    address: location, // Set initial address from location prop
     longitude: initialLongitude,
     latitude: initialLatitude,
     isSaveAddress: false,
@@ -25,26 +27,32 @@ const SearchMap: React.FC<SearchMapProps> = ({
   const mapContainer = useRef<HTMLDivElement>(null); // Reference to the map container
   const mapRef = useRef<mapboxgl.Map | null>(null); // Store the map instance
 
-  // Initialize map when the component is mounted
+  // Initialize the map
   useEffect(() => {
     if (mapContainer.current && !mapRef.current) {
-      mapboxgl.accessToken = accessToken; // Use the provided access token
+      mapboxgl.accessToken = accessToken;
 
-      // Initialize the map only once
       mapRef.current = new mapboxgl.Map({
         container: mapContainer.current,
         style: "mapbox://styles/mapbox/streets-v11",
-        center: [information.longitude, information.latitude],
+        center: [initialLongitude, initialLatitude],
         zoom: 13,
         attributionControl: false,
       });
     } else if (mapRef.current) {
-      // Update map center if already initialized
-      mapRef.current.setCenter([information.longitude, information.latitude]);
+      mapRef.current.setCenter([initialLongitude, initialLatitude]);
     }
-  }, [information, accessToken]);
+  }, [accessToken, initialLongitude, initialLatitude]);
 
-  // Handle address selection from map search
+  // Update address when location prop changes
+  useEffect(() => {
+    setInformation((prev) => ({
+      ...prev,
+      address: location,
+    }));
+  }, [location]);
+
+  // Handle address selection from search box
   const handleAddressRetrieve = (e: any) => {
     const { full_address, coordinates } = e.features[0].properties;
     setInformation({
@@ -54,7 +62,6 @@ const SearchMap: React.FC<SearchMapProps> = ({
       isSaveAddress: false,
     });
 
-    // Call the external callback function to send the selected address data back to the parent component
     onAddressSelect(full_address, coordinates.longitude, coordinates.latitude);
   };
 
@@ -62,8 +69,9 @@ const SearchMap: React.FC<SearchMapProps> = ({
     <div>
       <SearchBox
         options={{
-          proximity: { lng: initialLongitude, lat: initialLatitude }, // Default coordinates
+          proximity: { lng: initialLongitude, lat: initialLatitude },
         }}
+        value={information.address} // Bind to address state
         onRetrieve={handleAddressRetrieve}
         accessToken={accessToken}
       />

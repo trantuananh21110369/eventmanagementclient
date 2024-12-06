@@ -12,7 +12,7 @@ import { HomePage } from 'pages/Participant/Home';
 import { PanelPage } from 'pages/EventOrganization/OrganizationPanel';
 import { EventDetailPage } from 'pages/Participant/EventDetail';
 import { LikeEvent, ListOrder, UserOrderDetailPage } from 'pages/Participant/ManagementTicket';
-import { CheckoutPage, OrderSuccessPage } from 'pages/Participant/Checkout';
+import { CheckoutPage, FailOrderPage, OrderSuccessPage, PaymentPage } from 'pages/Participant/Checkout';
 //Organization
 import { OrdersOverviewPage, OrderDetailPage } from 'pages/EventOrganization/Order';
 import { EventsOverviewPage, EventUpsertPage, ManagementEventPage, EventDateForm, EventForm } from 'pages/EventOrganization/Event';
@@ -24,6 +24,8 @@ import ChatPopup from 'Components/Layout/ChatPopup';
 import SearchPage from 'pages/Participant/Home/pages/SearchPage';
 import SearchStringBar from 'Components/Layout/SearchStringBar';
 import EventReportPage from 'pages/EventOrganization/Event/pages/EventReportPage';
+import LoginAdmin from 'pages/Admin/LoginAdminPage';
+import { MainPage } from 'pages/Admin';
 
 function App() {
   const dispatch = useDispatch();
@@ -53,6 +55,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/" element={<SearchStringBar />} />
           <Route path="/searchpage" element={<SearchPage />} />
+
           {/*Organization*/}
           <Route path="/organization/create" element={<CreateOrganizationPage />} />
           <Route path="/dashboard" element={<PanelPage />} >
@@ -86,11 +89,16 @@ function App() {
           <Route path="/e/:idEvent" element={<EventDetailPage />} />
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/order-success" element={<OrderSuccessPage />} />
+          <Route path="/order-fail" element={<FailOrderPage />} />
+          <Route path='/payment' element={<PaymentPage />} />
           <Route path="/ticket" element={<ManagementTicketPage />} >
             <Route path="orders" element={<ListOrder />} />
             <Route path="like-event" element={<LikeEvent />} />
             <Route path="order-detail/:idOrderHeader" element={<UserOrderDetailPage />} />
           </Route>
+          {/*Admin*/}
+          {/* <Route path="/admin" element={<LoginAdmin />} />
+          <Route path="/mainpage" element={<MainPage />} /> */}
         </Routes>
       </main>
       {!isDashboardPage && <PopupClientMessage organizationId={undefined} />}

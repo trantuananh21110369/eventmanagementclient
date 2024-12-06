@@ -14,4 +14,5 @@ export default interface supportChatRoomModel {
 interface userModel {
   fullName?: string;
   email?: string;
+  urlImage?: string;
 }

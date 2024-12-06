@@ -65,7 +65,6 @@ const EventForm = () => {
       if (data.result.coordinates) {
         const [longitude, latitude] = data.result.coordinates.split(" ").map(Number); // Tách và chuyển thành số
         setCoordinates({ longitude, latitude });
-        console.log("Lay toa do" + data.result.coordinates)
       }
       setSelectedAddress(data.result.location);
       setEventInput(tempData);
@@ -214,6 +213,7 @@ const EventForm = () => {
         <h2 className="text-2xl font-semibold text-gray-700">Location</h2>
         <SearchMap
           accessToken="pk.eyJ1IjoiZHVvbmdsYXRvaSIsImEiOiJjbTI3c21qemMwb2JuMmpwdm9yOHh3YjhxIn0.RP4bO-ejWjEhO2JyPTsuZw" // Replace with your Mapbox access token
+          location={selectedAddress}
           initialLongitude={coordinates?.longitude}
           initialLatitude={coordinates?.latitude}
           onAddressSelect={handleAddressSelect}

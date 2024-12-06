@@ -40,11 +40,11 @@ function SidebarUpsertEvent({ isSidebarOpen, toggleSidebar, className }: Sidebar
                   Event Date
                 </NavLink>
               </li>
-              <li className={`p-2.5 mt-3 flex items-center rounded-md cursor-pointer hover:bg-blue-600 ${isCreatePage ? 'opacity-50 pointer-events-none' : ''}`}>
+              {/* <li className={`p-2.5 mt-3 flex items-center rounded-md cursor-pointer hover:bg-blue-600 ${isCreatePage ? 'opacity-50 pointer-events-none' : ''}`}>
                 <NavLink to="agenda" className="w-full text-gray-200 font-bold text-[15px] ml-4 block">
                   Agenda
                 </NavLink>
-              </li>
+              </li> */}
               <li className={`p-2.5 mt-3 flex items-center rounded-md cursor-pointer hover:bg-blue-600 ${isCreatePage ? 'opacity-50 pointer-events-none' : ''}`}>
                 <NavLink to="ticket" className="w-full text-gray-200 font-bold text-[15px] ml-4 block">
                   Ticket

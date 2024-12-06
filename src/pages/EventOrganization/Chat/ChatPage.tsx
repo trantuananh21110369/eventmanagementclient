@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import ChatSidebar from "./ChatSideBar";
 import ChatMain from "./ChatMain";
-import { useGetMessageByIdRoomQuery, useLazyGetAllChatRoomByOrganizationIdQuery, useLazyGetMessageByIdRoomQuery } from "Apis/supportChatApi";
+import { useLazyGetAllChatRoomByOrganizationIdQuery, useLazyGetMessageByIdRoomQuery } from "Apis/supportChatApi";
 import { useSelector } from "react-redux";
 import { RootState } from "Storage/Redux/store";
 import { supportChatRoomModel } from "Interfaces";
 import messageModel from "Interfaces/SupportChat/messageModel";
 import { hubService } from "Service/HubService";
-import { toastNotify } from "Helper";
+import { LoadingCircular } from "Components/UI";
 
 
 function App() {
@@ -39,7 +39,6 @@ function App() {
         // Lắng nghe sự kiện từ server
         connection.on("ReceiveMessage", (message: messageModel) => {
           setDataMessage((prevMessages) => [...prevMessages, message]);
-          console.log("them tin nhan")
         });
 
         connection.on("ReceiveChatRoom", (supportChatRoom: supportChatRoomModel) => {
@@ -63,7 +62,6 @@ function App() {
 
         // Tham gia phòng chat hiện tại nếu có
         if (selectedChat?.supportChatRoomId) {
-          console.log(selectedChat?.supportChatRoomId);
           await connection.invoke("JoinRoom", selectedChat?.supportChatRoomId);
         }
 
@@ -119,7 +117,6 @@ function App() {
           )
         );
         getAllMessages(chat.supportChatRoomId);
-        toastNotify("Ban da tham gia phong chat moi", "success");
       }
     } catch (error) {
       console.error("Error handling chat selection:", error);
@@ -131,16 +128,22 @@ function App() {
     <div className="flex h-full bg-gray-100">
       {/* Sidebar bên trái */}
       <div className="h-full w-1/4 border-r bg-white">
-        <ChatSidebar dataListChat={dataListRoom} onSelectChat={handleSelectChat} selectedChat={selectedChat} />
+        {
+          isFetchingRooms ? (<LoadingCircular />) :
+            (<ChatSidebar dataListChat={dataListRoom} onSelectChat={handleSelectChat} selectedChat={selectedChat} />)
+        }
       </div>
 
       {/* Khung chat chính giữa */}
       <div className="flex-1">
-        <ChatMain dataMessage={dataMessage}
-          selectedChat={selectedChat}
-          connectionRef={connectionRef} />
+        {isFetchingMessage ? (<LoadingCircular />
+        ) :
+          (<ChatMain dataMessage={dataMessage}
+            selectedChat={selectedChat}
+            connectionRef={connectionRef} />)}
       </div>
-    </div>
+
+    </div >
   );
 }
 

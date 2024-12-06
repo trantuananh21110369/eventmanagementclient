@@ -41,3 +41,16 @@ export enum SD_EOrderCreate {
   NOT_FOUND_ITEM = "NotFoundItem",
   DONE = "Done",
 }
+
+export enum SD_Status {
+  PENDING = "Pending",
+  COMPLETED = "Completed",
+  CANCELLED = "Cancelled",
+}
+
+export enum SD_OrderStatus {
+  PENDING = "Pending",
+  SUCCESSFUL = "Successful",
+  FAIL = "Fail",
+  CANCEL = "Cancel",
+}

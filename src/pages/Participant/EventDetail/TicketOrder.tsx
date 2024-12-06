@@ -24,12 +24,18 @@ function TicketOrder({ idEvent }: TicketOrderProps) {
   useEffect(() => {
     if (data?.result) {
       setDataTickets(data.result);
-      const initQuantities = data.result.map((ticket: TicketModel) => ({
-        TicketId: ticket.idTicket,
-        nameTicket: ticket.nameTicket,
-        price: ticket.price,
-        quantity: ticket.quantity > 0 ? 0 : -1,
-      }));
+      const initQuantities = data.result
+        .filter((ticket: TicketModel) =>
+          ticket.status === SD_Status_Ticket.ON_SALE &&
+          ticket.visibility === SD_Visibility_Ticket.VISIBLE &&
+          ticket.saleMethod === SD_Sale_Method_Ticket.ONLINE
+        )
+        .map((ticket: TicketModel) => ({
+          TicketId: ticket.idTicket,
+          nameTicket: ticket.nameTicket,
+          price: ticket.price,
+          quantity: ticket.quantity > 0 ? 0 : ticket.quantity,
+        }));
       setQuantities(initQuantities);
     }
   }, [data]);

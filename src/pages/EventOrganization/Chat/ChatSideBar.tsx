@@ -39,7 +39,7 @@ const ChatSidebar = ({ dataListChat, selectedChat, onSelectChat }: chatSidebarPr
             style={{ cursor: "pointer" }} // Thêm CSS nếu cần
           >
             <ListItemAvatar>
-              <Avatar>Chưa có</Avatar>
+              <Avatar alt="None" src={chat.user?.urlImage} />
             </ListItemAvatar>
             <ListItemText
               primary={chat.user?.fullName}

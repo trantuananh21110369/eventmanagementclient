@@ -73,6 +73,15 @@ const orderApi = createApi({
       }),
       invalidatesTags: ["Order"],
     }),
+
+    confirmOrder: builder.mutation({
+      query: ({ orderHeaderId, orderData }) => ({
+        url: `confirm/order/${orderHeaderId}`,
+        method: "PUT",
+        body: orderData,
+      }),
+      invalidatesTags: ["Order"],
+    }),
   }),
 });
 
@@ -82,5 +91,6 @@ export const {
   useGetOrderDetailByIdQuery,
   useGetOrderHeaderByIdQuery,
   useCreateOrderMutation,
+  useConfirmOrderMutation,
 } = orderApi;
 export default orderApi;

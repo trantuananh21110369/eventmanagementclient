@@ -8,6 +8,7 @@ import orderApi from "./orderApi";
 import roleApi from "./roleApi";
 import purchasedTicketApi from "./purchasedTicketApi";
 import supportChatApi from "./supportChatApi";
+import paymentApi from "./paymentApi";
 
 export {
   authApi,
@@ -20,4 +21,5 @@ export {
   roleApi,
   purchasedTicketApi,
   supportChatApi,
+  paymentApi,
 };

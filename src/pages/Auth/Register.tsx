@@ -20,9 +20,9 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center bg-orange-100">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Register</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center text-orange-600">Create Your Account</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <div>
             <label className="block text-gray-600 text-sm font-medium mb-1" htmlFor="fullName">
@@ -35,7 +35,7 @@ const Register = () => {
               placeholder="Enter your full name"
               value={userInput.fullName}
               onChange={handleInputUser}
-              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-orange-300 focus:outline-none"
               required
             />
           </div>
@@ -50,7 +50,7 @@ const Register = () => {
               placeholder="Enter your email"
               value={userInput.email}
               onChange={handleInputUser}
-              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-orange-300 focus:outline-none"
               required
             />
           </div>
@@ -65,7 +65,7 @@ const Register = () => {
               placeholder="Create a password"
               value={userInput.password}
               onChange={handleInputUser}
-              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-orange-300 focus:outline-none"
               required
             />
           </div>
@@ -80,13 +80,13 @@ const Register = () => {
               placeholder="Confirm your password"
               value={userInput.confirmPassword}
               onChange={handleInputUser}
-              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 focus:outline-none"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-orange-300 focus:outline-none"
               required
             />
           </div>
           <button
             type="submit"
-            className="bg-green-500 hover:bg-green-600 text-white py-2 rounded-md font-semibold transition"
+            className="bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md font-semibold transition"
           >
             Register
           </button>
@@ -94,7 +94,7 @@ const Register = () => {
         <div className="mt-4 text-center text-sm">
           <p>
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-500 hover:underline">
+            <Link to="/login" className="text-orange-500 hover:underline">
               Login
             </Link>
           </p>

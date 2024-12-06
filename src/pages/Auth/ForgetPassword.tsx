@@ -35,28 +35,28 @@ function ForgetPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Forget Password</h2>
-        <form method="post" onSubmit={handleSubmit} className="flex flex-col items-center justify-center w-full px-2">
-          <div className="mb-4 w-full">
-            <label className="block text-gray-700 text-sm font-bold mb-2 w-full px-2" htmlFor="email">
-              Email
+    <div className="min-h-screen flex items-center justify-center bg-orange-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+        <h2 className="text-3xl font-semibold mb-6 text-center text-orange-600">Forget Password</h2>
+        <form method="post" onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div>
+            <label className="block text-gray-700 text-sm font-medium mb-1" htmlFor="email">
+              Email Address
             </label>
             <input
-              type="text"
+              type="email"
               placeholder="Enter Your Email"
               name="email"
               value={userInput.email}
               onChange={handleInputUser}
-              className="shadow appearance-none border rounded py-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline w-full px-2"
+              className="w-full px-4 py-2 border rounded-md focus:ring focus:ring-orange-300 focus:outline-none"
               required
             />
           </div>
           {error && <div className="mb-2 text-red-500">{error}</div>}
           <button
             type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            className="bg-orange-500 hover:bg-orange-600 text-white py-2 rounded-md font-semibold transition"
           >
             {loading ? "Sending..." : "Send Reset Link"}
           </button>

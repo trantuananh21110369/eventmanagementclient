@@ -10,6 +10,7 @@ import {
   roleApi,
   purchasedTicketApi,
   supportChatApi,
+  paymentApi,
 } from "../../Apis";
 import { userAuthReducer } from "./userAuthSlice";
 import { organizationReducer } from "./organizationSlice";
@@ -30,6 +31,7 @@ const store = configureStore({
     [roleApi.reducerPath]: roleApi.reducer,
     [purchasedTicketApi.reducerPath]: purchasedTicketApi.reducer,
     [supportChatApi.reducerPath]: supportChatApi.reducer,
+    [paymentApi.reducerPath]: paymentApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware()
@@ -42,7 +44,8 @@ const store = configureStore({
       .concat(orderApi.middleware)
       .concat(roleApi.middleware)
       .concat(purchasedTicketApi.middleware)
-      .concat(supportChatApi.middleware),
+      .concat(supportChatApi.middleware)
+      .concat(paymentApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

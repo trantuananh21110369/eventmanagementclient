@@ -95,21 +95,21 @@ const SettingProfile = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-8 px-4"
+      className="flex flex-col items-center justify-center min-h-screen bg-white py-8 px-4"
     >
-      <div className="bg-white shadow-md rounded-lg p-6 space-y-6 w-full max-w-lg">
+      <div className="bg-white shadow-lg rounded-lg p-6 space-y-6 w-full max-w-lg">
         <div className="flex flex-col items-center">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Profile Image</label>
+          <label className="block text-sm font-medium text-orange-500 mb-2">Profile Image</label>
           {imageToDisplay && (
             <img
               src={imageToDisplay}
               alt="Profile"
-              className="w-32 h-32 object-cover rounded-full"
+              className="w-32 h-32 object-cover rounded-full border-4 border-orange-500"
             />
           )}
           <Button
             as="label"
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md cursor-pointer hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="mt-4 px-4 py-2 bg-orange-500 text-white rounded-md cursor-pointer hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
           >
             Choose Image
             <input
@@ -146,7 +146,7 @@ const SettingProfile = () => {
         <Button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
         >
           {loading ? "Saving..." : "Save Profile"}
         </Button>

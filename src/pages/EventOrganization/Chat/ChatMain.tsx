@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Avatar, TextField, IconButton, Box, Typography } from "@mui/material";
+import { Avatar, TextField, IconButton, Box, Typography, ListItemText } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 import messageModel from "Interfaces/SupportChat/messageModel";
 import { apiResponse, supportChatRoomModel } from "Interfaces";
@@ -49,11 +49,13 @@ const ChatMain = ({ dataMessage, selectedChat, connectionRef }: chatSidebarProps
 
   return (
     <div className="h-full flex flex-col">
-      <div className="flex items-center p-4 border-b">
-        <Avatar className="mr-2">D</Avatar>
+      <div className="flex items-center p-4 border-b space-x-2">
+        <Avatar alt="None" src={selectedChat?.user?.urlImage} />
         <div>
-          <p className="font-bold">Dianne Johnson</p>
-          <p className="text-sm text-gray-500">Junior Developer</p>
+          <ListItemText
+            primary={selectedChat?.user?.fullName}
+            secondary={`${selectedChat?.user?.email}`}
+          />
         </div>
       </div>
       <Box height="300px" overflow="auto" bgcolor="#f9f9f9" padding={2} border="1px solid #ddd" borderRadius={2}>
