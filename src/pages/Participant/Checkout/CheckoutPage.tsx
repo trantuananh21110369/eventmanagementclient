@@ -47,13 +47,11 @@ function CheckoutPage() {
 
     const rs: apiResponse = await createOrder(data); // Gửi dưới dạng JSON
 
-    console.log(rs);
     if (rs.data?.isSuccess) {
       navigate('/payment', { state: { apiResult: rs?.data, userInput: data } });
     }
     else {
       if (rs.data?.errorMessages && rs.data.errorMessages[0] == SD_EOrderCreate.OUT_OF_STOCK) {
-        console.log("Out of stock");
         toastNotify("Out of stock", "error");
       }
       else if (rs.data?.errorMessages && rs.data.errorMessages[0] == SD_EOrderCreate.NOT_FOUND_ITEM) {
@@ -104,7 +102,7 @@ function CheckoutPage() {
         <div className="flex justify-end items-center py-3 border-t">
           <p className="text-2xl font-semibold px-5">Total price:</p>
           <p className="text-xl font-medium">{quantitiesTicketData.reduce((sum, ticket) => {
-            return sum + ticket.quantity * ticket.price;
+            return sum + ticket.price;
           }, 0)}</p>
         </div>
 

@@ -9,7 +9,13 @@ const orderApi = createApi({
   endpoints: (builder) => ({
     //Lay orders cho user
     getOrdersByUserId: builder.query({
-      query: ({ userId, pageSize, pageNumber, searchString }) => ({
+      query: ({
+        userId,
+        pageSize,
+        pageNumber,
+        searchString,
+        statusFilter,
+      }) => ({
         url: `user/${userId}/orders/`,
         method: "Get",
         params: {
@@ -17,6 +23,7 @@ const orderApi = createApi({
           pageSize: pageSize,
           pageNumber: pageNumber,
           searchString: searchString,
+          statusFilter: statusFilter,
         },
       }),
       transformResponse: (apiResponse: { result: any }, meta) => {
@@ -64,6 +71,15 @@ const orderApi = createApi({
       providesTags: ["Order"],
     }),
 
+    //Lay lai thanh toán
+    retrieveOrder: builder.mutation({
+      query: ({ orderHeaderId }) => ({
+        url: `retrieve-intent/${orderHeaderId}`,
+        method: "POST",
+      }),
+      invalidatesTags: ["Order"],
+    }),
+
     //Tao moi order
     createOrder: builder.mutation({
       query: (orderData) => ({
@@ -92,5 +108,6 @@ export const {
   useGetOrderHeaderByIdQuery,
   useCreateOrderMutation,
   useConfirmOrderMutation,
+  useRetrieveOrderMutation,
 } = orderApi;
 export default orderApi;

@@ -79,13 +79,30 @@ const eventApi = createApi({
 
     getReportEvent: builder.query({
       query: ({ idEvent }) => ({
-        url: `ReportEvent`,
+        url: `ReportEvent/GetTicketStatics`,
         method: "GET",
         params: {
           eventId: idEvent,
         },
       }),
       providesTags: ["Event"],
+    }),
+
+    getAllTotalPaymentEvent: builder.query({
+      query: ({ searchString, pageSize, pageNumber }) => ({
+        url: `ReportEvent/TotalPaymentEvents`,
+        params: {
+          searchString,
+          pageSize,
+          pageNumber,
+        },
+      }),
+      transformResponse: (apiResponse: { result: any }, meta) => {
+        return {
+          apiResponse: apiResponse, // Dữ liệu chính từ API
+          totalRecords: meta?.response?.headers?.get("X-Pagination"), // Đọc số bản ghi từ header
+        };
+      },
     }),
   }),
 });
@@ -97,5 +114,6 @@ export const {
   useUpdateEventMutation,
   useUpdatePrivacyEventMutation,
   useGetReportEventQuery,
+  useGetAllTotalPaymentEventQuery,
 } = eventApi;
 export default eventApi;

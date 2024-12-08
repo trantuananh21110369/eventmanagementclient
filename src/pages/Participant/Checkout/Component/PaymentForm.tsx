@@ -5,12 +5,13 @@ import {
 } from "@stripe/react-stripe-js";
 import React from "react";
 import { useState } from "react";
-import { apiResponse } from "../../../Interfaces";
-import { useConfirmOrderMutation } from "../../../Apis/orderApi";
+import { apiResponse } from "../../../../Interfaces";
+import { useConfirmOrderMutation } from "../../../../Apis/orderApi";
 import { useNavigate } from "react-router-dom";
 import { SD_OrderStatus } from "Utility/SD";
+import { toastNotify } from "Helper";
 
-function PaymentForm({ data, userInput }: any) {
+function PaymentForm({ data }: any) {
   const navigate = useNavigate();
   const stripe = useStripe();
   const [isProcessing, setIsProcessing] = useState(false);
@@ -33,7 +34,7 @@ function PaymentForm({ data, userInput }: any) {
     });
 
     if (result.error) {
-      toastNotify("An unexpected error occured", "error");
+      toastNotify("Error of payment", "error");
       console.log(result.error.message);
     } else {
       console.log("Kết quả" + data?.result?.stripePaymentIntentId);
@@ -66,19 +67,19 @@ function PaymentForm({ data, userInput }: any) {
   return (
     <form onClick={handleSubmit}>
       <PaymentElement />
-      <button
-        disabled={!stripe || isProcessing}
-        className="btn btn-success mt-5"
-      >
-        <span id="button-text">
-          {isProcessing ? "Processing ..." : "Submit Order"}
-        </span>
-      </button>
+      <div className="flex justify-end mt-5">
+        <button
+          disabled={!stripe || isProcessing}
+          className="btn bg-primary mt-3 rounded-lg p-2"
+        >
+          <span id="button-text ">
+            {isProcessing ? "Processing ..." : "Submit Order"}
+          </span>
+        </button>
+      </div>
+
     </form>
   );
 }
 
 export default PaymentForm;
-function toastNotify(arg0: string, arg1: string) {
-  throw new Error("Function not implemented.");
-}

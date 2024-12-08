@@ -36,12 +36,34 @@ const organizationApi = createApi({
 
     getOrganizationByUserId: builder.query({
       query: (userId) => ({
-        url: `Organizations/`,
+        url: `user/Organizations/`,
         params: {
           userId: userId,
         },
       }),
       providesTags: ["Organization"],
+    }),
+
+    //Admin
+    getOrganizations: builder.query({
+      query: () => ({
+        url: `Organizations/`,
+      }),
+      providesTags: ["Organization"],
+    }),
+
+    changeStatusOrganization: builder.mutation({
+      query: ({ organizationId, status }) => ({
+        url: `status/organization/` + organizationId, // Đường dẫn URL
+        method: "PATCH", // Phương thức PATCH
+        headers: {
+          "Content-Type": "application/json", // Đảm bảo Content-Type là application/json
+        },
+        params: {
+          status: status,
+        },
+      }),
+      invalidatesTags: ["Organization"],
     }),
   }),
 });
@@ -51,6 +73,8 @@ export const {
   useCreateOrganizationMutation,
   useUpdateOrganizationMutation,
   useGetOrganizationByUserIdQuery,
+  useGetOrganizationsQuery,
+  useChangeStatusOrganizationMutation,
 } = organizationApi;
 
 export default organizationApi;

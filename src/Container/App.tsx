@@ -26,6 +26,10 @@ import SearchStringBar from 'Components/Layout/SearchStringBar';
 import EventReportPage from 'pages/EventOrganization/Event/pages/EventReportPage';
 import LoginAdmin from 'pages/Admin/LoginAdminPage';
 import { MainPage } from 'pages/Admin';
+import ListOrganization from 'pages/Admin/component/ListOrganizationPage';
+import ListOrganizationPage from 'pages/Admin/component/ListOrganizationPage';
+import ListUserPage from 'pages/Admin/component/ListUserPage';
+import ReportPage from 'pages/Admin/component/ReportPage';
 
 function App() {
   const dispatch = useDispatch();
@@ -92,13 +96,18 @@ function App() {
           <Route path="/order-fail" element={<FailOrderPage />} />
           <Route path='/payment' element={<PaymentPage />} />
           <Route path="/ticket" element={<ManagementTicketPage />} >
+            <Route index element={<ListOrder />} />
             <Route path="orders" element={<ListOrder />} />
             <Route path="like-event" element={<LikeEvent />} />
             <Route path="order-detail/:idOrderHeader" element={<UserOrderDetailPage />} />
           </Route>
           {/*Admin*/}
-          {/* <Route path="/admin" element={<LoginAdmin />} />
-          <Route path="/mainpage" element={<MainPage />} /> */}
+          <Route path="/admin" element={<LoginAdmin />} />
+          <Route path="/mainpage" element={<MainPage />} >
+            <Route path="organizations" element={<ListOrganizationPage />} />
+            <Route path="users" element={<ListUserPage />} />
+            <Route path="report" element={<ReportPage />} />
+          </Route>
         </Routes>
       </main>
       {!isDashboardPage && <PopupClientMessage organizationId={undefined} />}

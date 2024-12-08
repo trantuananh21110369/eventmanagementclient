@@ -6,4 +6,5 @@ export default interface organizationModel {
   city: string;
   country: string;
   urlImage: string;
+  status: string;
 }

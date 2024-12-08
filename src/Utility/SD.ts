@@ -54,3 +54,9 @@ export enum SD_OrderStatus {
   FAIL = "Fail",
   CANCEL = "Cancel",
 }
+
+export enum SD_OrganizationStatus {
+  PENDING = "Pending",
+  ACTIVE = "Active",
+  INACTIVE = "Inactive",
+}

@@ -43,7 +43,7 @@ function TicketOrder({ idEvent }: TicketOrderProps) {
   const handleIncrement = (ticketId: string) => {
     setQuantities((prevQuantities) =>
       prevQuantities.map((item) =>
-        item.TicketId === ticketId ? { ...item, quantity: item.quantity + 1 } : item
+        item.TicketId === ticketId ? { ...item, quantity: item.quantity + 1, price: item.price * (item.quantity + 1) } : item
       )
     );
   };

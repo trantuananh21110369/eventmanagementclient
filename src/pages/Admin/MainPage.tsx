@@ -4,7 +4,7 @@ import { setOrganization } from 'Storage/Redux/organizationSlice';
 import { organizationModel } from 'Interfaces';
 import { Loading } from 'Components/UI';
 import { Outlet, useNavigate } from 'react-router-dom';
-import SidebarAdmin from './SidebarAdmin';
+import SidebarAdmin from './component/SidebarAdmin';
 
 function PanelPage() {
   const navigate = useNavigate();

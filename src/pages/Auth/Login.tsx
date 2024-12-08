@@ -32,7 +32,7 @@ const Login = () => {
       password: userInput.password,
     });
 
-    if (response.data) {
+    if (response?.data) {
       const { token } = response.data.result;
       const { fullName, id, email, role, urlImage }: userModel = jwt_decode(token);
       localStorage.setItem("token", token);
@@ -40,7 +40,7 @@ const Login = () => {
       navigate("/");
       toastNotify("Login Successful");
     } else {
-      setError(response.error?.data?.errorMessages?.[0]);
+      setError(response?.error?.data?.errorMessages?.[0]);
     }
     setLoading(false);
   };

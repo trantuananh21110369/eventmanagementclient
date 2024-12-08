@@ -73,6 +73,20 @@ const authApi = createApi({
         method: "GET",
       }),
     }),
+
+    getAllUser: builder.query({
+      query: () => ({
+        url: "auth/users",
+        method: "GET",
+      }),
+    }),
+
+    blockUser: builder.mutation({
+      query: ({ userId }) => ({
+        url: "auth/lockout/user/" + userId,
+        method: "PATCH",
+      }),
+    }),
   }),
 });
 
@@ -84,5 +98,7 @@ export const {
   useForgetPasswordMutation,
   useSettingProfileMutation,
   useGetProfileQuery,
+  useGetAllUserQuery,
+  useBlockUserMutation,
 } = authApi;
 export default authApi;
