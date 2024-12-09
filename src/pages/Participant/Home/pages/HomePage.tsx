@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import EventListHome from "../components/EventListHome";
 import { useGetHomeEventQuery } from "Apis/searchApis";
+import FullScreenLoader from "Components/UI/Loading";
 let backgroundchrist = require("Assets/images/backgroundchrist.jpg");
 
 const HomePage = () => {
@@ -35,6 +36,10 @@ const HomePage = () => {
       setSliderEvents(firstThreeEvents); // Cập nhật chỉ 3 sự kiện đầu tiên cho slider
     }
   }, [data]);
+
+  if (isFetching) {
+    return <FullScreenLoader />; // Hiển thị trang loading khi dữ liệu đang được tải
+  }
 
   return (
     <div className="p-6 flex flex-col items-center h-auto w-full bg-cover bg-center" style={{ backgroundImage: `url(${backgroundchrist})` }}>

@@ -84,32 +84,32 @@ function MemberPage() {
       <h2 className="text-lg font-bold mb-3">Member List</h2>
 
       {/* Add Member Section */}
-      <div className="flex mb-4">
+      <div className="flex items-center mb-4">
         <input
           type="email"
           placeholder="Enter email"
           value={input.email}
           name="email"
           onChange={handleEmailChange}
-          className="w-full px-4 py-2 border rounded-md mb-2"
+          className="w-[50%] px-4 py-2 border rounded-md mb-2"
         />
-        <button className="px-4 py-2 text-white bg-blue-500 rounded" onClick={handleAddMember}>
+        <button className="p-2 m-2 text-white bg-blue-500 rounded" onClick={handleAddMember}>
           Add Member
         </button>
       </div>
 
       {/* Filter Section */}
-      <div className="flex mb-4">
+      <div className="flex mb-4 justify-center justify-center">
         <input
           type="text"
           placeholder="Search by name"
           value={filters.searchString}
           onChange={handleChange}
           name="searchString"
-          className="w-full px-4 py-2 border rounded-md mb-2"
+          className="w-[100%] px-4 py-2 border rounded-md mb-2"
         />
-        <select
-          className="w-full px-4 py-2 border rounded-md mb-2"
+        {/* <select
+          className="w-[20%] px-4 py-2 border rounded-md mb-2"
           onChange={handleChange}
           name="status"
         >
@@ -118,8 +118,8 @@ function MemberPage() {
               {item}
             </option>
           ))}
-        </select>
-        <button className="px-4 py-2 text-white bg-green-500 rounded" onClick={handleFilter}>
+        </select> */}
+        <button className="p-2 m-2 text-white bg-green-500 rounded" onClick={handleFilter}>
           Filter
         </button>
       </div>

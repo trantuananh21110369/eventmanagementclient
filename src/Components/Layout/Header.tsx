@@ -51,14 +51,14 @@ function Header({ className }: { className?: string }) {
             <div className="hidden sm:flex items-center space-x-4 relative">
               {userData.id ? (
                 <Menu as="div" className="relative">
-                  <Menu.Button className="bg-primary flex items-center space-x-1 focus:outline-none">
+                  <Menu.Button className="bg-primary flex items-center space-x-1 focus:outline-none hover:bg-secondaryColor">
                     <img
                       src={userData.urlImage}
                       alt="Avatar"
                       className="w-8 h-8 rounded-full border-2 border-secondaryColor"
                     />
                     <span className="text-second font-medium hidden sm:block">{userData.fullName}</span>
-                    <svg className="w-5 h-5 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                   </Menu.Button>
@@ -105,10 +105,10 @@ function Header({ className }: { className?: string }) {
                 </Menu>
               ) : (
                 <div className='flex space-x-2'>
-                  <NavLink className="nav-link text-second" to="/register">
+                  <NavLink className="nav-link text-second hover:text-primary" to="/register">
                     Register
                   </NavLink>
-                  <NavLink className="btn-success nav-link text-second" to="/login">
+                  <NavLink className="btn-success nav-link text-second hover:text-primary" to="/login">
                     Login
                   </NavLink>
                 </div>
@@ -119,14 +119,14 @@ function Header({ className }: { className?: string }) {
               <img src={logo} alt="Logo" className="h-10 w-10 rounded-lg mr-52" />
               {userData.id ? (
                 <Menu as="div" className="relative">
-                  <Menu.Button className="bg-primary flex items-center space-x-1 focus:outline-none">
+                  <Menu.Button className="bg-primary flex items-center space-x-1 focus:outline-none hover:bg-secondaryColor">
                     <img
                       src={userData.urlImage}
                       alt="Avatar"
                       className="w-8 h-8 rounded-full border-2 border-secondaryColor"
                     />
                     <span className="text-second font-medium hidden sm:block">{userData.fullName}</span>
-                    <svg className="w-5 h-5 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                     </svg>
                   </Menu.Button>
@@ -172,12 +172,12 @@ function Header({ className }: { className?: string }) {
                   </Menu.Items>
                 </Menu>
               ) : (
-                <div className='flex space-x-2'>
-                  <NavLink className="nav-link text-second" to="/register">
-                    Register
+                <div className='flex space-x-2 bg-yellow-300 rounded-lg p-2'>
+                  <NavLink className="nav-link text-second hover:text-primary" to="/register">
+                  Register
                   </NavLink>
-                  <NavLink className="btn-success nav-link text-second" to="/login">
-                    Login
+                  <NavLink className="btn-success nav-link text-second hover:text-primary" to="/login">
+                  Login
                   </NavLink>
                 </div>
               )}

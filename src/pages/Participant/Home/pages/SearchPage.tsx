@@ -3,6 +3,7 @@ import { useSearchParams, useNavigate, Link } from "react-router-dom";
 import FilterDateComponent from "../components/FilterDateComponent"; // Import FilterDateComponent
 import { useGetHomeEventQuery } from "Apis/searchApis";
 import { formatDate } from "Utility/formatDate";
+let backgroundchrist = require("Assets/images/backgroundchrist.jpg");
 
 interface EventHome {
   eventId: string;
@@ -66,9 +67,9 @@ const SearchPage: React.FC = () => {
   };
 
   return (
-    <div className="search-page-container" style={{ paddingLeft: "40px", paddingRight: "40px" }}>
+    <div className="p-6 flex flex-col items-center h-auto w-full bg-cover bg-center" style={{ backgroundImage: `url(${backgroundchrist})` }}>
       {/* Container for title and button */}
-      <div className="flex justify-between items-center mt-16 mb-6">
+      <div className="flex justify-between items-center mt-16 mb-6 w-3/4">
         <h1 className="search-page-title text-2xl font-bold">Search Results:</h1>
         <button
           onClick={handleButtonClick}
@@ -86,22 +87,23 @@ const SearchPage: React.FC = () => {
       </div>
 
       {/* Display FilterDateComponent if showFilter is true */}
-      {showFilter && (
-        <div className="absolute top-0 left-0 w-full h-full bg-gray-500 bg-opacity-50 z-10">
-          <div className="flex justify-center items-center h-full">
-            <FilterDateComponent
-              onFilter={handleFilterApply} // Apply filter function
-              onClose={handleFilterClose} // Close FilterDateComponent function
-            />
+      {
+        showFilter && (
+          <div className="absolute top-0 left-0 w-full h-full bg-gray-500 bg-opacity-50 z-10">
+            <div className="flex justify-center items-center h-full">
+              <FilterDateComponent
+                onFilter={handleFilterApply} // Apply filter function
+                onClose={handleFilterClose} // Close FilterDateComponent function
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* Event list */}
       <div
-        className="events-list grid gap-6"
+        className="events-list grid gap-6 w-3/4"
         style={{
-          paddingLeft: "80px", paddingRight: "80px",
           paddingTop: "20px",
           gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
           justifyContent: "center",
@@ -143,9 +145,7 @@ const SearchPage: React.FC = () => {
           </p>
         )}
       </div>
-
     </div>
-
   );
 };
 

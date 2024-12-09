@@ -1,5 +1,8 @@
+import { useRegisterUserMutation } from "Apis/authApi";
+import { toastNotify } from "Helper";
+import { apiResponse } from "Interfaces";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [userInput, setUserInput] = useState({
@@ -9,14 +12,24 @@ const Register = () => {
     confirmPassword: "",
   });
 
+  const [register] = useRegisterUserMutation();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const rs: apiResponse = await register(userInput);
+
+    if (rs?.data) {
+      toastNotify("Register success !", "success");
+      navigate("/");
+    } else {
+      toastNotify(rs?.error?.data?.errorMessages?.[0], "error");
+    }
+  }
+
   const handleInputUser = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setUserInput({ ...userInput, [name]: value });
-  };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Registering user:", userInput);
   };
 
   return (

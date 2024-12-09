@@ -20,10 +20,16 @@ export interface EventDetail {
   urlImageOrganization: string;
   status: string;
   tickets: TicketTimeDetail[];
+  eventDates: EventDate[];
 }
 
 export interface TicketTimeDetail {
   nameTicket: string;
+  scheduledDate: string;
+}
+
+export interface EventDate {
+  dateTitle: string;
   scheduledDate: string;
 }
 
@@ -129,16 +135,16 @@ const EventDetailPage = () => {
                 </button>
               </div>
 
-              {/* Date/Time Section */}
+              {/* Date/Time Section  of Ticket*/}
               <div className="mb-6 p-6 bg-gray-50 rounded-lg shadow-sm">
-                <h2 className="text-xl font-semibold text-gray-700">Date & Time</h2>
+                <h2 className="text-xl font-semibold text-gray-700">Ticket Summary</h2>
                 {eventDetailView?.tickets?.map((item, index) => (
                   <div key={index} className="text-gray-600 mt-4">
                     <p>
-                      <span className="font-bold text-blue-500">Tên loại vé:</span> {item.nameTicket}
+                      <span className="font-bold text-blue-500">Ticket Name:</span> {item.nameTicket}
                     </p>
                     <p>
-                      <span className="font-bold text-blue-500">Ngày diễn ra:</span> {item.scheduledDate}
+                      <span className="font-bold text-blue-500">Scheduled of Ticket:</span> {item.scheduledDate}
                     </p>
                   </div>
                 ))}

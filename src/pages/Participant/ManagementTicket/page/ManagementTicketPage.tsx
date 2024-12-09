@@ -41,7 +41,7 @@ function ManagementTicketPage() {
           >
             Management Order
           </NavLink>
-          <NavLink
+          {/* <NavLink
             to="like-event"
             className={({ isActive }) =>
               `block p-3 rounded-lg ${isActive
@@ -51,7 +51,7 @@ function ManagementTicketPage() {
             }
           >
             Event Like
-          </NavLink>
+          </NavLink> */}
         </nav>
       </div>
 

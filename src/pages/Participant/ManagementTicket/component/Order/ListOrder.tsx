@@ -30,7 +30,7 @@ const ListOrder = () => {
   const navigate = useNavigate();
   const userId = useSelector((state: RootState) => state.userAuthStore.id);
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState({ searchString: '', statusFilter: '' });
   const [apiFilters, setApiFilters] = useState({ searchString: '', statusFilter: '' });
   const pageNumber = parseInt(searchParams.get('pageNumber') || '1', 10);
@@ -100,22 +100,22 @@ const ListOrder = () => {
     {
       name: 'Action',
       cell: (row) => (
-        <>
+        <div className="flex space-x-4">
           <button
-            className="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-300"
+            className="px-2 py-1 text-xs text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-300"
             onClick={() => handleOpenDetailOrder(row.idOrderHeader)}
           >
             Detail
           </button>
           {row.status === SD_OrderStatus.PENDING && (
             <button
-              className="px-4 py-2 text-sm text-white bg-green-600 rounded-md hover:bg-green-700 focus:ring-2 focus:ring-green-300 ml-2"
+              className="px-3 py-1 text-xs text-white bg-green-600 rounded-md hover:bg-green-700 focus:ring-2 focus:ring-green-300"
               onClick={() => handlePaymentRedirect(row.idOrderHeader)}
             >
               Pay Now
             </button>
           )}
-        </>
+        </div>
       ),
     },
   ];
