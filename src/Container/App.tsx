@@ -30,6 +30,7 @@ import ListOrganization from 'pages/Admin/component/ListOrganizationPage';
 import ListOrganizationPage from 'pages/Admin/component/ListOrganizationPage';
 import ListUserPage from 'pages/Admin/component/ListUserPage';
 import ReportPage from 'pages/Admin/component/ReportPage';
+import PrivateRoute from 'Components/PrivateRoute';
 
 function App() {
   const dispatch = useDispatch();
@@ -61,46 +62,51 @@ function App() {
           <Route path="/searchpage" element={<SearchPage />} />
 
           {/*Organization*/}
-          <Route path="/organization/create" element={<CreateOrganizationPage />} />
-          <Route path="/dashboard" element={<PanelPage />} >
-            <Route index element={<ManagementEventPage />} />
-            <Route path="event" element={<ManagementEventPage />} >
-              <Route index element={<EventsOverviewPage />} />
-              <Route path="eventpage" element={<EventsOverviewPage />} />
-              <Route path="report/:idEvent" element={<EventReportPage />} />
-            </Route>
-            <Route path="create" element={<EventUpsertPage />} >
-              <Route path="edit" element={<EventForm />} />
-            </Route>
-            <Route path="update/:idEvent" element={<EventUpsertPage />} >
-              <Route path="edit" element={<EventForm />} />
-              <Route path="eventdate" element={<EventDateForm />} />
-              <Route path="ticket" element={<TicketsOverviewPage />} />
-            </Route>
-            <Route path="chatOrganization" element={<ChatPage />} />
-            <Route path="organization" element={<SettingOrganizationPage />} >
-              <Route index element={<OrganizationInfo />} />
-              <Route path="info" element={<OrganizationInfo />} />
-              <Route path="permissions" element={<ManageMemberPage />} >
-                <Route path="user" element={<MemberPage />} />
-                <Route path="admin" element={<RolePage />} />
+          <Route path="" element={<PrivateRoute />} >
+            <Route path="/organization/create" element={<CreateOrganizationPage />} />
+            <Route path="/dashboard" element={<PanelPage />} >
+              <Route index element={<ManagementEventPage />} />
+              <Route path="event" element={<ManagementEventPage />} >
+                <Route index element={<EventsOverviewPage />} />
+                <Route path="eventpage" element={<EventsOverviewPage />} />
+                <Route path="report/:idEvent" element={<EventReportPage />} />
               </Route>
+              <Route path="create" element={<EventUpsertPage />} >
+                <Route path="edit" element={<EventForm />} />
+              </Route>
+              <Route path="update/:idEvent" element={<EventUpsertPage />} >
+                <Route path="edit" element={<EventForm />} />
+                <Route path="eventdate" element={<EventDateForm />} />
+                <Route path="ticket" element={<TicketsOverviewPage />} />
+              </Route>
+              <Route path="chatOrganization" element={<ChatPage />} />
+              <Route path="organization" element={<SettingOrganizationPage />} >
+                <Route index element={<OrganizationInfo />} />
+                <Route path="info" element={<OrganizationInfo />} />
+                <Route path="permissions" element={<ManageMemberPage />} >
+                  <Route index element={<MemberPage />} />
+                  <Route path="user" element={<MemberPage />} />
+                  <Route path="admin" element={<RolePage />} />
+                </Route>
+              </Route>
+              <Route path="order-detail/:idOrderHeader" element={<OrderDetailPage />} />
+              <Route path="order" element={<OrdersOverviewPage />} />
+            </Route >
+
+            {/*User*/}
+            <Route path="/e/:idEvent" element={<EventDetailPage />} />
+            <Route path="/checkout" element={<CheckoutPage />} />
+            <Route path="/order-success" element={<OrderSuccessPage />} />
+            <Route path="/order-fail" element={<FailOrderPage />} />
+            <Route path='/payment' element={<PaymentPage />} />
+            <Route path="/ticket" element={<ManagementTicketPage />} >
+              <Route index element={<ListOrder />} />
+              <Route path="orders" element={<ListOrder />} />
+              <Route path="like-event" element={<LikeEvent />} />
+              <Route path="order-detail/:idOrderHeader" element={<UserOrderDetailPage />} />
             </Route>
-            <Route path="order-detail/:idOrderHeader" element={<OrderDetailPage />} />
-            <Route path="order" element={<OrdersOverviewPage />} />
-          </Route >
-          {/*User*/}
-          <Route path="/e/:idEvent" element={<EventDetailPage />} />
-          <Route path="/checkout" element={<CheckoutPage />} />
-          <Route path="/order-success" element={<OrderSuccessPage />} />
-          <Route path="/order-fail" element={<FailOrderPage />} />
-          <Route path='/payment' element={<PaymentPage />} />
-          <Route path="/ticket" element={<ManagementTicketPage />} >
-            <Route index element={<ListOrder />} />
-            <Route path="orders" element={<ListOrder />} />
-            <Route path="like-event" element={<LikeEvent />} />
-            <Route path="order-detail/:idOrderHeader" element={<UserOrderDetailPage />} />
           </Route>
+
           {/*Admin*/}
           <Route path="/admin" element={<LoginAdmin />} />
           <Route path="/mainpage" element={<MainPage />} >

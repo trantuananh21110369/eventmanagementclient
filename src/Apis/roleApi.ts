@@ -1,10 +1,29 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { get } from "http";
+import { useSelector } from "react-redux";
 
 const roleApi = createApi({
   reducerPath: "Role",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://localhost:7056/api",
+    prepareHeaders: (headers: Headers, api) => {
+      // Lấy idOrganization từ localStorage
+      const token = localStorage.getItem("token");
+
+      const storedData = localStorage.getItem("organization");
+      let idOrganization = null;
+
+      if (storedData) {
+        const organizationData = JSON.parse(storedData);
+        idOrganization = organizationData.idOrganization;
+      }
+
+      //Gán lại vào header
+      token && headers.set("Authorization", `Bearer ` + token);
+      if (idOrganization) {
+        headers.set("IdOrganization", idOrganization);
+      }
+    },
   }),
   tagTypes: ["Role"],
   endpoints: (builder) => ({

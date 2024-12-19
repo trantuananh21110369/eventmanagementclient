@@ -4,6 +4,22 @@ const organizationApi = createApi({
   reducerPath: "Organization",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://localhost:7056/api",
+    prepareHeaders: (headers: Headers, api) => {
+      const token = localStorage.getItem("token");
+
+      const storedData = localStorage.getItem("organization");
+      let idOrganization = null;
+
+      if (storedData) {
+        const organizationData = JSON.parse(storedData);
+        idOrganization = organizationData.idOrganization;
+      }
+
+      token && headers.set("Authorization", `Bearer ` + token);
+      if (idOrganization) {
+        headers.set("IdOrganization", idOrganization);
+      }
+    },
   }),
   tagTypes: ["Organization"],
   endpoints: (builder) => ({

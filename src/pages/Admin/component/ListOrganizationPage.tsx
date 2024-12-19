@@ -63,30 +63,7 @@ function ListOrganizationPage() {
       name: 'Status',
       selector: row => row.status,
       sortable: true,
-    },
-    {
-      name: 'Action',
-      cell: row => (
-        <select
-          value={row.status}
-          onChange={e => handleChangeStatus(row.idOrganization, e.target.value)}
-          style={{
-            padding: "6px 12px",
-            borderRadius: "4px",
-            fontSize: "14px",
-            cursor: "pointer",
-            border: "1px solid #d1d5db",
-            minWidth: "120px",
-          }}
-        >
-          {OrganizationStatus.map(status => (
-            <option key={status} value={status}>
-              {status}
-            </option>
-          ))}
-        </select>
-      ),
-    },
+    }
   ];
 
   return (

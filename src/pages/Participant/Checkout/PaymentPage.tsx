@@ -21,6 +21,8 @@ function PaymentPage() {
     clientSecret: apiResult?.result?.clientSecret,
   };
 
+  console.log(apiResult?.result?.numberPhone + " " + apiResult);
+
   return (
     <Elements stripe={stripePromise} options={options}>
       <div className="max-w-4xl mx-auto p-6 bg-gray-200 shadow-md rounded-lg m-3">
@@ -34,7 +36,7 @@ function PaymentPage() {
               <strong>Name:</strong> {user?.fullName || "Not provided"}
             </p>
             <p>
-              <strong>Phone:</strong> {apiResult?.numberPhone || "Not provided"}
+              <strong>Phone:</strong> {apiResult?.result?.numberPhone || "Not provided"}
             </p>
           </div>
           <div>

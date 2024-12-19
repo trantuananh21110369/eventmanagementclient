@@ -21,7 +21,7 @@ const Register = () => {
 
     if (rs?.data) {
       toastNotify("Register success !", "success");
-      navigate("/");
+      navigate("/login");
     } else {
       toastNotify(rs?.error?.data?.errorMessages?.[0], "error");
     }

@@ -28,11 +28,18 @@ function EventList({ isFetching, eventData }: eventListProps) {
   };
 
   const handleUpdatePrivacy = async (e: React.ChangeEvent<HTMLSelectElement>, idEvent: string) => {
-    console.log("button clicked");
-    const res: apiResponse = await updatePrivacy({ idEvent: idEvent, privacy: e.target.value });
-    console.log(res);
-    if (res.data?.isSuccess) {
-      toastNotify("Event updated successfully", "success");
+    try {
+      const res: apiResponse = await updatePrivacy({ idEvent: idEvent, privacy: e.target.value });
+      if (res.data?.isSuccess) {
+        toastNotify("Event updated successfully", "success");
+      }
+    } catch (err: any) {
+      if (err.status === 403) {
+        toastNotify("You do not have permission to update this event", "error");
+      } else {
+        console.error("Unexpected Error:", err);
+        toastNotify("An unexpected error occurred", "error");
+      }
     }
   };
 

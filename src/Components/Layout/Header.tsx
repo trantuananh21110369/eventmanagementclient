@@ -17,7 +17,7 @@ function Header({ className }: { className?: string }) {
     localStorage.removeItem("token");
     localStorage.removeItem("organization");
     dispatch(setLoggedInUser({ ...emptyUserState }));
-    navigate("/");
+    window.location.reload();
   };
 
   const userData: userModel = useSelector(
@@ -174,10 +174,10 @@ function Header({ className }: { className?: string }) {
               ) : (
                 <div className='flex space-x-2 bg-yellow-300 rounded-lg p-2'>
                   <NavLink className="nav-link text-second hover:text-primary" to="/register">
-                  Register
+                    Register
                   </NavLink>
                   <NavLink className="btn-success nav-link text-second hover:text-primary" to="/login">
-                  Login
+                    Login
                   </NavLink>
                 </div>
               )}

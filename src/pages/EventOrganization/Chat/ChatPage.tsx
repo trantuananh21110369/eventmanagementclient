@@ -8,6 +8,7 @@ import { supportChatRoomModel } from "Interfaces";
 import messageModel from "Interfaces/SupportChat/messageModel";
 import { hubService } from "Service/HubService";
 import { LoadingCircular } from "Components/UI";
+import { toastNotify } from "Helper";
 
 
 function App() {
@@ -21,7 +22,7 @@ function App() {
   const [dataListRoom, setDataListRoom] = useState<supportChatRoomModel[]>([]);
   const [isConnected, setIsConnected] = useState(false);
 
-  const [getAllChatRooms, { data: listChat, isFetching: isFetchingRooms }] = useLazyGetAllChatRoomByOrganizationIdQuery();
+  const [getAllChatRooms, { data: listChat, error: errorListChat, isFetching: isFetchingRooms }] = useLazyGetAllChatRoomByOrganizationIdQuery();
   const [getAllMessages, { data: listMessage, isFetching: isFetchingMessage }] = useLazyGetMessageByIdRoomQuery();
   useEffect(() => {
     const setupConnection = async () => {
@@ -93,7 +94,14 @@ function App() {
       setDataListRoom(listChat.result);
       handleSelectChat(listChat.result[0]);
     }
-  }, [isFetchingRooms])
+
+    if (errorListChat) {
+      if ('status' in errorListChat && errorListChat.status === 403) {
+        toastNotify("You don't have permission", "error");
+      }
+    }
+
+  }, [listChat, errorListChat])
 
   useEffect(() => {
     if (listMessage && !isFetchingMessage) {

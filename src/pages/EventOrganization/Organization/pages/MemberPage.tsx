@@ -30,7 +30,7 @@ function MemberPage() {
 
   // API Hooks
   const [addMember] = useAddMemberToOrganizationMutation();
-  const { data, isFetching } = useGetMembersQuery({
+  const { data, error, isFetching } = useGetMembersQuery({
     idOrganization,
     searchString: apiFilters.searchString,
     pageSize,
@@ -76,7 +76,13 @@ function MemberPage() {
       const { TotalRecords } = JSON.parse(data?.totalRecords || "{}");
       setTotalRecords(TotalRecords);
     }
-  }, [data]);
+    if (error) {
+      if ('status' in error && error.status === 403) {
+        toastNotify("You don't have permission", "error");
+      }
+    }
+
+  }, [data, error]);
 
   // JSX
   return (
@@ -99,7 +105,7 @@ function MemberPage() {
       </div>
 
       {/* Filter Section */}
-      <div className="flex mb-4 justify-center justify-center">
+      <div className="flex mb-4 justify-center">
         <input
           type="text"
           placeholder="Search by name"

@@ -24,11 +24,14 @@ function TicketOrder({ idEvent }: TicketOrderProps) {
   useEffect(() => {
     if (data?.result) {
       setDataTickets(data.result);
+      const now = new Date();
       const initQuantities = data.result
         .filter((ticket: TicketModel) =>
           ticket.status === SD_Status_Ticket.ON_SALE &&
           ticket.visibility === SD_Visibility_Ticket.VISIBLE &&
-          ticket.saleMethod === SD_Sale_Method_Ticket.ONLINE
+          ticket.saleMethod === SD_Sale_Method_Ticket.ONLINE &&
+          new Date(ticket.saleStartDate) <= now && new Date(ticket.saleEndDate) >= now &&
+          ticket.quantity > 0
         )
         .map((ticket: TicketModel) => ({
           TicketId: ticket.idTicket,
@@ -163,7 +166,7 @@ function TicketOrder({ idEvent }: TicketOrderProps) {
           className={`px-4 py-2 rounded-lg ${totalQuantity === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500 text-white hover:bg-blue-600"
             }`}
         >
-          Go Order
+          Go to Order
         </button>
       </div>
     </div>

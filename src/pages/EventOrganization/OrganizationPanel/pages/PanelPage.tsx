@@ -21,8 +21,8 @@ function PanelPage() {
       navigate("/organization/create");
     }
     else {
-      const storedData = localStorage.getItem("organization");
-      if (storedData) {
+      const storedData: any = localStorage.getItem("organization");
+      if (storedData?.idOrganization) {
         const organizationData: organizationModel = JSON.parse(storedData) as organizationModel;
         dispatch(setOrganization({
           idUser: organizationData.idUser, idOrganization: organizationData.idOrganization, nameOrganization: organizationData.nameOrganization,
@@ -33,16 +33,18 @@ function PanelPage() {
       }
       else {
         const tempData = {
+          idOrganization: dataOwner?.result?.idOrganization,
           nameOrganization: dataOwner?.result?.nameOrganization,
           description: dataOwner?.result?.description,
           city: dataOwner?.result?.city,
           country: dataOwner?.result?.country,
           urlImage: dataOwner?.result?.urlImage,
         };
-        dispatch(setOrganization({ idUser: idUser, idOrganization: dataOwner?.result?.idOrganization, ...tempData })); navigate("event");
+        dispatch(setOrganization({ idUser: idUser, ...tempData })); navigate("event");
+        localStorage.setItem("organization", JSON.stringify(tempData));
       }
     }
-  }, [isFetching]);
+  }, [dataOwner]);
 
   useEffect(() => { console.log(currentOraganization.nameOrganization) }, [currentOraganization])
 
@@ -58,6 +60,6 @@ function PanelPage() {
       </div>
     )
   );
-}  
+}
 
 export default PanelPage;

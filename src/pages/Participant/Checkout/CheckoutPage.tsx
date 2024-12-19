@@ -102,6 +102,7 @@ function CheckoutPage() {
         <div className="flex justify-end items-center py-3 border-t">
           <p className="text-2xl font-semibold px-5">Total price:</p>
           <p className="text-xl font-medium">{quantitiesTicketData.reduce((sum, ticket) => {
+            console.log(ticket.nameTicket + ":" + ticket.price);
             return sum + ticket.price;
           }, 0)}</p>
         </div>

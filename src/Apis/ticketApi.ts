@@ -25,12 +25,9 @@ const ticketApi = createApi({
     }),
 
     createTicket: builder.mutation({
-      query: (ticketData) => ({
+      query: ({ticketData}) => ({
         url: "tickets/",
         method: "POST",
-        headers: {
-          "Content-type": "application/json",
-        },
         body: ticketData,
       }),
       invalidatesTags: ["Ticket"],

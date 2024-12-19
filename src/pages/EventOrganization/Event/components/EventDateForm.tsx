@@ -13,7 +13,7 @@ function EventDateForm() {
   const navigate = useNavigate();
   const [saveEventDates] = useSaveEventDatesMutation();
   const [isLoading, setLoading] = useState(false);
-  const [eventDateData, setEventDateData] = useState<EventDateModel[]>([]);  
+  const [eventDateData, setEventDateData] = useState<EventDateModel[]>([]);
   const [eventDateDeleteData, setEventDateDeleteData] = useState<EventDateModel[]>([]);
   const [isZoomedIn, setIsZoomedIn] = useState(false);  // State to track zoom level
 
@@ -67,18 +67,28 @@ function EventDateForm() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const response: apiResponse = await saveEventDates({ data: { ListEventDateDto: eventDateData, ListEventDateDelete: eventDateDeleteData }, idEvent });
 
-    setLoading(false);
-    if (response.data?.isSuccess) {
-      toastNotify("Event Date Saved Successfully");
-      if (idEvent) {
-        navigate("../ticket");
+    try {
+      const response: apiResponse =
+        await saveEventDates({ data: { ListEventDateDto: eventDateData, ListEventDateDelete: eventDateDeleteData }, idEvent });
+      // console.log("Loi bat duoc" + response?.error?.data?.errorMessages[0]);
+      if (response.data?.isSuccess) {
+        toastNotify("Event Date Saved Successfully");
       } else {
-        navigate("./");
+        const errorMessage = response?.error?.data?.errorMessages[0] || "Unknown error";
+
+        if (response.error?.status === 409) {
+          toastNotify("Already Ticket take EventDate", "error");
+        }
+
+        toastNotify(errorMessage, "error");
       }
-    } else {
-      toastNotify("Error Saving Event Date", "error");
+    } catch (err: any) {
+      console.error("Unexpected Error:", err);
+      // toastNotify(err?.data?.errorMessages[0] || "Unknown error", "error");
+      toastNotify("Already Ticket take EventDate", "error");
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -86,8 +96,8 @@ function EventDateForm() {
     <form method="post" className='flex flex-col space-y-6' onSubmit={handleSubmit}>
       {eventDateData && eventDateData.map((eventDate, index) => {
         return (
-          <div 
-            key={index} 
+          <div
+            key={index}
             className={`mb-6 border-2 border-gray-300 p-4 rounded-md shadow-md ${isZoomedIn ? 'pr-4' : ''}`}
           >
             <div className={`flex justify-between items-center ${isZoomedIn ? 'space-x-6' : ''}`}>

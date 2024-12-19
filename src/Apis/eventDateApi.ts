@@ -10,7 +10,7 @@ const eventDateApi = createApi({
   endpoints: (builder) => ({
     getEventDates: builder.query({
       query: (idEvent) => ({
-        url: `EventDate/`,
+        url: `EventDates/`,
         method: "get",
         params: {
           idEvent: idEvent,
@@ -21,8 +21,8 @@ const eventDateApi = createApi({
 
     saveEventDates: builder.mutation({
       query: ({ data, idEvent }) => ({
-        url: "EventDate/",
-        method: "Post",
+        url: "EventDate",
+        method: "Put",
         params: {
           idEvent: idEvent,
         },
@@ -33,9 +33,34 @@ const eventDateApi = createApi({
       }),
       invalidatesTags: ["EventDate"],
     }),
+
+    createEventDate: builder.mutation({
+      query: ({ data, idEvent }) => ({
+        url: "EventDate",
+        method: "Post",
+        params: {
+          idEvent: idEvent,
+        },
+        body: data,
+      }),
+      invalidatesTags: ["EventDate"],
+    }),
+
+    updateEventDate: builder.mutation({
+      query: ({ data, eventDateId }) => ({
+        url: "EventDate/" + eventDateId,
+        method: "Put",
+        body: data,
+      }),
+      invalidatesTags: ["EventDate"],
+    }),
   }),
 });
 
-export const { useGetEventDatesQuery, useSaveEventDatesMutation } =
-  eventDateApi;
+export const {
+  useGetEventDatesQuery,
+  useCreateEventDateMutation,
+  useUpdateEventDateMutation,
+  useSaveEventDatesMutation,
+} = eventDateApi;
 export default eventDateApi;

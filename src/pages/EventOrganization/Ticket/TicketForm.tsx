@@ -121,7 +121,8 @@ const TicketForm = ({ listEventDates, ticket, onClose }: ticketFormProps) => {
       if (ticket?.idTicket) {
         await updateTicket({ data: ticketInputs, idTicket: ticket.idTicket });
       } else {
-        await createTicket(ticketInputs);
+        console.log("Ticket" + ticketInputs.quantity);
+        await createTicket({ ticketData: ticketInputs });
       }
       toastNotify("Ticket saved successfully!", "success");
       onClose();
