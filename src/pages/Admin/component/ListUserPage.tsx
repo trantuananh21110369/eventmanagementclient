@@ -12,7 +12,7 @@ function ListUserPage() {
     id: string
     fullName: string
     email: string
-    lockoutEnable: boolean
+    lockoutEnabled: boolean
   }
   useEffect(() => {
     if (!isFetching && fetchedUserData) {
@@ -20,7 +20,7 @@ function ListUserPage() {
     }
   }, [isFetching, fetchedUserData]);
 
-  const handleBlockUser = async (id: string, lockoutEnable: boolean) => {
+  const handleBlockUser = async (id: string, lockoutEnabled: boolean) => {
     const res = await blockUser({ userId: id });
     if (res.data?.isSuccess) {
       toastNotify("User status updated successfully", "success");
@@ -57,8 +57,8 @@ function ListUserPage() {
       name: 'Action',
       cell: row => (
         <select
-          value={row.lockoutEnable ? 'Lock' : 'Unlock'}
-          onChange={() => handleBlockUser(row.id, row.lockoutEnable)}
+          value={row.lockoutEnabled ? 'Lock' : 'Unlock'}
+          onChange={() => handleBlockUser(row.id, row.lockoutEnabled)}
           style={{
             padding: "6px 12px",
             borderRadius: "4px",

@@ -65,6 +65,12 @@ const SettingProfile = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (profile.fullname.trim() === "") {
+      toastNotify("Full name is required", "error");
+      return;
+    }
+
     setLoading(true);
     if (!imageToStore && !userId) {
       toastNotify("Please upload an image", "error");

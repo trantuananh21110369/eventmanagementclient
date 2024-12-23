@@ -89,7 +89,7 @@ function CheckoutPage() {
 
         {/* Ticket Data */}
         {
-          quantitiesTicketData.filter(ticket => ticket.quantity > 0).map((ticket, index) => (
+          quantitiesTicketData.map((ticket, index) => (
             <div key={index} className="flex flex-row justify-between mt-1">
               <p className="w-1/3">{ticket.nameTicket}</p>
               <p className="w-1/3">{ticket.quantity}</p>
@@ -102,9 +102,9 @@ function CheckoutPage() {
         <div className="flex justify-end items-center py-3 border-t">
           <p className="text-2xl font-semibold px-5">Total price:</p>
           <p className="text-xl font-medium">{quantitiesTicketData.reduce((sum, ticket) => {
-            console.log(ticket.nameTicket + ":" + ticket.price);
+            console.log(ticket.nameTicket + " :" + ticket.price);
             return sum + ticket.price;
-          }, 0)}</p>
+          }, 0)} $</p>
         </div>
 
         {/* Area Payment */}

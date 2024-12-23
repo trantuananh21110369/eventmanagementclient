@@ -17,34 +17,37 @@ function PanelPage() {
 
   useEffect(() => {
     //Kiem tra user có Organization hay chưa
-    if (error && 'status' in error && error.status === 404) {
-      navigate("/organization/create");
-    }
-    else {
-      const storedData: any = localStorage.getItem("organization");
-      if (storedData?.idOrganization) {
-        const organizationData: organizationModel = JSON.parse(storedData) as organizationModel;
-        dispatch(setOrganization({
-          idUser: organizationData.idUser, idOrganization: organizationData.idOrganization, nameOrganization: organizationData.nameOrganization,
-          description: organizationData.description, city: organizationData.city,
-          country: organizationData.country, urlImage: organizationData.urlImage
-        }));
-        navigate("event");
+    console.log(error);
+    if (!isFetching) {
+      if (error && 'status' in error && error?.status === 404) {
+        navigate("/organization/create");
       }
       else {
-        const tempData = {
-          idOrganization: dataOwner?.result?.idOrganization,
-          nameOrganization: dataOwner?.result?.nameOrganization,
-          description: dataOwner?.result?.description,
-          city: dataOwner?.result?.city,
-          country: dataOwner?.result?.country,
-          urlImage: dataOwner?.result?.urlImage,
-        };
-        dispatch(setOrganization({ idUser: idUser, ...tempData })); navigate("event");
-        localStorage.setItem("organization", JSON.stringify(tempData));
+        const storedData: any = localStorage.getItem("organization");
+        if (storedData?.idOrganization) {
+          const organizationData: organizationModel = JSON.parse(storedData) as organizationModel;
+          dispatch(setOrganization({
+            idUser: organizationData.idUser, idOrganization: organizationData.idOrganization, nameOrganization: organizationData.nameOrganization,
+            description: organizationData.description, city: organizationData.city,
+            country: organizationData.country, urlImage: organizationData.urlImage
+          }));
+          navigate("event");
+        }
+        else {
+          const tempData = {
+            idOrganization: dataOwner?.result?.idOrganization,
+            nameOrganization: dataOwner?.result?.nameOrganization,
+            description: dataOwner?.result?.description,
+            city: dataOwner?.result?.city,
+            country: dataOwner?.result?.country,
+            urlImage: dataOwner?.result?.urlImage,
+          };
+          dispatch(setOrganization({ idUser: idUser, ...tempData })); navigate("event");
+          localStorage.setItem("organization", JSON.stringify(tempData));
+        }
       }
     }
-  }, [dataOwner]);
+  }, [dataOwner, error]);
 
   useEffect(() => { console.log(currentOraganization.nameOrganization) }, [currentOraganization])
 

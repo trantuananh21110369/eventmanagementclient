@@ -25,8 +25,20 @@ const CreateOrganizationPage = () => {
     setOrganizationInput(tempData);
   };
 
+  const validateInputs = () => {
+    if (!organizationInput.nameOrganization || !organizationInput.description || !organizationInput.city || !organizationInput.Country) {
+      setError("All fields are required.");
+      return false;
+    }
+    setError("");
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validateInputs()) {
+      return;
+    }
     setLoading(true);
     const response: apiResponse = await createOrganization({
       IdUserOwner: userId,
@@ -38,7 +50,7 @@ const CreateOrganizationPage = () => {
 
     if (response.data) {
       toastNotify("Organization Created Successfully");
-      navigate("/dashboard");
+      navigate("/");
     } else {
       setError(response.error?.data?.errorMessages?.[0]);
     }

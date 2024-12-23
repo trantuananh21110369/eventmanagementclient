@@ -112,6 +112,12 @@ const EventForm = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (eventInputs.nameEvent === '') {
+      toastNotify("Please enter event title", "error");
+      return;
+    }
+
     setLoading(true);
     if (!imageToStore && !idEvent) {
       toastNotify("Please upload an image", "error");

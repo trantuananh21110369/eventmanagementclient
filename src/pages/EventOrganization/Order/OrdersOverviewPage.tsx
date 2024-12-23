@@ -61,7 +61,7 @@ const OrdersOverviewPage = () => {
         <div className="bg-gray-50 p-4 rounded-md shadow-sm">
           <input
             type="text"
-            placeholder="Search by Order ID"
+            placeholder="Search by Key word"
             value={filters.searchString}
             onChange={handleChange}
             name="searchString"

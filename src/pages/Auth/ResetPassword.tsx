@@ -24,6 +24,12 @@ function ResetPassword() {
     e.preventDefault();
     setLoading(true);
 
+    if (userInput.newPassword !== userInput.confirmNewPassword) {
+      setLoading(false);
+      toastNotify("Passwords do not match", "error");
+      return;
+    }
+
     const response: apiResponse = await resetPassword({ NewPassword: userInput.newPassword, token: token, email: email });
     setLoading(false);
 

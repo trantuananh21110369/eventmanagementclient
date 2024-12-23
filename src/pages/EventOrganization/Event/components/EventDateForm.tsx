@@ -66,6 +66,7 @@ function EventDateForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     setLoading(true);
 
     try {

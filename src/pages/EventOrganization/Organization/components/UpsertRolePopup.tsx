@@ -45,7 +45,7 @@ const defaultRoleOrganization: RoleOrganization = {
 function UpsertRolePopup({ isOpen, toggleModal, roleId }: UpsertRoleModalProps) {
   const { data: permissionData } = useGetPermissionsQuery({});
   const { data: roleDetailData } = useGetRoleDetailQuery(roleId, {
-    skip: !permissionData,
+    skip: !roleId,
   });
   const idOrganization = useSelector(
     (state: RootState) => state.organizationStore.idOrganization
@@ -92,6 +92,11 @@ function UpsertRolePopup({ isOpen, toggleModal, roleId }: UpsertRoleModalProps) 
   }, []);
 
   const handleCreateOrUpdateRole = useCallback(async () => {
+    if (!input.nameRole.trim()) {
+      toastNotify("Role name cannot be empty", "error");
+      return;
+    }
+
     const newRole: RoleOrganization = {
       ...input,
       organizationId: idOrganization,
@@ -128,6 +133,7 @@ function UpsertRolePopup({ isOpen, toggleModal, roleId }: UpsertRoleModalProps) 
           onChange={handleEventInput}
           fullWidth
           margin="normal"
+          required
         />
         <TextField
           label="Description"

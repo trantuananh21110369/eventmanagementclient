@@ -17,6 +17,10 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (userInput.password !== userInput.confirmPassword) {
+      toastNotify("Passwords do not match!", "error");
+      return;
+    }
     const rs: apiResponse = await register(userInput);
 
     if (rs?.data) {

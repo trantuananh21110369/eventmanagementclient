@@ -9,7 +9,7 @@ interface TicketOrderProps {
 }
 
 interface ticketQuantity {
-  TicketId: string;
+  ticketId: string;
   quantity: number;
   nameTicket: string;
   price: number;
@@ -19,55 +19,64 @@ function TicketOrder({ idEvent }: TicketOrderProps) {
   const navigate = useNavigate();
   const { data, isFetching } = useGetTicketsQuery(idEvent);
   const [dataTickets, setDataTickets] = useState<TicketModel[]>([]);
-  const [quantities, setQuantities] = useState<ticketQuantity[]>([]);
-
-  useEffect(() => {
-    if (data?.result) {
-      setDataTickets(data.result);
-      const now = new Date();
-      const initQuantities = data.result
-        .filter((ticket: TicketModel) =>
-          ticket.status === SD_Status_Ticket.ON_SALE &&
-          ticket.visibility === SD_Visibility_Ticket.VISIBLE &&
-          ticket.saleMethod === SD_Sale_Method_Ticket.ONLINE &&
-          new Date(ticket.saleStartDate) <= now && new Date(ticket.saleEndDate) >= now &&
-          ticket.quantity > 0
-        )
-        .map((ticket: TicketModel) => ({
-          TicketId: ticket.idTicket,
-          nameTicket: ticket.nameTicket,
-          price: ticket.price,
-          quantity: ticket.quantity > 0 ? 0 : ticket.quantity,
-        }));
-      setQuantities(initQuantities);
-    }
-  }, [data]);
+  const [quantities, setQuantities] = useState<ticketQuantity[]>([]); //Make item cart
 
   const handleIncrement = (ticketId: string) => {
-    setQuantities((prevQuantities) =>
-      prevQuantities.map((item) =>
-        item.TicketId === ticketId ? { ...item, quantity: item.quantity + 1, price: item.price * (item.quantity + 1) } : item
-      )
-    );
+    var entity = quantities.find((item) => item.ticketId === ticketId)
+    const model = dataTickets.find((ticket) => ticket.idTicket === ticketId);
+    if (model === undefined) return;
+
+    if (entity) {
+      setQuantities((prevQuantities) =>
+        prevQuantities.map((item) =>
+          item.ticketId === entity?.ticketId ? { ...item, quantity: item.quantity + 1, price: model?.price * (item.quantity + 1) } : item
+        )
+      );
+    }
+    else {
+      const entity = { ticketId: model?.idTicket, nameTicket: model?.nameTicket, price: model?.price, quantity: 1 } as ticketQuantity;
+      setQuantities((prevQuantities) => [...prevQuantities, entity]);
+    }
   };
 
   const handleDecrement = (ticketId: string) => {
-    setQuantities((prevQuantities) =>
-      prevQuantities.map((item) =>
-        item.TicketId === ticketId && item.quantity > 0
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
+    var entity = quantities.find((item) => item.ticketId === ticketId)
+    const model = dataTickets.find((ticket) => ticket.idTicket === ticketId);
+
+    if (model === undefined) return;
+
+    if (entity) {
+      if (entity.quantity === 1) {
+        setQuantities((prevQuantities) =>
+          prevQuantities.filter((item) =>
+            item.ticketId !== entity?.ticketId
+          )
+        );
+      }
+      else {
+        setQuantities((prevQuantities) =>
+          prevQuantities.map((item) =>
+            item.ticketId === entity?.ticketId ? { ...item, quantity: item.quantity - 1, price: model.price * (item.quantity - 1) } : item
+          )
+        );
+      }
+    }
   };
 
   const handleGoPageCheckout = () => {
     navigate("/checkout", { state: { quantities } });
   };
 
+  useEffect(() => {
+    if (data?.result) {
+      setDataTickets(data.result);
+    }
+  }, [data]);
+
+
   const totalQuantity = quantities.reduce((total, item) => total + (item.quantity > 0 ? item.quantity : 0), 0);
   const totalPrice = quantities.reduce((total, item) => {
-    const ticket = dataTickets.find((ticket) => ticket.idTicket === item.TicketId);
+    const ticket = dataTickets.find((ticket) => ticket.idTicket === item.ticketId);
     return total + (ticket?.price || 0) * (item.quantity > 0 ? item.quantity : 0);
   }, 0);
 
@@ -122,7 +131,7 @@ function TicketOrder({ idEvent }: TicketOrderProps) {
                           –
                         </button>
                         <span className="px-3">
-                          {quantities.find((q) => q.TicketId === ticket.idTicket)?.quantity || 0}
+                          {quantities.find((q) => q.ticketId === ticket.idTicket)?.quantity || 0}
                         </span>
                         <button
                           onClick={() => handleIncrement(ticket.idTicket)}
