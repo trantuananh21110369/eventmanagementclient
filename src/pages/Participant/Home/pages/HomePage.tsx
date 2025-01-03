@@ -1,19 +1,24 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import EventListHome from "../components/EventListHome";
 import { useGetHomeEventQuery } from "Apis/searchApis";
 import FullScreenLoader from "Components/UI/Loading";
+import { PagingBar } from "Components/UI";
+import { useSearchParams } from "react-router-dom";
 let backgroundchrist = require("Assets/images/backgroundchrist.jpg");
 
 const HomePage = () => {
+  const [searchParams] = useSearchParams();
+  const pageNumber = parseInt(searchParams.get('pageNumber') || '1', 10);
+  const pageSize = parseInt(searchParams.get('pageSize') || '5', 10);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [fromDate, setFromDate] = useState("");  // Ngày bắt đầu
   const [toDate, setToDate] = useState("");      // Ngày kết thúc
 
   // Truyền fromDate và toDate vào hook useGetHomeEventQuery
-  const { data, isFetching } = useGetHomeEventQuery({ searchString: "", fromDate, toDate });
-  console.log(data, isFetching);
+  const { data, isFetching } = useGetHomeEventQuery({ searchString: "", fromDate, toDate, pageSize, pageNumber });
 
   // Cấu hình cho react-slick slider
   const settings = {
@@ -31,14 +36,16 @@ const HomePage = () => {
 
   useEffect(() => {
     if (data) {
-      const firstThreeEvents = data?.result?.slice(0, 3);
-      setHomeEvent(data.result);
+      const firstThreeEvents = data?.apiResponse?.result?.slice(0, 3);
+      setHomeEvent(data?.apiResponse?.result);
+      const { TotalRecords } = JSON.parse(data?.totalRecords || "{}");
+      setTotalRecords(TotalRecords);
       setSliderEvents(firstThreeEvents); // Cập nhật chỉ 3 sự kiện đầu tiên cho slider
     }
   }, [data]);
 
   if (isFetching) {
-    return <FullScreenLoader />; // Hiển thị trang loading khi dữ liệu đang được tải
+    return <FullScreenLoader />;
   }
 
   return (
@@ -86,6 +93,10 @@ const HomePage = () => {
 
       {/* Event Listings */}
       <EventListHome data={homeEvent} isFetching={isFetching} />
+
+      <PagingBar
+        totalRecords={totalRecords}
+      />
     </div>
   );
 };

@@ -32,7 +32,7 @@ const SearchPage: React.FC = () => {
 
   useEffect(() => {
     if (data && !isFetching) {
-      setDataEventHome(data.result);
+      setDataEventHome(data?.apiResponse?.result);
     }
   }, [data]);
 

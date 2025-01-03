@@ -6,16 +6,16 @@ import inputHelper from 'Helper/inputHelper';
 import { apiResponse } from 'Interfaces';
 import { toastNotify } from 'Helper';
 import { Button } from '@headlessui/react';
+import apiResponseTest from 'Interfaces/apiReponseTest';
 
 function EventDateForm() {
   const { idEvent } = useParams();
   const { data, isFetching } = useGetEventDatesQuery(idEvent);
-  const navigate = useNavigate();
   const [saveEventDates] = useSaveEventDatesMutation();
   const [isLoading, setLoading] = useState(false);
   const [eventDateData, setEventDateData] = useState<EventDateModel[]>([]);
   const [eventDateDeleteData, setEventDateDeleteData] = useState<EventDateModel[]>([]);
-  const [isZoomedIn, setIsZoomedIn] = useState(false);  // State to track zoom level
+  const [isZoomedIn, setIsZoomedIn] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -70,27 +70,27 @@ function EventDateForm() {
     setLoading(true);
 
     try {
-      const response: apiResponse =
+      const response: any =
         await saveEventDates({ data: { ListEventDateDto: eventDateData, ListEventDateDelete: eventDateDeleteData }, idEvent });
-      // console.log("Loi bat duoc" + response?.error?.data?.errorMessages[0]);
-      if (response.data?.isSuccess) {
+      if (response.data.isSuccess) {
         toastNotify("Event Date Saved Successfully");
       } else {
         const errorMessage = response?.error?.data?.errorMessages[0] || "Unknown error";
 
         if (response.error?.status === 409) {
-          toastNotify("Already Ticket take EventDate", "error");
+          toastNotify(errorMessage, "error");
         }
-
-        toastNotify(errorMessage, "error");
       }
     } catch (err: any) {
       console.error("Unexpected Error:", err);
-      // toastNotify(err?.data?.errorMessages[0] || "Unknown error", "error");
-      toastNotify("Already Ticket take EventDate", "error");
-    } finally {
-      setLoading(false);
     }
+
+    setEventDateData([]);
+    setEventDateDeleteData([]);
+    if (data) {
+      setEventDateData(data.result);
+    }
+    setLoading(false);
   }
 
   return (

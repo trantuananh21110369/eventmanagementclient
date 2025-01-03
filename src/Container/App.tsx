@@ -72,9 +72,11 @@ function App() {
                 <Route path="report/:idEvent" element={<EventReportPage />} />
               </Route>
               <Route path="create" element={<EventUpsertPage />} >
+                <Route index element={<EventForm />} />
                 <Route path="edit" element={<EventForm />} />
               </Route>
               <Route path="update/:idEvent" element={<EventUpsertPage />} >
+                <Route index element={<EventForm />} />
                 <Route path="edit" element={<EventForm />} />
                 <Route path="eventdate" element={<EventDateForm />} />
                 <Route path="ticket" element={<TicketsOverviewPage />} />

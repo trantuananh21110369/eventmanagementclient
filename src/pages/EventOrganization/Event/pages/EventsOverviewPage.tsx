@@ -22,9 +22,9 @@ function EventsOverviewPage() {
   // Local state for filters, pagination, and event data
   const [filters, setFilters] = useState({ searchString: "", statusEvent: "" });
   const [apiFilters, setApiFilters] = useState({ searchString: "", statusEvent: "" });
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const pageNumber = parseInt(searchParams.get('pageNumber') || '1', 10);
-  const pageSize = parseInt(searchParams.get('pageSize') || '5', 10);
+  const pageSize = parseInt(searchParams.get('pageSize') || '10', 10);
   const [eventData, setEventData] = useState([]);
   const [totalRecords, setTotalRecords] = useState(0);
 
@@ -57,7 +57,6 @@ function EventsOverviewPage() {
       setEventData(data?.apiResponse?.result);
       const { TotalRecords } = JSON.parse(data?.totalRecords || "{}");
       setTotalRecords(TotalRecords);
-      console.log("Tong so luong" + TotalRecords);
     }
   }, [data]);
 
